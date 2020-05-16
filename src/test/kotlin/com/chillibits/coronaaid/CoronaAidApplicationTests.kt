@@ -8,6 +8,6 @@ class CoronaAidApplicationTests {
 
 	@Test
 	fun contextLoads() {
+		assert(true)
 	}
-
 }

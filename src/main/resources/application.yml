@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  http2.enabled: true
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+spring:
+  application.name: Corona Aid API
+  resources.cache.cachecontrol:
+    max-age: 120
+    must-revalidate: true
+  datasource:
+    url: ${SAC19_MYSQL_HOST}
+    username: ${SAC19_MYSQL_USER}
+    password: ${SAC19_MYSQL_PASSWORD}
+    continueOnError: true
+  jpa:
+    show-sql: false
+    open-in-view: true
+    hibernate.ddl-auto: update
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect

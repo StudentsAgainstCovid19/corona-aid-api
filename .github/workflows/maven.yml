@@ -33,9 +33,9 @@ jobs:
     steps:
       - name: Docker LogIn
         env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }} 
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
           DOCKER_PW: ${{ secrets.DOCKER_PASSWORD }} 
-        run: docker login -u "$DOCKER_USER" -p "$DOCKER_PW"
+        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PW"
       - name: Docker Build
         run: docker build . -t "jatsqi/sac19api"
       - name: Push to registry

@@ -12,5 +12,5 @@ import springfox.documentation.annotations.ApiIgnore
 class RoutingConfig {
     @RequestMapping(method = [RequestMethod.GET], value = ["/"])
     @ApiOperation(value = "Redirects the user to the swagger ui page", hidden = true)
-    fun swagger() = "redirect:/swagger-ui5.html"
+    fun swagger() = "redirect:/swagger-ui.html"
 }

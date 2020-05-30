@@ -23,7 +23,7 @@ class SwaggerConfig: ServletContextAware {
     @Bean
     public fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_12)
-                .host("api.corona-aid.chillibits.com")
+                .host("api.sac19.jatsqi.com")
                 .pathProvider(object: RelativePathProvider(context) {
 
                 })

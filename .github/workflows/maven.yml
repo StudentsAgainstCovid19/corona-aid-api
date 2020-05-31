@@ -47,6 +47,8 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@master
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

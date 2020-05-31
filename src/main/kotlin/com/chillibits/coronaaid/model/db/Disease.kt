@@ -9,20 +9,20 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "disease")
-class Disease {
+class Disease (
 
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int = 0
+    private val id: Int,
 
     // List of initial diseases
     @OneToMany
-    private val initialDiseases: List<InitialDisease> = emptyList()
+    private val initialDiseases: List<InitialDisease>,
 
     // Degree of danger of the symptom in general (percentage)
-    private val degreeOfDanger: Int = 0
+    private val degreeOfDanger: Int,
 
     // Probability of occurrence in the wild (percentage)
-    private val probability: Int = 0
-}
+    private val probability: Int
+)

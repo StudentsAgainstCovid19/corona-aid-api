@@ -10,24 +10,25 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "test")
-class Test {
+class Test (
 
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int = 0
+    private val id: Int,
 
     // Foreign key to the affected infected
     @ManyToOne
     @JoinColumn(name = "infected_id")
-    private val infectedId: Infected? = null
+    private val infectedId: Infected,
 
     // Time of scheduling, respectively the time of implementation of the test
-    private val timestamp: Long = System.currentTimeMillis()
+    private val timestamp: Long,
 
     // Test result - 0: Scheduled, 1: Positive, 2: Negative, 3: Invalid
-    private val result: Int = RESULT_SCHEDULED
+    private val result: Int
 
+) {
     companion object {
         // Constants
         const val RESULT_SCHEDULED = 0

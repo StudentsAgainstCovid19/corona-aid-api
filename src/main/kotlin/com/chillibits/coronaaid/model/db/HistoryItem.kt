@@ -11,33 +11,34 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "history")
-class HistoryItem {
+class HistoryItem (
 
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int = 0
+    private val id: Int,
 
     // Foreign key to the affected infected
     @ManyToOne
     @JoinColumn(name = "infected_id")
-    private val infectedId: Infected? = null
+    private val infectedId: Infected,
 
     // List of symptoms
     @ManyToMany(mappedBy = "historyItems")
-    private val symptoms: List<Symptom> = emptyList()
+    private val symptoms: List<Symptom>,
 
     // Timestamp of the call
-    private val timestamp: Long = System.currentTimeMillis()
+    private val timestamp: Long,
 
     // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered
-    private val status: Int = STATUS_NOT_REACHABLE
+    private val status: Int,
 
     // Personal feeling (Rating from 0 - 10)
-    private val personalFeeling: Int = 0
+    private val personalFeeling: Int
 
     // TODO: Add more fields
 
+) {
     companion object {
         // Constants
         const val STATUS_NOT_REACHABLE = 0

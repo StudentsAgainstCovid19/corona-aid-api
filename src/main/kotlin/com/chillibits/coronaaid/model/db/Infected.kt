@@ -13,56 +13,56 @@ import javax.persistence.TemporalType
 
 @Entity
 @Table(name = "infected")
-class Infected {
+class Infected (
 
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int = 0
+    private val id: Int,
 
     // Forename of the infected person
-    private val forename: String = ""
+    private val forename: String,
 
     // Surname of the infected person
-    private val surname: String = ""
+    private val surname: String,
 
     // Birth date of the infected person
     @Temporal(TemporalType.DATE)
-    private val birthDate: Date = Date()
+    private val birthDate: Date,
 
     // City, where the infected person lives
-    private val city: String = ""
+    private val city: String,
 
     // Matching postal code
-    private val postalCode: Int = 0
+    private val postalCode: Int,
 
     // Street, where the infected person lives
-    private val street: String = ""
+    private val street: String,
 
     // House, where the infected person lives
-    private val houseNumber: Int = 0
+    private val houseNumber: Int,
 
     // Exact gps coordinates of the house of the infected person
-    private val lat: Double = 0.0
-    private val lon: Double = 0.0
+    private val lat: Double,
+    private val lon: Double,
 
     // List of contact data key-value pairs
     @OneToMany(mappedBy = "infectedId")
-    private val contactData: List<ContactItem> = emptyList()
+    private val contactData: List<ContactItem>,
 
     // List of tests
     @OneToMany(mappedBy = "infectedId")
-    private val tests: List<Test> = emptyList()
+    private val tests: List<Test>,
 
     // List of initial diseases
     @OneToMany(mappedBy = "infectedId")
-    private val initialDiseases: List<InitialDisease> = emptyList()
+    private val initialDiseases: List<InitialDisease>,
 
     // List of history items
     @OneToMany(mappedBy = "infectedId")
-    private val historyItems: List<HistoryItem> = emptyList()
+    private val historyItems: List<HistoryItem>,
 
     // List of groups
     @ManyToMany(mappedBy = "infected")
-    private val groups: List<Group> = emptyList()
-}
+    private val groups: List<Group>
+)

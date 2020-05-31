@@ -8,16 +8,16 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "config")
-class ConfigItem {
+class ConfigItem (
 
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int = 0
+    private val id: Int,
 
     // Key of the key-value pair. List gets filtered by the key
-    private val key: String = ""
+    private val key: String,
 
     // Value of the key-value pair.
-    private val value: String = ""
-}
+    private val value: String
+)

@@ -11,12 +11,12 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "group")
-class Group {
+class Group (
 
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int = 0
+    private val id: Int,
 
     // List of infected persons
     @ManyToMany
@@ -25,5 +25,5 @@ class Group {
             joinColumns = [JoinColumn(name = "infected_id", referencedColumnName = "id")],
             inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")]
     )
-    private val infected: List<Infected> = emptyList()
-}
+    private val infected: List<Infected>
+)

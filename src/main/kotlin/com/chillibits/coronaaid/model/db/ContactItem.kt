@@ -10,21 +10,21 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "contact")
-class ContactItem {
+class ContactItem (
 
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int = 0
+    private val id: Int,
 
     // Foreign key to the affected infected
     @ManyToOne
     @JoinColumn(name = "infected_id")
-    private val infectedId: Infected? = null
+    private val infectedId: Infected,
 
     // Key of the key-value pair. List gets filtered by the key
-    private val key: String = ""
+    private val key: String,
 
     // Value of the key-value pair.
-    private val value: String = ""
-}
+    private val value: String
+)

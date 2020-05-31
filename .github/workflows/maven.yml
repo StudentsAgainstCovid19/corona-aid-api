@@ -26,6 +26,8 @@ jobs:
 #        LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: CodeCov report deploy
+      run: bash <(curl -s https://codecov.io/bash)
   deploy:
     name: Docker image deploy
     runs-on: ubuntu-latest
@@ -41,15 +43,3 @@ jobs:
         run: docker build . -t "jatsqi/sac19api"
       - name: Push to registry
         run: docker push "jatsqi/sac19api"
-  codecov:
-    name: CodeCov report deploy
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@master
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./target/jacoco.exec

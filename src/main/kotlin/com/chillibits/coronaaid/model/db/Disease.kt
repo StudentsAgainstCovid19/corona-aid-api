@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -11,18 +12,22 @@ import javax.persistence.Table
 @Table(name = "disease")
 class Disease (
 
-    // Fields
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int,
+        // Fields
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private val id: Int,
 
-    // List of initial diseases
-    @OneToMany
-    private val initialDiseases: List<InitialDisease>,
+        // List of initial diseases
+        @OneToMany
+        private val initialDiseases: List<InitialDisease>,
 
-    // Degree of danger of the symptom in general (percentage)
-    private val degreeOfDanger: Int,
+        // Name or indication of the disease
+        @Column(unique = true)
+        private val name: String,
 
-    // Probability of occurrence in the wild (percentage)
-    private val probability: Int
+        // Degree of danger of the symptom in general (percentage)
+        private val degreeOfDanger: Int,
+
+        // Probability of occurrence in the wild (percentage)
+        private val probability: Int
 )

@@ -13,30 +13,30 @@ import javax.persistence.Table
 @Table(name = "history")
 class HistoryItem (
 
-    // Fields
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int,
+        // Fields
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private val id: Int,
 
-    // Foreign key to the affected infected
-    @ManyToOne
-    @JoinColumn(name = "infected_id")
-    private val infectedId: Infected,
+        // Foreign key to the affected infected
+        @ManyToOne
+        @JoinColumn(name = "infected_id")
+        private val infectedId: Infected,
 
-    // List of symptoms
-    @ManyToMany(mappedBy = "historyItems")
-    private val symptoms: List<Symptom>,
+        // List of symptoms
+        @ManyToMany(mappedBy = "historyItems")
+        private val symptoms: List<Symptom>,
 
-    // Timestamp of the call
-    private val timestamp: Long,
+        // Timestamp of the call
+        private val timestamp: Long,
 
-    // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered
-    private val status: Int,
+        // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered
+        private val status: Int,
 
-    // Personal feeling (Rating from 0 - 10)
-    private val personalFeeling: Int
+        // Personal feeling (Rating from 0 - 10)
+        private val personalFeeling: Int
 
-    // TODO: Add more fields
+        // TODO: Add more fields
 
 ) {
     companion object {

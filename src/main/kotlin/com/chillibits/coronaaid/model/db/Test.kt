@@ -12,21 +12,21 @@ import javax.persistence.Table
 @Table(name = "test")
 class Test (
 
-    // Fields
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int,
+        // Fields
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private val id: Int,
 
-    // Foreign key to the affected infected
-    @ManyToOne
-    @JoinColumn(name = "infected_id")
-    private val infectedId: Infected,
+        // Foreign key to the affected infected
+        @ManyToOne
+        @JoinColumn(name = "infected_id")
+        private val infectedId: Infected,
 
-    // Time of scheduling, respectively the time of implementation of the test
-    private val timestamp: Long,
+        // Time of scheduling, respectively the time of implementation of the test
+        private val timestamp: Long,
 
-    // Test result - 0: Scheduled, 1: Positive, 2: Negative, 3: Invalid
-    private val result: Int
+        // Test result - 0: Scheduled, 1: Positive, 2: Negative, 3: Invalid
+        private val result: Int
 
 ) {
     companion object {

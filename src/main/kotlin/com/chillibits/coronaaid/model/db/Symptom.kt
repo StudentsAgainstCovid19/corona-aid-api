@@ -13,26 +13,26 @@ import javax.persistence.Table
 @Table(name = "symptom")
 class Symptom (
 
-    // Fields
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int,
+        // Fields
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private val id: Int,
 
-    // List of history items
-    @ManyToMany
-    @JoinTable(
-            name = "history_symptoms",
-            joinColumns = [JoinColumn(name = "history_item_id", referencedColumnName = "id")],
-            inverseJoinColumns = [JoinColumn(name = "symptom_id", referencedColumnName = "id")]
-    )
-    private val historyItems: List<HistoryItem>,
+        // List of history items
+        @ManyToMany
+        @JoinTable(
+                name = "history_symptoms",
+                joinColumns = [JoinColumn(name = "history_item_id", referencedColumnName = "id")],
+                inverseJoinColumns = [JoinColumn(name = "symptom_id", referencedColumnName = "id")]
+        )
+        private val historyItems: List<HistoryItem>,
 
-    // Name or indication of the symptom
-    private val name: String,
+        // Name or indication of the symptom
+        private val name: String,
 
-    // Degree of danger of the symptom in general (percentage)
-    private val degreeOfDanger: Int,
+        // Degree of danger of the symptom in general (percentage)
+        private val degreeOfDanger: Int,
 
-    // Probability of occurrence in the wild (percentage)
-    private val probability: Int
+        // Probability of occurrence in the wild (percentage)
+        private val probability: Int
 )

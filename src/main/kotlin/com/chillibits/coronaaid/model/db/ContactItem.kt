@@ -12,19 +12,19 @@ import javax.persistence.Table
 @Table(name = "contact")
 class ContactItem (
 
-    // Fields
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Int,
+        // Fields
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private val id: Int = 0,
 
-    // Foreign key to the affected infected
-    @ManyToOne
-    @JoinColumn(name = "infected_id")
-    private val infectedId: Infected,
+        // Foreign key to the affected infected
+        @ManyToOne
+        @JoinColumn(name = "infected_id")
+        private val infectedId: Infected?,
 
-    // Key of the key-value pair. List gets filtered by the key
-    private val key: String,
+        // Key of the key-value pair. List gets filtered by the key
+        private val contactKey: String,
 
-    // Value of the key-value pair.
-    private val value: String
+        // Value of the key-value pair (do not name this field 'value'. This would cause an MySQL error)
+        private val contactValue: String
 )

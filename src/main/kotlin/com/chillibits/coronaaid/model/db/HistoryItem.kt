@@ -16,25 +16,25 @@ class HistoryItem (
         // Fields
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private val id: Int,
+        val id: Int,
 
         // Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
-        private val infectedId: Infected,
+        val infectedId: Infected,
 
         // List of symptoms
         @ManyToMany(mappedBy = "historyItems")
-        private val symptoms: List<Symptom>,
+        val symptoms: List<Symptom>,
 
         // Timestamp of the call
-        private val timestamp: Long,
+        val timestamp: Long,
 
         // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered
-        private val status: Int,
+        val status: Int,
 
         // Personal feeling (Rating from 0 - 10)
-        private val personalFeeling: Int
+        val personalFeeling: Int
 
         // TODO: Add more fields
 

@@ -15,18 +15,18 @@ class Test (
         // Fields
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private val id: Int,
+        val id: Int,
 
         // Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
-        private val infectedId: Infected,
+        val infectedId: Infected,
 
         // Time of scheduling, respectively the time of implementation of the test
-        private val timestamp: Long,
+        val timestamp: Long,
 
         // Test result - 0: Scheduled, 1: Positive, 2: Negative, 3: Invalid
-        private val result: Int
+        val result: Int
 
 ) {
     companion object {

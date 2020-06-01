@@ -15,19 +15,19 @@ class Disease (
         // Fields
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private val id: Int,
+        val id: Int,
 
         // List of initial diseases
         @OneToMany
-        private val initialDiseases: List<InitialDisease>,
+        val initialDiseases: List<InitialDisease>,
 
         // Name or indication of the disease
         @Column(unique = true)
-        private val name: String,
+        val name: String,
 
         // Degree of danger of the symptom in general (percentage)
-        private val degreeOfDanger: Int,
+        val degreeOfDanger: Int,
 
         // Probability of occurrence in the wild (percentage)
-        private val probability: Int
+        val probability: Int
 )

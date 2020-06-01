@@ -20,7 +20,7 @@ class CoronaAidApplication: CommandLineRunner {
 
 	override fun run(vararg args: String?) {
 		// Test db
-		createInfected()
+		//createInfected()
 	}
 
 	private fun createInfected() {

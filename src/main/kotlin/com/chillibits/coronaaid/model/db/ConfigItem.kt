@@ -14,12 +14,12 @@ class ConfigItem (
         // Fields
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private val id: Int,
+        val id: Int,
 
         // Key of the key-value pair. List gets filtered by the key
         @Column(unique = true)
-        private val configKey: String,
+        val configKey: String,
 
         // Value of the key-value pair (do not name this field 'value'. This would cause an MySQL error)
-        private val configValue: String
+        val configValue: String
 )

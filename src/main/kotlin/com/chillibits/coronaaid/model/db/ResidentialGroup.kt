@@ -16,7 +16,7 @@ class ResidentialGroup (
         // Fields
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private val id: Int,
+        val id: Int,
 
         // List of infected persons
         @ManyToMany
@@ -25,5 +25,5 @@ class ResidentialGroup (
                 joinColumns = [JoinColumn(name = "infected_id", referencedColumnName = "id")],
                 inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")]
         )
-        private val infected: List<Infected>
+        val infected: List<Infected>
 )

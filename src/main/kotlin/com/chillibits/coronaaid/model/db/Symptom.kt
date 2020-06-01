@@ -16,7 +16,7 @@ class Symptom (
         // Fields
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private val id: Int,
+        val id: Int,
 
         // List of history items
         @ManyToMany
@@ -25,14 +25,14 @@ class Symptom (
                 joinColumns = [JoinColumn(name = "history_item_id", referencedColumnName = "id")],
                 inverseJoinColumns = [JoinColumn(name = "symptom_id", referencedColumnName = "id")]
         )
-        private val historyItems: List<HistoryItem>,
+        val historyItems: List<HistoryItem>,
 
         // Name or indication of the symptom
-        private val name: String,
+        val name: String,
 
         // Degree of danger of the symptom in general (percentage)
-        private val degreeOfDanger: Int,
+        val degreeOfDanger: Int,
 
         // Probability of occurrence in the wild (percentage)
-        private val probability: Int
+        val probability: Int
 )

@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -25,5 +26,6 @@ class ResidentialGroup (
                 joinColumns = [JoinColumn(name = "infected_id", referencedColumnName = "id")],
                 inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")]
         )
+        @JsonBackReference
         val infected: List<Infected>
 )

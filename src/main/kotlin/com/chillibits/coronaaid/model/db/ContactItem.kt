@@ -22,7 +22,7 @@ class ContactItem (
         @ManyToOne
         @JoinColumn(name = "infected_id")
         @JsonBackReference
-        val infectedId: Infected?,
+        val infectedId: Infected,
 
         // Key of the key-value pair. List gets filtered by the key
         val contactKey: String,

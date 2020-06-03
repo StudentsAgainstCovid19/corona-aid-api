@@ -54,17 +54,21 @@ class Infected (
 
         // List of tests
         @OneToMany(mappedBy = "infectedId")
+        @JsonManagedReference
         val tests: List<Test> = emptyList(),
 
         // List of initial diseases
         @OneToMany(mappedBy = "infectedId")
+        @JsonManagedReference
         val initialDiseases: List<InitialDisease> = emptyList(),
 
         // List of history items
         @OneToMany(mappedBy = "infectedId")
+        @JsonManagedReference
         val historyItems: List<HistoryItem> = emptyList(),
 
         // List of residential groups
         @ManyToMany(mappedBy = "infected")
+        @JsonManagedReference
         val residentialGroups: List<ResidentialGroup> = emptyList()
 )

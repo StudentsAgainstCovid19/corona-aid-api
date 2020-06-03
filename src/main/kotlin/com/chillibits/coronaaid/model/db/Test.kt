@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -20,6 +21,7 @@ class Test (
         // Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
+        @JsonBackReference
         val infectedId: Infected,
 
         // Time of scheduling, respectively the time of implementation of the test

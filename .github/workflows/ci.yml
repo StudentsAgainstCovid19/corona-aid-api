@@ -44,7 +44,7 @@ jobs:
     - name: docker build and push
       run: |
         echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
-        docker build -t corona-aid-api/${ARTIFACT_ID}:${VERSION} -t corona-aid-api/${ARTIFACT_ID}:latest .
+        docker build -t docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}:${VERSION} -t corona-aid-api/${ARTIFACT_ID}:latest .
         docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}:${VERSION}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

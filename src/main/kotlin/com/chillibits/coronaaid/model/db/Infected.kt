@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -48,6 +49,7 @@ class Infected (
 
         // List of contact data key-value pairs
         @OneToMany(mappedBy = "infectedId")
+        @JsonManagedReference
         val contactData: List<ContactItem> = emptyList(),
 
         // List of tests

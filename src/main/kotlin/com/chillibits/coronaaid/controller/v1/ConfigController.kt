@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.model.dto.ConfigItemDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
@@ -22,7 +23,7 @@ class ConfigController {
             path = ["/config"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
     )
-    fun getAllConfigItems() = configRepository.findAll().map { it.toDto() }
+    fun getAllConfigItems(): List<ConfigItemDto> = configRepository.findAll().map { it.toDto() }
 
     @RequestMapping(
             method = [RequestMethod.GET],

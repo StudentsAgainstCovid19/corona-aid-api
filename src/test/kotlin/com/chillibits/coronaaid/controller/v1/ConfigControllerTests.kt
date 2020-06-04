@@ -64,13 +64,13 @@ class ConfigControllerTests {
 
     private fun getTestData(): List<ConfigItem> {
         val item1 = ConfigItem(0, "priorityAgeWeight", "1.57")
-        val item2 = ConfigItem(0, "priorityDiseaseWeight", "2.31")
+        val item2 = ConfigItem(1, "priorityDiseaseWeight", "2.31")
         return listOf(item1, item2)
     }
 
     private fun getAssertData(): List<ConfigItemDto> {
         val item1 = ConfigItemDto(0, "priorityAgeWeight", "1.57")
-        val item2 = ConfigItemDto(0, "priorityDiseaseWeight", "2.31")
+        val item2 = ConfigItemDto(1, "priorityDiseaseWeight", "2.31")
         return listOf(item1, item2)
     }
 }

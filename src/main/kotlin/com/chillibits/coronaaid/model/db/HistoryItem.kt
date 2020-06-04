@@ -23,12 +23,12 @@ data class HistoryItem (
         @JoinColumn(name = "infected_id")
         val infectedId: Infected,
 
+        // Timestamp of the call
+        val timestamp: Long,
+
         // List of symptoms
         @ManyToMany(mappedBy = "historyItems")
         val symptoms: List<Symptom>,
-
-        // Timestamp of the call
-        val timestamp: Long,
 
         // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered
         val status: Int,

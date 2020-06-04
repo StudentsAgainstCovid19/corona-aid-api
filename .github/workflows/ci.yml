@@ -5,9 +5,9 @@ name: CI
 
 on:
   push:
-    branches: [ master, dev ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master, dev ]
+    branches: [ master, develop ]
 
 jobs:
   build:
@@ -18,49 +18,5 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
-#    - name: Decrypt large secret
-#      run: |
-#        chmod +x ./.github/scripts/decrypt_secret.sh
-#        ./.github/scripts/decrypt_secret.sh
-#      env:
-#        LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: CodeCov report deploy
-      run: bash <(curl -s https://codecov.io/bash)
-    - name: Prepare environment
-      run: |
-        sudo apt-get install --yes --no-install-recommends libxml-xpath-perl
-        export ARTIFACT_ID=$(xpath -q -e "/project/artifactId/text()" pom.xml)
-        echo "::set-env name=ARTIFACT_ID::${ARTIFACT_ID}"
-        export VERSION=$(xpath -q -e "/project/version/text()" pom.xml)
-        export VERSION=${VERSION//-SNAPSHOT}-$(git rev-parse --short ${GITHUB_SHA})
-        echo "::set-env name=VERSION::${VERSION}"
-    - name: GH Packages deploy
-      uses: actions/upload-artifact@v1
-      with:
-        name: target
-        path: target
-    - name: docker build and push
-      run: |
-        echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
-        docker build -t docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}:${VERSION} -t docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}:latest .
-        docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}:${VERSION}
-        docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}:latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#  deploy:
-#    name: Docker image deploy
-#    runs-on: ubuntu-latest
-#    needs: [build]
-#    steps:
-#      - uses: actions/checkout@v2
-#      - name: Docker LogIn
-#        env:
-#          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-#          DOCKER_PW: ${{ secrets.DOCKER_PASSWORD }}
-#        run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PW"
-#      - name: Docker Build
-#        run: docker build . -t "jatsqi/sac19api"
-#      - name: Push to registry
-#        run: docker push "jatsqi/sac19api"

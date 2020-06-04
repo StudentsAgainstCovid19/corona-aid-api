@@ -3,8 +3,8 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.model.db.ConfigItem
 import com.chillibits.coronaaid.model.dto.ConfigItemDto
 import com.chillibits.coronaaid.repository.ConfigRepository
-import junit.framework.Assert.assertEquals
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
@@ -50,7 +50,7 @@ class ConfigControllerTests {
     @DisplayName("Test for getting all config properties - success")
     fun testGetAllConfigItems() {
         val result = configController.getAllConfigItems()
-        assertThat(result).containsExactlyInAnyOrder(*assertData.toTypedArray())
+        assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1])
     }
 
     @Test

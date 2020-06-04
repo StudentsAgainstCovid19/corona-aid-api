@@ -6,8 +6,6 @@ name: CI with Docker
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
   release:
     branches: [ master ]
 

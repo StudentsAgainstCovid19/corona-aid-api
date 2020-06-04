@@ -47,6 +47,6 @@ class CoronaAidApplication: CommandLineRunner {
 
 }
 
-fun main(args: Array<String>) {
-	runApplication<CoronaAidApplication>(*args)
+fun main() {
+	runApplication<CoronaAidApplication>()
 }

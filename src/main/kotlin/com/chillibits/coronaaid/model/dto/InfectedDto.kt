@@ -1,9 +1,5 @@
 package com.chillibits.coronaaid.model.dto
 
-import com.chillibits.coronaaid.model.db.HistoryItem
-import com.chillibits.coronaaid.model.db.InitialDisease
-import com.chillibits.coronaaid.model.db.ResidentialGroup
-import com.chillibits.coronaaid.model.db.Test
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.util.*
 
@@ -21,11 +17,11 @@ data class InfectedDto (
         @JsonManagedReference
         val contactData: List<ContactItemDto>,
         @JsonManagedReference
-        val tests: List<Test>,
+        val tests: List<TestDto>,
         @JsonManagedReference
-        val initialDiseases: List<InitialDisease>,
+        val initialDiseases: List<InitialDiseaseDto>,
         @JsonManagedReference
-        val historyItems: List<HistoryItem>,
+        val historyItems: List<HistoryItemDto>,
         @JsonManagedReference
-        val residentialGroups: List<ResidentialGroup>
+        val residentialGroups: List<ResidentialGroupDto>
 )

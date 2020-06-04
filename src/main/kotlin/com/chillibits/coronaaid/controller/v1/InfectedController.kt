@@ -3,7 +3,6 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
-import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,9 +15,6 @@ class InfectedController {
 
     @Autowired
     private lateinit var infectedRepository: InfectedRepository
-
-    @Autowired
-    private lateinit var mapper: ModelMapper
 
     @RequestMapping(
             method = [RequestMethod.GET],

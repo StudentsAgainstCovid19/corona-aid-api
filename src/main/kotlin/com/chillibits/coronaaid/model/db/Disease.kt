@@ -10,7 +10,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "disease")
-class Disease (
+data class Disease (
 
         // Fields
         @Id

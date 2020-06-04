@@ -11,7 +11,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "symptom")
-class Symptom (
+data class Symptom (
 
         // Fields
         @Id

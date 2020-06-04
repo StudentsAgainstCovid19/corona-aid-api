@@ -1,6 +1,5 @@
 package com.chillibits.coronaaid.model.db
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -14,7 +13,7 @@ import javax.persistence.TemporalType
 
 @Entity
 @Table(name = "infected")
-class Infected (
+data class Infected (
 
         // Fields
         @Id
@@ -49,26 +48,21 @@ class Infected (
 
         // List of contact data key-value pairs
         @OneToMany(mappedBy = "infectedId")
-        @JsonManagedReference
         val contactData: List<ContactItem> = emptyList(),
 
         // List of tests
         @OneToMany(mappedBy = "infectedId")
-        @JsonManagedReference
         val tests: List<Test> = emptyList(),
 
         // List of initial diseases
         @OneToMany(mappedBy = "infectedId")
-        @JsonManagedReference
         val initialDiseases: List<InitialDisease> = emptyList(),
 
         // List of history items
         @OneToMany(mappedBy = "infectedId")
-        @JsonManagedReference
         val historyItems: List<HistoryItem> = emptyList(),
 
         // List of residential groups
         @ManyToMany(mappedBy = "infected")
-        @JsonManagedReference
         val residentialGroups: List<ResidentialGroup> = emptyList()
 )

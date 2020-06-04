@@ -1,6 +1,5 @@
 package com.chillibits.coronaaid.model.db
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -11,7 +10,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "initial_disease")
-class InitialDisease (
+data class InitialDisease (
 
         // Fields
         @Id
@@ -21,7 +20,6 @@ class InitialDisease (
         //Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
-        @JsonBackReference
         val infectedId: Infected,
 
         // Foreign key to the diseases

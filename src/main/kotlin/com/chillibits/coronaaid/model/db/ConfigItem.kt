@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "config")
-class ConfigItem (
+data class ConfigItem (
 
         // Fields
         @Id

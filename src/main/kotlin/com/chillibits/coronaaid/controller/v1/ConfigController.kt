@@ -30,5 +30,5 @@ class ConfigController {
             path = ["/config/{configKey}"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
     )
-    fun getSingleConfigItem(@PathVariable configKey: String) = configRepository.findByConfigKey(configKey).toDto()
+    fun getSingleConfigItem(@PathVariable configKey: String): ConfigItemDto = configRepository.findByConfigKey(configKey).toDto()
 }

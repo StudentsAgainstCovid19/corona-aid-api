@@ -1,6 +1,5 @@
 package com.chillibits.coronaaid.model.db
 
-import java.time.LocalDate
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -28,7 +27,8 @@ data class Infected (
         val surname: String,
 
         // Birth date of the infected person
-        val birthDate: LocalDate,
+        @Temporal(TemporalType.DATE)
+        val birthDate: Date,
 
         // City, where the infected person lives
         val city: String,

@@ -1,13 +1,14 @@
 package com.chillibits.coronaaid.model.dto
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import java.time.LocalDate
 import java.util.*
 
 data class InfectedDto (
         val id: Int,
         val forename: String,
         val surname: String,
-        val birthDate: Date,
+        val birthDate: LocalDate,
         val city: String,
         val postalCode: Int,
         val street: String,

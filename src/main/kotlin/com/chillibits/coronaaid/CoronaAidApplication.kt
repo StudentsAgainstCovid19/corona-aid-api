@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import java.time.LocalDate
+import java.time.Month
 import java.util.*
 
 @SpringBootApplication
@@ -24,7 +26,7 @@ class CoronaAidApplication: CommandLineRunner {
 	}
 
 	private fun createInfected() {
-		val birthDate = GregorianCalendar(1985, Calendar.JUNE, 4).time
+		val birthDate = LocalDate.of(1985, Month.JUNE, 4)
 		// Insert infected person
 		val infected = infectedRepository.save(
 				Infected(

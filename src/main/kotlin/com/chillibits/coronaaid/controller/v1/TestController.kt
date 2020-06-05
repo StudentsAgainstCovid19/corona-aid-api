@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.TestDto
 import com.chillibits.coronaaid.repository.TestRepository
 import com.chillibits.coronaaid.shared.toDto
@@ -35,7 +36,8 @@ class TestController {
 
     @PostMapping(
             path = ["/test"],
+            consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
-    fun addTest(@RequestBody testDto: TestDto) = testRepository.save(testDto.toModel())
+    fun addTest(@RequestBody testDto: TestDto): Test? = testRepository.save(testDto.toModel())
 }

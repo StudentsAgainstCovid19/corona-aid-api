@@ -20,7 +20,7 @@ class InfectedController {
     @RequestMapping(
             method = [RequestMethod.GET],
             path = ["/infected"],
-            produces = [MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE ]
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
     )
     fun getAllInfected(): List<InfectedDto> = infectedRepository.findAll().map { it.toDto() }
 }

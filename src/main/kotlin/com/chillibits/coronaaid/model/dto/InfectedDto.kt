@@ -2,6 +2,7 @@ package com.chillibits.coronaaid.model.dto
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 data class InfectedDto (
@@ -25,4 +26,6 @@ data class InfectedDto (
         val historyItems: List<HistoryItemDto>,
         @JsonManagedReference
         val residentialGroups: List<ResidentialGroupDto>
-)
+) {
+        val age = ChronoUnit.YEARS.between(this.birthDate, LocalDate.now())
+}

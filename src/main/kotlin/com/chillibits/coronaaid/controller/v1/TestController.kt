@@ -36,6 +36,7 @@ class TestController {
 
     @PostMapping(
             path = ["/test"],
+            consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     fun addTest(@RequestBody testDto: TestDto): Test? = testRepository.save(testDto.toModel())

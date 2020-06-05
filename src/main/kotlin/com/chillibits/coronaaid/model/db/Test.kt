@@ -20,7 +20,7 @@ data class Test (
         // Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
-        val infectedId: Infected,
+        val infectedId: Infected? = null,
 
         // Time of scheduling, respectively the time of implementation of the test
         val timestamp: Long,

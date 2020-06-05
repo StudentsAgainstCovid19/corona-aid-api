@@ -48,7 +48,8 @@ fun Test.toDto() = TestDto(
 )
 
 fun InitialDisease.toDto() = InitialDiseaseDto(
-        id = this.id
+        id = this.id,
+        degreeOfDanger = this.degreeOfDanger
 )
 
 fun HistoryItem.toDto() = HistoryItemDto(

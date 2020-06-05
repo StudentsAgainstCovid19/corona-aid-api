@@ -34,9 +34,9 @@ class CoronaAidApplication: CommandLineRunner {
 						surname = "Doe",
 						birthDate = birthDate,
 						city = "Karlsruhe",
-						postalCode = 76131,
+						postalCode = "76131",
 						street = "Erzbergerstraße",
-						houseNumber = 121,
+						houseNumber = "121",
 						lat = 49.0264134,
 						lon = 8.3831085
 				)

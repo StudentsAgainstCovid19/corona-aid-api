@@ -10,9 +10,9 @@ data class InfectedDto (
         val surname: String,
         val birthDate: LocalDate,
         val city: String,
-        val postalCode: Int,
+        val postalCode: String,
         val street: String,
-        val houseNumber: Int,
+        val houseNumber: String,
         val lat: Double,
         val lon: Double,
         @JsonManagedReference

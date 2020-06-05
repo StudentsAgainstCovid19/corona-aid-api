@@ -32,20 +32,16 @@ fun InfectedDto.toModel() = Infected(
 )
 fun ContactItemDto.toModel() = ContactItem(
         id = this.id,
-        infectedId = null,
         contactKey = this.contactKey,
         contactValue = this.contactValue
 )
 fun InitialDiseaseDto.toModel() = InitialDisease(
         id = this.id,
-        infectedId = null,
-        diseaseId = null,
         degreeOfDanger = this.degreeOfDanger
 )
 
 fun HistoryItemDto.toModel() = HistoryItem(
         id = this.id,
-        infectedId = null,
         timestamp = this.timestamp,
         symptoms = emptyList(),
         status = this.status,
@@ -59,7 +55,6 @@ fun ResidentialGroupDto.toModel() = ResidentialGroup(
 
 fun TestDto.toModel() = Test(
         id = this.id,
-        infectedId = null,
         timestamp = this.timestamp,
         result = this.result
 )

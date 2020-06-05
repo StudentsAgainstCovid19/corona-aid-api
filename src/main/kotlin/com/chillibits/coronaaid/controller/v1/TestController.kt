@@ -3,11 +3,14 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.model.dto.TestDto
 import com.chillibits.coronaaid.repository.TestRepository
 import com.chillibits.coronaaid.shared.toDto
+import com.chillibits.coronaaid.shared.toModel
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -30,9 +33,9 @@ class TestController {
     fun getTestsForSinglePerson(@PathVariable infectedId: Int): List<TestDto>
             = testRepository.findTestsForPerson(infectedId).map { it.toDto()}
 
-    /*@PostMapping(
+    @PostMapping(
             path = ["/test"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
-    fun addTest(@RequestBody testDto: TestDto) = testRepository.save(testDto)*/
+    fun addTest(@RequestBody testDto: TestDto) = testRepository.save(testDto.toModel())
 }

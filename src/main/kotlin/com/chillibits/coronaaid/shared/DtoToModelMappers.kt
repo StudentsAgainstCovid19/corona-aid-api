@@ -1,6 +1,19 @@
 package com.chillibits.coronaaid.shared
 
-/*fun InfectedDto.toModel() = Infected(
+import com.chillibits.coronaaid.model.db.ContactItem
+import com.chillibits.coronaaid.model.db.HistoryItem
+import com.chillibits.coronaaid.model.db.Infected
+import com.chillibits.coronaaid.model.db.InitialDisease
+import com.chillibits.coronaaid.model.db.ResidentialGroup
+import com.chillibits.coronaaid.model.db.Test
+import com.chillibits.coronaaid.model.dto.ContactItemDto
+import com.chillibits.coronaaid.model.dto.HistoryItemDto
+import com.chillibits.coronaaid.model.dto.InfectedDto
+import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
+import com.chillibits.coronaaid.model.dto.ResidentialGroupDto
+import com.chillibits.coronaaid.model.dto.TestDto
+
+fun InfectedDto.toModel() = Infected(
         id = this.id,
         forename = this.forename,
         surname = this.surname,
@@ -25,11 +38,28 @@ fun ContactItemDto.toModel() = ContactItem(
 )
 fun InitialDiseaseDto.toModel() = InitialDisease(
         id = this.id,
-        infectedId = this.infectedId
+        infectedId = null,
+        diseaseId = null,
+        degreeOfDanger = this.degreeOfDanger
 )
+
+fun HistoryItemDto.toModel() = HistoryItem(
+        id = this.id,
+        infectedId = null,
+        timestamp = this.timestamp,
+        symptoms = emptyList(),
+        status = this.status,
+        personalFeeling = this.personalFeeling
+)
+
+fun ResidentialGroupDto.toModel() = ResidentialGroup(
+        id = this.id,
+        infected = emptyList()
+)
+
 fun TestDto.toModel() = Test(
         id = this.id,
-        infectedId = this.infectedId.toModel(),
+        infectedId = null,
         timestamp = this.timestamp,
         result = this.result
-)*/
+)

@@ -21,7 +21,7 @@ data class HistoryItem (
         // Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
-        val infectedId: Infected,
+        val infectedId: Infected?,
 
         // Timestamp of the call
         val timestamp: Long,

@@ -20,7 +20,7 @@ data class ContactItem (
         // Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
-        val infectedId: Infected,
+        val infectedId: Infected? = null,
 
         // Key of the key-value pair. List gets filtered by the key
         val contactKey: String,

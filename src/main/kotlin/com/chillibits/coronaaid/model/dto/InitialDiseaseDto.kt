@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 data class InitialDiseaseDto (
         val id: Int,
         @JsonBackReference
-        val infectedId: InfectedDto? = null
-
-        // TODO: Wait for response regarding the individual dod
+        val infectedId: InfectedDto? = null,
+        val degreeOfDanger: Int
 )

@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import java.time.LocalDate
 import java.util.*
 
 @RunWith(SpringRunner::class)
@@ -27,7 +28,7 @@ class InfectedControllerTests {
     @MockBean
     private lateinit var infectedRepository: InfectedRepository
 
-    private val testBirthDate = Date()
+    private val testBirthDate = LocalDate.now()
     private val testData = getTestData()
     private val assertData = getAssertData()
 

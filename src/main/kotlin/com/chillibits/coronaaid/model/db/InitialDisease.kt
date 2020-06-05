@@ -20,12 +20,12 @@ data class InitialDisease (
         //Foreign key to the affected infected
         @ManyToOne
         @JoinColumn(name = "infected_id")
-        val infectedId: Infected,
+        val infectedId: Infected? = null,
 
         // Foreign key to the diseases
         @ManyToOne
         @JoinColumn(name = "disease_id")
-        val diseaseId: Disease,
+        val diseaseId: Disease? = null,
 
         // Individual degree of danger (percentage)
         val degreeOfDanger: Int

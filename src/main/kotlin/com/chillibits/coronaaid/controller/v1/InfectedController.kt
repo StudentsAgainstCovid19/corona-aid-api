@@ -4,6 +4,7 @@ import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,5 +21,6 @@ class InfectedController {
             path = ["/infected"],
             produces = [MediaType.APPLICATION_JSON_VALUE , MediaType.APPLICATION_XML_VALUE ]
     )
+    @ApiOperation("Returns all infected persons with all available attributes")
     fun getAllInfected(): List<InfectedDto> = infectedRepository.findAll().map { it.toDto() }
 }

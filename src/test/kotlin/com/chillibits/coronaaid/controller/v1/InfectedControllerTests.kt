@@ -63,8 +63,8 @@ class InfectedControllerTests {
     }
 
     private fun getAssertData(): List<InfectedDto> {
-        val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131", "Erzbergerstraße", "121", 49.0264134, 8.3831085, emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
-        val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131", "Göthestraße", "4", 49.4874639, 8.4763718, emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
+        val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131", "Erzbergerstraße", "121", 49.0264134, 8.3831085, emptyList())
+        val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131", "Göthestraße", "4", 49.4874639, 8.4763718, emptyList())
         return listOf(infected1, infected2)
     }
 }

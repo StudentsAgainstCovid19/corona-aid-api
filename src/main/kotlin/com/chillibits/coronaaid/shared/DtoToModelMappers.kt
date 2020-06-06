@@ -24,7 +24,11 @@ fun InfectedDto.toModel() = Infected(
         houseNumber = this.houseNumber,
         lat = this.lat,
         lon = this.lon,
-        contactData = this.contactData.map { it.toModel() }
+        contactData = this.contactData.map { it.toModel() },
+        tests = this.tests.map { it.toModel() },
+        initialDiseases = this.initialDiseases.map { it.toModel() },
+        historyItems = this.historyItems.map { it.toModel() },
+        residentialGroups = this.residentialGroups.map { it.toModel() }
 )
 fun ContactItemDto.toModel() = ContactItem(
         id = this.id,

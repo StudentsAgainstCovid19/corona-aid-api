@@ -28,7 +28,11 @@ fun Infected.toDto() = InfectedDto(
         houseNumber = this.houseNumber,
         lat = this.lat,
         lon = this.lon,
-        contactData = this.contactData.map { it.toDto() }
+        contactData = this.contactData.map { it.toDto() },
+        tests = this.tests.map { it.toDto() },
+        initialDiseases = this.initialDiseases.map { it.toDto() },
+        historyItems = this.historyItems.map { it.toDto() },
+        residentialGroups = this.residentialGroups.map { it.toDto() }
 )
 
 fun ContactItem.toDto() = ContactItemDto(

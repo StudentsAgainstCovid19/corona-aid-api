@@ -75,8 +75,8 @@ class TestControllerTests {
 
     private fun getTestData(): List<Test> {
         // Infected
-        val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131", "Erzbergerstraße", "121", 49.0264134, 8.3831085)
-        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "68159", "Göthestraße", "4", 49.4874639, 8.4763718)
+        val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131", "Erzbergerstraße", "121", 49.0264134, 8.3831085, locked = false)
+        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "68159", "Göthestraße", "4", 49.4874639, 8.4763718, locked = true)
         // Tests
         val test1 = Test(0, infected1, testTimestamp, 0)
         val test2 = Test(1, infected2, testTimestamp, 2)

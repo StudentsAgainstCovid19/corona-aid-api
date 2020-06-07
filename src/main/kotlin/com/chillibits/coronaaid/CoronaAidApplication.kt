@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import java.time.LocalDate
 import java.time.Month
-import java.util.*
 
 @SpringBootApplication
 class CoronaAidApplication: CommandLineRunner {
@@ -38,7 +37,8 @@ class CoronaAidApplication: CommandLineRunner {
 						street = "Erzbergerstraße",
 						houseNumber = "121",
 						lat = 49.0264134,
-						lon = 8.3831085
+						lon = 8.3831085,
+						locked = false
 				)
 		)
 

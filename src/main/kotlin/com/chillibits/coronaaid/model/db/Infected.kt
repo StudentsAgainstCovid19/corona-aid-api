@@ -1,8 +1,14 @@
 package com.chillibits.coronaaid.model.db
 
 import java.time.LocalDate
-import java.util.*
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
 @Table(name = "infected")
@@ -58,5 +64,8 @@ data class Infected (
 
         // List of residential groups
         @ManyToMany(mappedBy = "infected")
-        val residentialGroups: List<ResidentialGroup> = emptyList()
+        val residentialGroups: List<ResidentialGroup> = emptyList(),
+
+        // Locking state of infected - false: Unlocked, true: Locked
+        var locked: Boolean
 )

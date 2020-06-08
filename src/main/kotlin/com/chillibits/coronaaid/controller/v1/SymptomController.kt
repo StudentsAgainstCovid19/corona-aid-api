@@ -18,8 +18,7 @@ class SymptomController {
 
     @GetMapping(
             path = ["/symptom"],
-            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     fun getAllSymptoms(): List<SymptomDto> = symptomRepository.findAll().map { it.toDto() }
-
 }

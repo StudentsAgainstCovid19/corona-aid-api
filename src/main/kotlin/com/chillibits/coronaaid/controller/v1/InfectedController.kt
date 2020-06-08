@@ -49,11 +49,6 @@ class InfectedController {
         // Lock infected for other access
         infectedRepository.changeLockedState(infectedId, true, System.currentTimeMillis())
 
-        /*
-        TODO: Please insert the unlocking part in the HistoryItemController. Unlock the infected, when the daily
-         history item gets pushed to the backend
-         */
-
         return infected.toDto()
     }
 }

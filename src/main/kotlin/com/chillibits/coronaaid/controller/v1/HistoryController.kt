@@ -17,7 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Api(value = "History REST Endpoint", tags = ["history"])
@@ -34,7 +38,7 @@ class HistoryController {
 
     @GetMapping(
             path = ["/history"],
-            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all history items")
     fun getAllHistoryItems(): List<HistoryItemDto> = historyRepository.findAll().map { it.toDto() }
@@ -64,17 +68,22 @@ class HistoryController {
         symptoms.addAll(symptomRepository.findAllById(historyDto.symptom)) //TODO: Null checks -> 404 Status code or throw exception
 
         //Construct DAO object
-        val item = HistoryItem(
-                0,
-                infected,
-                historyDto.timestamp,
-                symptoms,
-                historyDto.status,
-                historyDto.personalFeeling
+        val item = historyRepository.save(
+                HistoryItem(
+                    0,
+                    infected,
+                    historyDto.timestamp,
+                    symptoms,
+                    historyDto.status,
+                    historyDto.personalFeeling
+                )
         )
 
+        // Unlock infected
+        infectedRepository.changeLockedState(infected.id, false, System.currentTimeMillis())
+
         //Return stored DTO
-        return ResponseEntity(historyRepository.save(item).toDto(), HttpStatus.CREATED)
+        return ResponseEntity(item.toDto(), HttpStatus.CREATED)
     }
 
 }

@@ -20,14 +20,14 @@ class ConfigController {
 
     @GetMapping(
             path = ["/config"],
-            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all config items")
     fun getAllConfigItems(): List<ConfigItemDto> = configRepository.findAll().map { it.toDto() }
 
     @GetMapping(
             path = ["/config/{configKey}"],
-            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns a config item by its name")
     fun getSingleConfigItem(@PathVariable configKey: String): ConfigItemDto = configRepository.findByConfigKey(configKey).toDto()

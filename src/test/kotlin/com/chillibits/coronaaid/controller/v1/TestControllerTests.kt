@@ -4,8 +4,8 @@ import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.TestDto
 import com.chillibits.coronaaid.repository.TestRepository
-import junit.framework.Assert.assertEquals
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.jupiter.api.DisplayName
 import org.junit.runner.RunWith

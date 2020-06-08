@@ -2,6 +2,7 @@ package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.dto.InfectedDto
+import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -26,6 +27,8 @@ class InfectedControllerTests {
     private lateinit var infectedController: InfectedController
     @MockBean
     private lateinit var infectedRepository: InfectedRepository
+    @MockBean
+    private lateinit var configRepository: ConfigRepository
 
     private val testBirthDate = LocalDate.now()
     private val testTimestamp = System.currentTimeMillis()

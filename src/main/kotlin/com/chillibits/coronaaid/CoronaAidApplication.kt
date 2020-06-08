@@ -38,7 +38,8 @@ class CoronaAidApplication: CommandLineRunner {
 						houseNumber = "121",
 						lat = 49.0264134,
 						lon = 8.3831085,
-						locked = false
+						locked = false,
+						lockedLastUpdate = System.currentTimeMillis()
 				)
 		)
 

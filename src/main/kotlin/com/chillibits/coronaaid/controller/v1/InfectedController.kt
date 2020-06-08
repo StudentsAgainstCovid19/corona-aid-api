@@ -3,6 +3,7 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.exception.exception.InfectedLockedException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.dto.InfectedDto
+import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
@@ -19,6 +20,8 @@ class InfectedController {
 
     @Autowired
     private lateinit var infectedRepository: InfectedRepository
+    @Autowired
+    private lateinit var configRepository: ConfigRepository
 
     @GetMapping(
             path = ["/infected"],
@@ -36,10 +39,15 @@ class InfectedController {
         val infected = infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
 
         // Check if already locked
-        if(infected.locked) throw InfectedLockedException(infectedId)
+        if(infected.locked) {
+            // Retrieve config record for 'autoResetOffset' (seconds -> conversion to millis)
+            val autoResetOffset = configRepository.findByConfigKey("autoResetOffset").configValue.toInt() * 1000
+            if(infected.lockedLastUpdate > System.currentTimeMillis() - autoResetOffset)
+                throw InfectedLockedException(infectedId)
+        }
 
         // Lock infected for other access
-        infectedRepository.changeLockedState(infectedId, true)
+        infectedRepository.changeLockedState(infectedId, true, System.currentTimeMillis())
 
         /*
         TODO: Please insert the unlocking part in the HistoryItemController. Unlock the infected, when the daily

@@ -29,7 +29,8 @@ fun InfectedDto.toModel() = Infected(
         initialDiseases = this.initialDiseases.map { it.toModel() },
         historyItems = this.historyItems.map { it.toModel() },
         residentialGroups = this.residentialGroups.map { it.toModel() },
-        locked = false
+        locked = false,
+        lockedLastUpdate = System.currentTimeMillis()
 )
 
 fun ContactItemDto.toModel() = ContactItem(

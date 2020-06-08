@@ -6,6 +6,7 @@ import com.chillibits.coronaaid.repository.TestRepository
 import com.chillibits.coronaaid.shared.toDto
 import com.chillibits.coronaaid.shared.toModel
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,12 +26,14 @@ class TestController {
             path = ["/test"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
     )
+    @ApiOperation("Returns all tests")
     fun getAllTests(): List<TestDto> = testRepository.findAll().map { it.toDto() }
 
     @GetMapping(
             path = ["/test/{infectedId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
+    @ApiOperation("Returns all tests for a specific person")
     fun getTestsForSinglePerson(@PathVariable infectedId: Int): List<TestDto>
             = testRepository.findTestsForPerson(infectedId).map { it.toDto()}
 
@@ -39,5 +42,6 @@ class TestController {
             consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
+    @ApiOperation("Pushes a new test to the database")
     fun addTest(@RequestBody testDto: TestDto): Test? = testRepository.save(testDto.toModel())
 }

@@ -24,6 +24,7 @@ class ConfigControllerTests {
 
     @Autowired
     private lateinit var configController: ConfigController
+
     @MockBean
     private lateinit var configRepository: ConfigRepository
 

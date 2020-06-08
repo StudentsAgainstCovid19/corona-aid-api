@@ -1,7 +1,7 @@
 package com.chillibits.coronaaid.model.db
 
 import java.time.LocalDate
-import java.util.*
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -9,8 +9,6 @@ import javax.persistence.Id
 import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 import javax.persistence.Table
-import javax.persistence.Temporal
-import javax.persistence.TemporalType
 
 @Entity
 @Table(name = "infected")
@@ -34,13 +32,15 @@ data class Infected (
         val city: String,
 
         // Matching postal code
-        val postalCode: Int,
+        @Column(length = 10)
+        val postalCode: String,
 
         // Street, where the infected person lives
         val street: String,
 
         // House, where the infected person lives
-        val houseNumber: Int,
+        @Column(length = 5)
+        val houseNumber: String,
 
         // Exact gps coordinates of the house of the infected person
         val lat: Double,
@@ -64,5 +64,11 @@ data class Infected (
 
         // List of residential groups
         @ManyToMany(mappedBy = "infected")
-        val residentialGroups: List<ResidentialGroup> = emptyList()
+        val residentialGroups: List<ResidentialGroup> = emptyList(),
+
+        // Locking state of infected - false: Unlocked, true: Locked
+        var locked: Boolean,
+
+        // Timestamp of last locking update
+        var lockedLastUpdate: Long
 )

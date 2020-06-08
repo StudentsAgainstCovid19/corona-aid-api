@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query
 
 interface TestRepository: JpaRepository<Test, Int> {
 
-    @Query("SELECT t FROM Test t, Infected i WHERE t.infectedId = i.id AND i.id = ?1")
+    @Query("SELECT t FROM Test t WHERE t.infectedId.id = ?1")
     fun findTestsForPerson(infectedId: Int): List<Test>
 }

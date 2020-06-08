@@ -1,13 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "history")
@@ -27,7 +20,12 @@ data class HistoryItem (
         val timestamp: Long,
 
         // List of symptoms
-        @ManyToMany(mappedBy = "historyItems")
+        @ManyToMany(cascade = [CascadeType.ALL])
+        @JoinTable(
+                name = "history_symptoms",
+                joinColumns = [JoinColumn(name = "history_item_id", referencedColumnName = "id")],
+                inverseJoinColumns = [JoinColumn(name = "symptom_id", referencedColumnName = "id")]
+        )
         val symptoms: List<Symptom>,
 
         // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered

@@ -63,11 +63,11 @@ class HistoryControllerTests {
         //history repository
         Mockito.`when`(historyRepository.findAll()).thenReturn(testData)
         Mockito.`when`(historyRepository.getHistoryItemsForPerson(5)).thenReturn(listOf(testData[0]))
-        Mockito.`when`(historyRepository.save(getTestInsertRepositoryDao())).thenReturn(getTestInsertRepositoryResultDao())
+        Mockito.`when`(historyRepository.save(getPostRequiredRepositorySaveInput())).thenReturn(getPostRepositorySaveOutput())
 
         //symptom repository
-        Mockito.`when`(symptomRepository.findById(0)).thenReturn(Optional.of(getSymptomTestData()[0]))
-        Mockito.`when`(symptomRepository.findAllById(listOf(0))).thenReturn(getSymptomTestData())
+        Mockito.`when`(symptomRepository.findById(0)).thenReturn(Optional.of(getPostSymptomTestData()[0]))
+        Mockito.`when`(symptomRepository.findAllById(listOf(0))).thenReturn(getPostSymptomTestData())
 
         //infected repository
         Mockito.`when`(infectedRepository.findById(5)).thenReturn(Optional.of(getDummyInfected()))
@@ -85,13 +85,13 @@ class HistoryControllerTests {
 
     @Test
     fun testPostSingleHistoryItem() {
-        val result = historyController.addHistoryItem(getTestInsertInputDto())
-        Assertions.assertThat(result).isEqualTo(ResponseEntity(getTestInsertOutputDto(), HttpStatus.CREATED))
+        val result = historyController.addHistoryItem(getPostInputDto()) //simulate client request
+        Assertions.assertThat(result).isEqualTo(ResponseEntity(getPostExpectedPostOutputDto(), HttpStatus.CREATED))
     }
 
     @Test
     fun testPostSingleHistoryItemWithUnknownInfected() {
-        assertThrows<InfectedNotFoundException>({ historyController.addHistoryItem(getTestInsertUnknownInfectedDto()) })
+        assertThrows<InfectedNotFoundException>({ historyController.addHistoryItem(getPostUnknownInfectedDto()) })
     }
 
     fun getDummyInfected() = Infected(5, "Donald", "Trump", LocalDate.of(1900, Month.JANUARY, 10), "Pjöngjang", "kim-111", "Nuclearstreet", "666", 420.0, 360.0, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false)
@@ -108,13 +108,13 @@ class HistoryControllerTests {
         return listOf(historyItem1, historyItem2)
     }
 
-    fun getSymptomTestData(): List<Symptom> = listOf(Symptom(0, emptyList(), "fever", 7, 80))
-    fun getSymptomAssertData(): List<SymptomDto> = listOf(SymptomDto(0, "fever", 7, 80))
+    fun getPostSymptomTestData(): List<Symptom> = listOf(Symptom(0, emptyList(), "fever", 7, 80))
+    fun getPostSymptomAssertData(): List<SymptomDto> = listOf(SymptomDto(0, "fever", 7, 80))
 
-    fun getTestInsertInputDto(): HistoryItemInsertDto = HistoryItemInsertDto(getDummyInfected().id, 9999, listOf(0), 2, 5)
-    fun getTestInsertRepositoryDao(): HistoryItem = HistoryItem(0, getDummyInfected(), 9999, listOf(getSymptomTestData()[0]), 2, 5)
-    fun getTestInsertRepositoryResultDao(): HistoryItem = HistoryItem(100, getDummyInfected(), 9999, listOf(getSymptomTestData()[0]), 2, 5)
-    fun getTestInsertOutputDto() : HistoryItemDto = HistoryItemDto(100, getDummyInfected().id, 9999, listOf(getSymptomAssertData()[0]), 2, 5)
+    fun getPostInputDto(): HistoryItemInsertDto = HistoryItemInsertDto(getDummyInfected().id, 9999, listOf(0), 2, 5)
+    fun getPostRequiredRepositorySaveInput(): HistoryItem = HistoryItem(0, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5)
+    fun getPostRepositorySaveOutput(): HistoryItem = HistoryItem(100, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5)
+    fun getPostExpectedPostOutputDto() : HistoryItemDto = HistoryItemDto(100, getDummyInfected().id, 9999, listOf(getPostSymptomAssertData()[0]), 2, 5)
 
-    fun getTestInsertUnknownInfectedDto(): HistoryItemInsertDto = HistoryItemInsertDto(919191, 9999, listOf(0), 2, 5)
+    fun getPostUnknownInfectedDto(): HistoryItemInsertDto = HistoryItemInsertDto(919191, 9999, listOf(0), 2, 5)
 }

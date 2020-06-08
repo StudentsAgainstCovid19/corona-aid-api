@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.dto.HistoryItemDto
@@ -56,21 +57,23 @@ class HistoryController {
             ApiResponse(code = 404, message = "Infected not found")
     )
     fun addHistoryItem(@RequestBody historyDto: HistoryItemInsertDto): ResponseEntity<HistoryItemDto> {
-        val infected = infectedRepository.findById(historyDto.infectedId)
-        if(infected.isEmpty) return ResponseEntity(HttpStatus.NOT_FOUND)
+        val infected = infectedRepository.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
 
+        //Lazy fetch symptoms
         val symptoms = mutableListOf<Symptom>()
         symptoms.addAll(symptomRepository.findAllById(historyDto.symptom)) //TODO: Null checks -> 404 Status code or throw exception
 
+        //Construct DAO object
         val item = HistoryItem(
                 0,
-                infected.get(),
+                infected,
                 historyDto.timestamp,
                 symptoms,
                 historyDto.status,
                 historyDto.personalFeeling
         )
 
+        //Return saved DTO
         return ResponseEntity(historyRepository.save(item).toDto(), HttpStatus.CREATED)
     }
 

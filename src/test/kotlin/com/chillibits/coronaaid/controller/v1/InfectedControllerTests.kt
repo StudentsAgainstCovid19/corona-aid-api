@@ -2,6 +2,7 @@ package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.dto.InfectedDto
+import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -26,8 +27,11 @@ class InfectedControllerTests {
     private lateinit var infectedController: InfectedController
     @MockBean
     private lateinit var infectedRepository: InfectedRepository
+    @MockBean
+    private lateinit var configRepository: ConfigRepository
 
     private val testBirthDate = LocalDate.now()
+    private val testTimestamp = System.currentTimeMillis()
     private val testData = getTestData()
     private val assertData = getAssertData()
 
@@ -56,8 +60,8 @@ class InfectedControllerTests {
     // -------------------------------------------------- Test data ----------------------------------------------------
 
     private fun getTestData(): List<Infected> {
-        val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131", "Erzbergerstraße", "121", 49.0264134, 8.3831085, locked = false)
-        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131", "Göthestraße", "4", 49.4874639, 8.4763718, locked = true)
+        val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131", "Erzbergerstraße", "121", 49.0264134, 8.3831085, locked = false, lockedLastUpdate = testTimestamp)
+        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131", "Göthestraße", "4", 49.4874639, 8.4763718, locked = true, lockedLastUpdate = testTimestamp)
         return listOf(infected1, infected2)
     }
 

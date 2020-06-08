@@ -54,6 +54,7 @@ fun InitialDisease.toDto() = InitialDiseaseDto(
 
 fun HistoryItem.toDto() = HistoryItemDto(
         id = this.id,
+        infectedId = this.infectedId?.id,
         timestamp = this.timestamp,
         symptom = this.symptoms.map { it.toDto() },
         status = this.status,

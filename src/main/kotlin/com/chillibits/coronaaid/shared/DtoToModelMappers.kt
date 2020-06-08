@@ -30,11 +30,13 @@ fun InfectedDto.toModel() = Infected(
         historyItems = this.historyItems.map { it.toModel() },
         residentialGroups = this.residentialGroups.map { it.toModel() }
 )
+
 fun ContactItemDto.toModel() = ContactItem(
         id = this.id,
         contactKey = this.contactKey,
         contactValue = this.contactValue
 )
+
 fun InitialDiseaseDto.toModel() = InitialDisease(
         id = this.id,
         degreeOfDanger = this.degreeOfDanger

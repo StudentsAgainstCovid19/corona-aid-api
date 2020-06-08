@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 
 interface HistoryRepository: JpaRepository<HistoryItem, Int> {
 
-    @Query("SELECT it FROM HistoryItem it, Infected i WHERE it.infectedId = i.id AND i.id = ?1")
+    @Query("SELECT it FROM HistoryItem it WHERE it.infectedId.id = ?1")
     fun getHistoryItemsForPerson(infectedId : Int): List<HistoryItem>
 
 }

@@ -17,4 +17,5 @@ interface InfectedRepository: JpaRepository<Infected, Int> {
     @Transactional
     @Query("UPDATE Infected i SET i.locked = false")
     fun resetLockingOfAllInfected()
+  
 }

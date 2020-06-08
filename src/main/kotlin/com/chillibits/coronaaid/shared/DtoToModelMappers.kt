@@ -32,11 +32,13 @@ fun InfectedDto.toModel() = Infected(
         locked = false,
         lockedLastUpdate = System.currentTimeMillis()
 )
+
 fun ContactItemDto.toModel() = ContactItem(
         id = this.id,
         contactKey = this.contactKey,
         contactValue = this.contactValue
 )
+
 fun InitialDiseaseDto.toModel() = InitialDisease(
         id = this.id,
         degreeOfDanger = this.degreeOfDanger

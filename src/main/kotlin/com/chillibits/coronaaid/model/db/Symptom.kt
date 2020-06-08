@@ -1,13 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "symptom")
@@ -19,12 +12,7 @@ data class Symptom (
         val id: Int,
 
         // List of history items
-        @ManyToMany
-        @JoinTable(
-                name = "history_symptoms",
-                joinColumns = [JoinColumn(name = "history_item_id", referencedColumnName = "id")],
-                inverseJoinColumns = [JoinColumn(name = "symptom_id", referencedColumnName = "id")]
-        )
+        @ManyToMany(mappedBy = "symptoms")
         val historyItems: List<HistoryItem>,
 
         // Name or indication of the symptom

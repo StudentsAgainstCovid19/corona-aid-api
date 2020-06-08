@@ -28,7 +28,8 @@ fun InfectedDto.toModel() = Infected(
         tests = this.tests.map { it.toModel() },
         initialDiseases = this.initialDiseases.map { it.toModel() },
         historyItems = this.historyItems.map { it.toModel() },
-        residentialGroups = this.residentialGroups.map { it.toModel() }
+        residentialGroups = this.residentialGroups.map { it.toModel() },
+        locked = false
 )
 fun ContactItemDto.toModel() = ContactItem(
         id = this.id,

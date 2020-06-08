@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.db.Symptom
@@ -13,6 +14,7 @@ import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -89,21 +91,20 @@ class HistoryControllerTests {
 
     @Test
     fun testPostSingleHistoryItemWithUnknownInfected() {
-        val result = historyController.addHistoryItem(getTestInsertUnknownInfectedDto())
-        Assertions.assertThat(result).isEqualTo(ResponseEntity<HistoryItemDto>(HttpStatus.NOT_FOUND))
+        assertThrows<InfectedNotFoundException>({ historyController.addHistoryItem(getTestInsertUnknownInfectedDto()) })
     }
 
-    fun getDummyInfected() = Infected(5, "Donald", "Trump", LocalDate.of(1900, Month.JANUARY, 10), "Pjöngjang", "kim-111", "Nuclearstreet", "666", 420.0, 360.0, emptyList(), emptyList(), emptyList(), emptyList())
+    fun getDummyInfected() = Infected(5, "Donald", "Trump", LocalDate.of(1900, Month.JANUARY, 10), "Pjöngjang", "kim-111", "Nuclearstreet", "666", 420.0, 360.0, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false)
 
     fun getHistoryTestData(): List<HistoryItem> {
         val historyItem1 = HistoryItem(0, getDummyInfected(), 1234, emptyList(), 0, 1)
-        val historyItem2 = HistoryItem(1, getDummyInfected(), 4321, emptyList(), 1, 0)
+        val historyItem2 = HistoryItem(1, null, 4321, emptyList(), 1, 0)
         return listOf(historyItem1, historyItem2)
     }
 
     fun getHistoryAssertData() : List<HistoryItemDto> {
         val historyItem1 = HistoryItemDto(0, getDummyInfected().id, 1234, emptyList(), 0, 1)
-        val historyItem2 = HistoryItemDto(1, getDummyInfected().id, 4321, emptyList(), 1, 0)
+        val historyItem2 = HistoryItemDto(1, null, 4321, emptyList(), 1, 0)
         return listOf(historyItem1, historyItem2)
     }
 

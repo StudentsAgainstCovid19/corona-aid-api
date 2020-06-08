@@ -94,7 +94,7 @@ class HistoryControllerTests {
         assertThrows<InfectedNotFoundException>({ historyController.addHistoryItem(getPostUnknownInfectedDto()) })
     }
 
-    fun getDummyInfected() = Infected(5, "Donald", "Trump", LocalDate.of(1900, Month.JANUARY, 10), "Pjöngjang", "kim-111", "Nuclearstreet", "666", 420.0, 360.0, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false)
+    fun getDummyInfected() = Infected(5, "Donald", "Trump", LocalDate.of(1900, Month.JANUARY, 10), "Pjöngjang", "kim-111", "Nuclearstreet", "666", 420.0, 360.0, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false, System.currentTimeMillis())
 
     fun getHistoryTestData(): List<HistoryItem> {
         val historyItem1 = HistoryItem(0, getDummyInfected(), 1234, emptyList(), 0, 1)

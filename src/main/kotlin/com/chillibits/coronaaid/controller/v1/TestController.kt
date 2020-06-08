@@ -24,7 +24,7 @@ class TestController {
 
     @GetMapping(
             path = ["/test"],
-            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE ]
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all tests")
     fun getAllTests(): List<TestDto> = testRepository.findAll().map { it.toDto() }

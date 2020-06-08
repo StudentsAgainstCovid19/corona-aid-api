@@ -73,7 +73,7 @@ class HistoryController {
                 historyDto.personalFeeling
         )
 
-        //Return saved DTO
+        //Return stored DTO
         return ResponseEntity(historyRepository.save(item).toDto(), HttpStatus.CREATED)
     }
 

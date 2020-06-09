@@ -101,7 +101,7 @@ class HistoryControllerTests {
     private fun getDummyInfected()
             = Infected(5, "Donald", "Trump", LocalDate.of(1900, Month.JANUARY, 10),
             "Pjöngjang", "kim-111", "Nuclearstreet", "666", 420.0, 360.0,
-            locked = false, lockedLastUpdate = 99999L)
+            lockedTimestamp = 99999L)
 
     private fun getHistoryTestData(): List<HistoryItem> {
         val historyItem1 = HistoryItem(0, getDummyInfected(), 1234, emptyList(), 0, 1)

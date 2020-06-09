@@ -10,12 +10,11 @@ interface InfectedRepository: JpaRepository<Infected, Int> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Infected i SET i.locked = ?2, i.lockedLastUpdate = ?3 WHERE i.id = ?1")
-    fun changeLockedState(infectedId: Int, locked: Boolean, timestamp: Long)
+    @Query("UPDATE Infected i SET i.lockedTimestamp = ?2 WHERE i.id = ?1")
+    fun changeLockedState(infectedId: Int, timestamp: Long)
 
     @Modifying
     @Transactional
-    @Query("UPDATE Infected i SET i.locked = false")
+    @Query("UPDATE Infected i SET i.lockedTimestamp = 0")
     fun resetLockingOfAllInfected()
-  
 }

@@ -80,7 +80,7 @@ class HistoryController {
         )
 
         // Unlock infected
-        infectedRepository.changeLockedState(infected.id, false, System.currentTimeMillis())
+        infectedRepository.changeLockedState(infected.id, System.currentTimeMillis())
 
         //Return stored DTO
         return ResponseEntity(item.toDto(), HttpStatus.CREATED)

@@ -46,6 +46,16 @@ data class Infected (
         val lat: Double,
         val lon: Double,
 
+        //Health insurance number of the infected person
+        val healthInsuranceNumber: String,
+
+        //Notes about the infected person
+        @Column(columnDefinition = "TEXT")
+        val notes : String? = null,
+
+        // Timestamp of last locking update
+        var lockedTimestamp: Long,
+
         // List of contact data key-value pairs
         @OneToMany(mappedBy = "infectedId")
         val contactData: List<ContactItem> = emptyList(),
@@ -64,11 +74,6 @@ data class Infected (
 
         // List of residential groups
         @ManyToMany(mappedBy = "infected")
-        val residentialGroups: List<ResidentialGroup> = emptyList(),
+        val residentialGroups: List<ResidentialGroup> = emptyList()
 
-        // Locking state of infected - false: Unlocked, true: Locked
-        var locked: Boolean,
-
-        // Timestamp of last locking update
-        var lockedLastUpdate: Long
 )

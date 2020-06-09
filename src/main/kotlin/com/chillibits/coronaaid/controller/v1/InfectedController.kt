@@ -39,16 +39,13 @@ class InfectedController {
     fun getSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
         val infected = infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
 
-        // Check if already locked
-        if(infected.locked) {
-            // Retrieve config record for 'autoResetOffset' (seconds -> conversion to millis)
-            val autoResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET).configValue.toInt()
-            if(infected.lockedLastUpdate > System.currentTimeMillis() - autoResetOffset * 1000)
-                throw InfectedLockedException(infectedId)
-        }
+        // Retrieve config record for 'autoResetOffset' (seconds -> conversion to millis)
+        val autoResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET).configValue.toInt()
+        if(infected.lockedTimestamp > System.currentTimeMillis() - autoResetOffset * 1000)
+            throw InfectedLockedException(infectedId)
 
         // Lock infected for other access
-        infectedRepository.changeLockedState(infectedId, true, System.currentTimeMillis())
+        infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
 
         return infected.toDto()
     }

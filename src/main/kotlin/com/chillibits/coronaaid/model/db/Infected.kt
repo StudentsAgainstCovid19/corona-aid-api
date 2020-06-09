@@ -66,9 +66,6 @@ data class Infected (
         @ManyToMany(mappedBy = "infected")
         val residentialGroups: List<ResidentialGroup> = emptyList(),
 
-        // Locking state of infected - false: Unlocked, true: Locked
-        var locked: Boolean,
-
         // Timestamp of last locking update
-        var lockedLastUpdate: Long
+        var lockedTimestamp: Long
 )

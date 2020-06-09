@@ -21,7 +21,7 @@ class CoronaAidApplication: CommandLineRunner {
 
 	override fun run(vararg args: String?) {
 		// Test db
-		//createInfected()
+		// createInfected()
 	}
 
 	private fun createInfected() {
@@ -38,7 +38,8 @@ class CoronaAidApplication: CommandLineRunner {
 						houseNumber = "121",
 						lat = 49.0264134,
 						lon = 8.3831085,
-						lockedTimestamp = System.currentTimeMillis()
+						lockedTimestamp = System.currentTimeMillis(),
+						healthInsuranceNumber = "M1234567"
 				)
 		)
 

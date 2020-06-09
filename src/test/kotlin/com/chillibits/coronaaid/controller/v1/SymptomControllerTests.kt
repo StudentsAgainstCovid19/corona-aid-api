@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner::class)
 @ActiveProfiles("logging")
-@DisplayName("Symptoms Controller")
+@DisplayName("Symptom Controller")
 class SymptomControllerTests {
 
     @Autowired
@@ -42,23 +42,26 @@ class SymptomControllerTests {
         Mockito.`when`(symptomRepository.findAll()).thenReturn(testData)
     }
 
-    @DisplayName("Test for getting all symptoms")
+    // ---------------------------------------------------- Tests ------------------------------------------------------
+
     @Test
+    @DisplayName("Test for getting all symptoms")
     fun testGetAllSymptoms() {
         val result = symptomController.getAllSymptoms()
         Assertions.assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1])
     }
 
-    fun getTestData(): List<Symptom> {
+    // -------------------------------------------------- Test data ----------------------------------------------------
+
+    private fun getTestData(): List<Symptom> {
         val symptom1 = Symptom(0, emptyList(), "fever", 7, 80)
         val symptom2 = Symptom(1, emptyList(), "fatigue", 2, 100)
         return listOf(symptom1, symptom2)
     }
 
-    fun getAssertData(): List<SymptomDto> {
+    private fun getAssertData(): List<SymptomDto> {
         val symptom1 = SymptomDto(0,"fever", 7, 80)
         val symptom2 = SymptomDto(1,"fatigue", 2, 100)
         return listOf(symptom1, symptom2)
     }
-
 }

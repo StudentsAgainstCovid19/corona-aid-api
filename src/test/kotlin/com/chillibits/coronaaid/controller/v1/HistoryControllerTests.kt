@@ -10,7 +10,7 @@ import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
@@ -55,45 +55,50 @@ class HistoryControllerTests {
 
         @Bean
         fun historyController() = HistoryController()
-
     }
 
     @Before
     fun init() {
-        //history repository
+        // History repository
         Mockito.`when`(historyRepository.findAll()).thenReturn(testData)
         Mockito.`when`(historyRepository.getHistoryItemsForPerson(5)).thenReturn(listOf(testData[0]))
         Mockito.`when`(historyRepository.save(getPostRequiredRepositorySaveInput())).thenReturn(getPostRepositorySaveOutput())
 
-        //symptom repository
+        // Symptom repository
         Mockito.`when`(symptomRepository.findById(0)).thenReturn(Optional.of(getPostSymptomTestData()[0]))
         Mockito.`when`(symptomRepository.findAllById(listOf(0))).thenReturn(getPostSymptomTestData())
 
-        //infected repository
+        // Infected repository
         Mockito.`when`(infectedRepository.findById(5)).thenReturn(Optional.of(getDummyInfected()))
+        Mockito.`when`(infectedRepository.findById(100)).thenReturn(Optional.empty())
     }
 
     // ---------------------------------------------------- Tests ------------------------------------------------------
 
     @Test
     fun testGetAllHistoryItems() {
-        Assertions.assertThat(historyController.getAllHistoryItems()).containsExactlyInAnyOrder(assertData[0], assertData[1])
+        assertThat(historyController.getAllHistoryItems()).containsExactlyInAnyOrder(assertData[0], assertData[1])
     }
 
     @Test
-    fun testGetHistoryItemsOfSinglePerson() {
-        Assertions.assertThat(historyController.getHistoryItemForSinglePerson(5)).isEqualTo(listOf(assertData[0]))
+    fun testGetHistoryItemsForSinglePerson() {
+        assertThat(historyController.getHistoryItemsForSinglePerson(5)).isEqualTo(listOf(assertData[0]))
+    }
+
+    @Test
+    fun testGetHistoryItemsForSinglePersonNotFound() {
+        assertThrows<InfectedNotFoundException> { historyController.getHistoryItemsForSinglePerson(100) }
     }
 
     @Test
     fun testPostSingleHistoryItem() {
         val result = historyController.addHistoryItem(getPostInputDto()) //simulate client request
-        Assertions.assertThat(result).isEqualTo(ResponseEntity(getPostExpectedPostOutputDto(), HttpStatus.CREATED))
+        assertThat(result).isEqualTo(ResponseEntity(getPostExpectedPostOutputDto(), HttpStatus.CREATED))
     }
 
     @Test
     fun testPostSingleHistoryItemWithUnknownInfected() {
-        assertThrows<InfectedNotFoundException>({ historyController.addHistoryItem(getPostUnknownInfectedDto()) })
+        assertThrows<InfectedNotFoundException> { historyController.addHistoryItem(getPostUnknownInfectedDto()) }
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------

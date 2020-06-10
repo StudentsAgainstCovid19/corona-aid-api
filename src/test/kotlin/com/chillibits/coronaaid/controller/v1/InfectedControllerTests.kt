@@ -14,6 +14,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -78,23 +79,13 @@ class InfectedControllerTests {
     @Test
     @DisplayName("Test for getting a single infected, which not exists - exception")
     fun testGetSingleInfectedNotFound() {
-        val exception = assertThrows(InfectedNotFoundException::class.java) {
-            infectedController.getSingleInfected(10)
-        }
-
-        val expectedMessage = InfectedNotFoundException(10).message
-        assertEquals(expectedMessage, exception.message)
+        assertThrows<InfectedNotFoundException> { infectedController.getSingleInfected(10) }
     }
 
     @Test
     @DisplayName("Test for getting a single infected, which is locked - exception")
     fun testGetSingleInfectedLocked() {
-        val exception = assertThrows(InfectedLockedException::class.java) {
-            infectedController.getSingleInfected(testData[1].id)
-        }
-
-        val expectedMessage = InfectedLockedException(testData[1].id).message
-        assertEquals(expectedMessage, exception.message)
+        assertThrows<InfectedLockedException> { infectedController.getSingleInfected(testData[1].id) }
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------

@@ -78,7 +78,8 @@ class HistoryController {
                     historyDto.timestamp,
                     symptoms,
                     historyDto.status,
-                    historyDto.personalFeeling
+                    historyDto.personalFeeling,
+                    historyDto.notes
                 )
         )
 

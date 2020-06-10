@@ -49,10 +49,6 @@ data class Infected (
         //Health insurance number of the infected person
         val healthInsuranceNumber: String,
 
-        //Notes about the infected person
-        @Column(columnDefinition = "TEXT")
-        val notes : String? = null,
-
         // Timestamp of last locking update
         var lockedTimestamp: Long,
 

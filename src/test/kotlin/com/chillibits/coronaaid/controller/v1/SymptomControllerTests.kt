@@ -4,6 +4,7 @@ import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.repository.SymptomRepository
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
@@ -39,6 +40,7 @@ class SymptomControllerTests {
 
     @Before
     fun init() {
+        // Setup fake function calls
         Mockito.`when`(symptomRepository.findAll()).thenReturn(testData)
     }
 
@@ -48,7 +50,7 @@ class SymptomControllerTests {
     @DisplayName("Test for getting all symptoms")
     fun testGetAllSymptoms() {
         val result = symptomController.getAllSymptoms()
-        Assertions.assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1])
+        assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1])
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------

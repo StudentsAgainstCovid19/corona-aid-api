@@ -15,7 +15,6 @@ data class InfectedDto (
         val lat: Double,
         val lon: Double,
         val healthInsuranceNumber: String,
-        val notes : String?,
         val contactData: List<ContactItemDto>,
         val tests: List<TestDto>,
         val initialDiseases: List<InitialDiseaseDto>,

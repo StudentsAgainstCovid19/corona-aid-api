@@ -2,7 +2,6 @@ package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.db.HistoryItem
-import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.HistoryItemInsertDto
 import com.chillibits.coronaaid.repository.HistoryRepository
@@ -47,27 +46,31 @@ class HistoryController {
             path = ["/history/{infectedId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
+    @ApiResponses(
+            ApiResponse(code = 404, message = "Infected not found")
+    )
     @ApiOperation("Returns all history items for a specific person")
-    fun getHistoryItemForSinglePerson(@PathVariable infectedId: Int): List<HistoryItemDto>
-            = historyRepository.getHistoryItemsForPerson(infectedId).map { it.toDto() } //TODO: Add infected not found check
+    fun getHistoryItemsForSinglePerson(@PathVariable infectedId: Int): List<HistoryItemDto> {
+        if(infectedRepository.findById(infectedId).isEmpty) throw InfectedNotFoundException(infectedId)
+        return historyRepository.getHistoryItemsForPerson(infectedId).map { it.toDto() }
+    }
 
     @PostMapping(
             path = ["/history"],
             consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
-    @ApiOperation("Pushes a new history item to the database")
     @ApiResponses(
             ApiResponse(code = 404, message = "Infected not found")
     )
+    @ApiOperation("Pushes a new history item to the database")
     fun addHistoryItem(@RequestBody historyDto: HistoryItemInsertDto): ResponseEntity<HistoryItemDto> {
         val infected = infectedRepository.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
 
-        //Lazy fetch symptoms
-        val symptoms = mutableListOf<Symptom>()
-        symptoms.addAll(symptomRepository.findAllById(historyDto.symptom)) //TODO: Null checks -> 404 Status code or throw exception
+        // Fetch symptoms
+        val symptoms = historyDto.symptom.map { symptomRepository.findById(it) }.filter { it.isPresent }.map { it.get() }
 
-        //Construct DAO object
+        // Construct DAO object
         val item = historyRepository.save(
                 HistoryItem(
                     0,
@@ -75,14 +78,15 @@ class HistoryController {
                     historyDto.timestamp,
                     symptoms,
                     historyDto.status,
-                    historyDto.personalFeeling
+                    historyDto.personalFeeling,
+                    historyDto.notes
                 )
         )
 
         // Unlock infected
         infectedRepository.changeLockedState(infected.id, System.currentTimeMillis())
 
-        //Return stored DTO
+        // Return stored DTO
         return ResponseEntity(item.toDto(), HttpStatus.CREATED)
     }
 

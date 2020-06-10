@@ -14,6 +14,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -78,23 +79,13 @@ class InfectedControllerTests {
     @Test
     @DisplayName("Test for getting a single infected, which not exists - exception")
     fun testGetSingleInfectedNotFound() {
-        val exception = assertThrows(InfectedNotFoundException::class.java) {
-            infectedController.getSingleInfected(10)
-        }
-
-        val expectedMessage = InfectedNotFoundException(10).message
-        assertEquals(expectedMessage, exception.message)
+        assertThrows<InfectedNotFoundException> { infectedController.getSingleInfected(10) }
     }
 
     @Test
     @DisplayName("Test for getting a single infected, which is locked - exception")
     fun testGetSingleInfectedLocked() {
-        val exception = assertThrows(InfectedLockedException::class.java) {
-            infectedController.getSingleInfected(testData[1].id)
-        }
-
-        val expectedMessage = InfectedLockedException(testData[1].id).message
-        assertEquals(expectedMessage, exception.message)
+        assertThrows<InfectedLockedException> { infectedController.getSingleInfected(testData[1].id) }
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
@@ -112,10 +103,10 @@ class InfectedControllerTests {
     private fun getAssertData(): List<InfectedDto> {
         val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085,  "M123456",
-                        null, emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
+                         emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
         val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718, "M654321",
-                        null, emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
+                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
         return listOf(infected1, infected2)
     }
 }

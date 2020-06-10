@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.exception.exception.ConfigItemNotFoundException
 import com.chillibits.coronaaid.model.db.ConfigItem
 import com.chillibits.coronaaid.model.dto.ConfigItemDto
 import com.chillibits.coronaaid.repository.ConfigRepository
@@ -8,6 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,6 +32,7 @@ class ConfigControllerTests {
 
     private val testData = getTestData()
     private val assertData = getAssertData()
+    private val nonExistingConfigKey = "nonExistingConfigKey"
 
     @TestConfiguration
     class ConfigControllerImplTestContextConfiguration {
@@ -43,6 +46,7 @@ class ConfigControllerTests {
         // Setup fake function calls
         Mockito.`when`(configRepository.findAll()).thenReturn(testData)
         Mockito.`when`(configRepository.findByConfigKey(testData[0].configKey)).thenReturn(testData[0])
+        Mockito.`when`(configRepository.findByConfigKey(nonExistingConfigKey)).thenReturn(null)
     }
 
     // ---------------------------------------------------- Tests ------------------------------------------------------
@@ -59,6 +63,12 @@ class ConfigControllerTests {
     fun getSingleConfigItem() {
         val result = configController.getSingleConfigItem(testData[0].configKey)
         assertEquals(assertData[0], result)
+    }
+
+    @Test
+    @DisplayName("Test for getting single config property - infected not found")
+    fun getSingleConfigItemInfectedNotFound() {
+        assertThrows<ConfigItemNotFoundException> { configController.getSingleConfigItem(nonExistingConfigKey) }
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------

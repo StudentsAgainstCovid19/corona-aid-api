@@ -10,7 +10,6 @@ import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -71,6 +70,7 @@ class HistoryControllerTests {
 
         // Infected repository
         Mockito.`when`(infectedRepository.findById(5)).thenReturn(Optional.of(getDummyInfected()))
+        Mockito.`when`(infectedRepository.findById(100)).thenReturn(Optional.empty())
     }
 
     // ---------------------------------------------------- Tests ------------------------------------------------------
@@ -81,8 +81,13 @@ class HistoryControllerTests {
     }
 
     @Test
-    fun testGetHistoryItemsOfSinglePerson() {
-        assertThat(historyController.getHistoryItemForSinglePerson(5)).isEqualTo(listOf(assertData[0]))
+    fun testGetHistoryItemsForSinglePerson() {
+        assertThat(historyController.getHistoryItemsForSinglePerson(5)).isEqualTo(listOf(assertData[0]))
+    }
+
+    @Test
+    fun testGetHistoryItemsForSinglePersonNotFound() {
+        assertThrows<InfectedNotFoundException> { historyController.getHistoryItemsForSinglePerson(100) }
     }
 
     @Test

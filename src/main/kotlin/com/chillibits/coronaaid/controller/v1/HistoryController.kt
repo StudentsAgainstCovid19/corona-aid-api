@@ -46,19 +46,24 @@ class HistoryController {
             path = ["/history/{infectedId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
+    @ApiResponses(
+            ApiResponse(code = 404, message = "Infected not found")
+    )
     @ApiOperation("Returns all history items for a specific person")
-    fun getHistoryItemForSinglePerson(@PathVariable infectedId: Int): List<HistoryItemDto>
-            = historyRepository.getHistoryItemsForPerson(infectedId).map { it.toDto() } //TODO: Add infected not found check
+    fun getHistoryItemsForSinglePerson(@PathVariable infectedId: Int): List<HistoryItemDto> {
+        if(infectedRepository.findById(infectedId).isEmpty) throw InfectedNotFoundException(infectedId)
+        return historyRepository.getHistoryItemsForPerson(infectedId).map { it.toDto() }
+    }
 
     @PostMapping(
             path = ["/history"],
             consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
-    @ApiOperation("Pushes a new history item to the database")
     @ApiResponses(
             ApiResponse(code = 404, message = "Infected not found")
     )
+    @ApiOperation("Pushes a new history item to the database")
     fun addHistoryItem(@RequestBody historyDto: HistoryItemInsertDto): ResponseEntity<HistoryItemDto> {
         val infected = infectedRepository.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
 

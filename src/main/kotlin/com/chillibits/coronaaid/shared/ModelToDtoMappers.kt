@@ -29,7 +29,6 @@ fun Infected.toDto() = InfectedDto(
         lat = this.lat,
         lon = this.lon,
         healthInsuranceNumber = this.healthInsuranceNumber,
-        notes = this.notes,
         contactData = this.contactData.map { it.toDto() },
         tests = this.tests.map { it.toDto() },
         initialDiseases = this.initialDiseases.map { it.toDto() },
@@ -60,7 +59,8 @@ fun HistoryItem.toDto() = HistoryItemDto(
         timestamp = this.timestamp,
         symptom = this.symptoms.map { it.toDto() },
         status = this.status,
-        personalFeeling = this.personalFeeling
+        personalFeeling = this.personalFeeling,
+        notes = this.notes
 )
 
 fun ResidentialGroup.toDto() = ResidentialGroupDto(

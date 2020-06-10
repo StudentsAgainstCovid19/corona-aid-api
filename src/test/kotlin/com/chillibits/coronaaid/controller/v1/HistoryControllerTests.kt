@@ -115,8 +115,8 @@ class HistoryControllerTests {
     }
 
     private fun getHistoryAssertData(): List<HistoryItemDto> {
-        val historyItem1 = HistoryItemDto(0, getDummyInfected().id, 1234, emptyList(), 0, 1)
-        val historyItem2 = HistoryItemDto(1, null, 4321, emptyList(), 1, 0)
+        val historyItem1 = HistoryItemDto(0, getDummyInfected().id, 1234, emptyList(), 0, 1, null)
+        val historyItem2 = HistoryItemDto(1, null, 4321, emptyList(), 1, 0, null)
         return listOf(historyItem1, historyItem2)
     }
 
@@ -124,13 +124,13 @@ class HistoryControllerTests {
     private fun getPostSymptomAssertData() = listOf(SymptomDto(0, "fever", 7, 80))
 
     private fun getPostInputDto()
-            = HistoryItemInsertDto(getDummyInfected().id, 9999, listOf(0), 2, 5)
+            = HistoryItemInsertDto(getDummyInfected().id, 9999, listOf(0), 2, 5, "aggressive")
     private fun getPostRequiredRepositorySaveInput()
-            = HistoryItem(0, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5)
+            = HistoryItem(0, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5, "aggressive")
     private fun getPostRepositorySaveOutput()
-            = HistoryItem(100, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5)
+            = HistoryItem(100, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5, "aggressive")
     private fun getPostExpectedPostOutputDto()
-            = HistoryItemDto(100, getDummyInfected().id, 9999, listOf(getPostSymptomAssertData()[0]), 2, 5)
+            = HistoryItemDto(100, getDummyInfected().id, 9999, listOf(getPostSymptomAssertData()[0]), 2, 5, "aggressive")
     private fun getPostUnknownInfectedDto()
-            = HistoryItemInsertDto(919191, 9999, listOf(0), 2, 5)
+            = HistoryItemInsertDto(919191, 9999, listOf(0), 2, 5, null)
 }

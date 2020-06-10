@@ -13,5 +13,5 @@ class InfectedLockedAdvice {
     @ResponseBody
     @ExceptionHandler(InfectedLockedException::class)
     @ResponseStatus(HttpStatus.LOCKED)
-    fun employeeNotFoundHandler(ex: InfectedLockedException) = ex.message
+    fun handler(ex: InfectedLockedException) = ex.message
 }

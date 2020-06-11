@@ -75,8 +75,12 @@ class TestControllerTests {
 
     private fun getTestData(): List<Test> {
         // Infected
-        val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131", "Erzbergerstraße", "121", 49.0264134, 8.3831085, lockedTimestamp = testTimestamp)
-        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "68159", "Göthestraße", "4", 49.4874639, 8.4763718, lockedTimestamp = testTimestamp)
+        val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
+                                "Erzbergerstraße", "121", 49.0264134, 8.3831085, "M654321",
+                                lockedTimestamp = testTimestamp)
+        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "68159",
+                                "Göthestraße", "4", 49.4874639, 8.4763718, "M654321",
+                                lockedTimestamp = testTimestamp)
 
         // Tests
         val test1 = Test(0, infected1, testTimestamp, 0)

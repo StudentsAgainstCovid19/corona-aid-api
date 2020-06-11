@@ -9,6 +9,8 @@ import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,13 +38,19 @@ class InfectedController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Get details of single infected (locks the infected for access)")
+    @ApiResponses(
+            ApiResponse(code = 404, message = "Infected not found"),
+            ApiResponse(code = 423, message = "Infected locked")
+    )
     fun getSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
         val infected = infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
 
         // Retrieve config record for 'autoResetOffset' (seconds -> conversion to millis)
-        val autoResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET).configValue.toInt()
-        if(infected.lockedTimestamp > System.currentTimeMillis() - autoResetOffset * 1000)
-            throw InfectedLockedException(infectedId)
+        configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.let {
+            if(infected.lockedTimestamp > System.currentTimeMillis() - it.configValue.toInt() * 1000)
+                throw InfectedLockedException(infectedId)
+        }
+
 
         // Lock infected for other access
         infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())

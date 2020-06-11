@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.Query
 interface ConfigRepository: JpaRepository<ConfigItem, Int> {
 
     @Query("SELECT c FROM ConfigItem c WHERE c.configKey = ?1")
-    fun findByConfigKey(configKey: String): ConfigItem
+    fun findByConfigKey(configKey: String): ConfigItem?
 }

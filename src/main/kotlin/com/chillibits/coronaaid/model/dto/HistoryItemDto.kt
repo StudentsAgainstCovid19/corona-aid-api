@@ -6,5 +6,6 @@ data class HistoryItemDto (
         val timestamp: Long,
         val symptom: List<SymptomDto>,
         val status: Int,
-        val personalFeeling: Int
+        val personalFeeling: Int,
+        val notes: String?
 )

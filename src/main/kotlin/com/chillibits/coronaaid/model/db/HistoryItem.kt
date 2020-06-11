@@ -32,9 +32,11 @@ data class HistoryItem (
         val status: Int,
 
         // Personal feeling (Rating from 0 - 10)
-        val personalFeeling: Int
+        val personalFeeling: Int,
 
-        // TODO: Add more fields
+        //Notes about the infected person
+        @Column(columnDefinition = "TEXT")
+        val notes : String? = null
 
 ) {
     companion object {

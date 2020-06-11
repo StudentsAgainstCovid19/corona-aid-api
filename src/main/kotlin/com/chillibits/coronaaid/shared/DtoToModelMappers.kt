@@ -24,6 +24,7 @@ fun InfectedDto.toModel() = Infected(
         houseNumber = this.houseNumber,
         lat = this.lat,
         lon = this.lon,
+        healthInsuranceNumber = this.healthInsuranceNumber,
         contactData = this.contactData.map { it.toModel() },
         tests = this.tests.map { it.toModel() },
         initialDiseases = this.initialDiseases.map { it.toModel() },

@@ -5,5 +5,6 @@ data class HistoryItemInsertDto(
         val timestamp: Long,
         val symptom: List<Int>,
         val status: Int,
-        val personalFeeling: Int
+        val personalFeeling: Int,
+        val notes : String?
 )

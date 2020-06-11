@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import java.time.LocalDate
 import java.time.Month
 
@@ -48,6 +51,15 @@ class CoronaAidApplication: CommandLineRunner {
 		contactRepository.save(ContactItem(infectedId = infected, contactKey = "email", contactValue = "john.doe@dh-karlsruhe.de"))
 	}
 
+	@Bean
+	fun corsConfiguration(): WebMvcConfigurer {
+		return object : WebMvcConfigurer {
+			override fun addCorsMappings(registry: CorsRegistry) {
+				registry.addMapping("/**")
+						.allowedOrigins("http://localhost:63342", "https://sac19.jatsqi.com")
+			}
+		}
+	}
 }
 
 fun main() {

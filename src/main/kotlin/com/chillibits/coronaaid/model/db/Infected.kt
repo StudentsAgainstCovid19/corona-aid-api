@@ -1,14 +1,9 @@
 package com.chillibits.coronaaid.model.db
 
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.time.LocalDate
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.ManyToMany
-import javax.persistence.OneToMany
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "infected")
@@ -53,7 +48,8 @@ data class Infected (
         var lockedTimestamp: Long,
 
         // List of contact data key-value pairs
-        @OneToMany(mappedBy = "infectedId")
+        @OneToMany(mappedBy = "infectedId", fetch = FetchType.EAGER)
+        @Fetch(value = FetchMode.SUBSELECT)
         val contactData: List<ContactItem> = emptyList(),
 
         // List of tests
@@ -61,15 +57,18 @@ data class Infected (
         val tests: List<Test> = emptyList(),
 
         // List of initial diseases
-        @OneToMany(mappedBy = "infectedId")
+        @OneToMany(mappedBy = "infectedId", fetch = FetchType.EAGER)
+        @Fetch(value = FetchMode.SUBSELECT)
         val initialDiseases: List<InitialDisease> = emptyList(),
 
         // List of history items
-        @OneToMany(mappedBy = "infectedId")
+        @OneToMany(mappedBy = "infectedId", fetch = FetchType.EAGER)
+        @Fetch(value = FetchMode.SUBSELECT)
         val historyItems: List<HistoryItem> = emptyList(),
 
         // List of residential groups
-        @ManyToMany(mappedBy = "infected")
+        @ManyToMany(mappedBy = "infected", fetch = FetchType.EAGER)
+        @Fetch(value = FetchMode.SUBSELECT)
         val residentialGroups: List<ResidentialGroup> = emptyList()
 
 )

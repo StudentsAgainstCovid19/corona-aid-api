@@ -6,6 +6,7 @@ import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.shared.ConfigKeys
+import com.chillibits.coronaaid.shared.toCompressed
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -24,6 +26,7 @@ class InfectedController {
 
     @Autowired
     private lateinit var infectedRepository: InfectedRepository
+
     @Autowired
     private lateinit var configRepository: ConfigRepository
 
@@ -32,7 +35,13 @@ class InfectedController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all infected persons with all available attributes")
-    fun getAllInfected(): List<InfectedDto> = infectedRepository.findAll().map { it.toDto() }
+    fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): List<Any> {
+        if(compressDto) {
+            return infectedRepository.findAll().map { it.toCompressed() }
+        } else {
+            return infectedRepository.findAll().map { it.toDto() }
+        }
+    }
 
     @GetMapping(
             path = ["/infected/{infectedId}"],

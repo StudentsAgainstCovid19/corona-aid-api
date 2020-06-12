@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -56,5 +57,18 @@ class InfectedController {
         infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
 
         return infected.toDto()
+    }
+
+    @PutMapping(
+            path = ["/infected/unlock/{infectedId}"],
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
+    )
+    @ApiOperation("Unlock a locked infected")
+    @ApiResponses(
+            ApiResponse(code = 404, message = "Infected not found")
+    )
+    fun unlockSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
+        infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
+        return infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 }

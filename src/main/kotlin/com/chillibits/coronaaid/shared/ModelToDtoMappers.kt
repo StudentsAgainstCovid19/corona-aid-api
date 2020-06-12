@@ -61,6 +61,7 @@ fun ContactItem.toDto() = ContactItemDto(
 
 fun Test.toDto() = TestDto(
         id = this.id,
+        infectedId = this.infectedId?.id ?: -1,
         timestamp = this.timestamp,
         result = this.result
 )

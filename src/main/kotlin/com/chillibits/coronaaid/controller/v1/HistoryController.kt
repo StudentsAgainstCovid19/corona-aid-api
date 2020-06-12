@@ -66,7 +66,7 @@ class HistoryController {
         val infected = infectedRepository.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
 
         // Fetch symptoms
-        val symptoms = historyDto.symptom?.map { symptomRepository.findById(it) }?.filter { it.isPresent }?.map { it.get() }
+        val symptoms = historyDto.symptoms?.map { symptomRepository.findById(it) }?.filter { it.isPresent }?.map { it.get() }
 
         // Construct DAO object
         val item = historyRepository.save(

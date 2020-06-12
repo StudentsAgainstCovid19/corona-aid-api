@@ -74,6 +74,7 @@ class TestControllerTests {
     // -------------------------------------------------- Test data ----------------------------------------------------
 
     private fun getTestData(): List<Test> {
+        // Infected
         val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                                 "Erzbergerstraße", "121", 49.0264134, 8.3831085, "M654321",
                                 lockedTimestamp = testTimestamp)

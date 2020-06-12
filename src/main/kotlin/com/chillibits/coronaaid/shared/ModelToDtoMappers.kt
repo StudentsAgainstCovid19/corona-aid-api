@@ -8,9 +8,14 @@ import com.chillibits.coronaaid.model.db.InitialDisease
 import com.chillibits.coronaaid.model.db.ResidentialGroup
 import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.db.Test
-import com.chillibits.coronaaid.model.dto.*
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import com.chillibits.coronaaid.model.dto.ConfigItemDto
+import com.chillibits.coronaaid.model.dto.ContactItemDto
+import com.chillibits.coronaaid.model.dto.HistoryItemDto
+import com.chillibits.coronaaid.model.dto.InfectedDto
+import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
+import com.chillibits.coronaaid.model.dto.ResidentialGroupDto
+import com.chillibits.coronaaid.model.dto.SymptomDto
+import com.chillibits.coronaaid.model.dto.TestDto
 
 fun Infected.toDto() = InfectedDto(
         id = this.id,
@@ -30,28 +35,6 @@ fun Infected.toDto() = InfectedDto(
         historyItems = this.historyItems.map { it.toDto() },
         residentialGroups = this.residentialGroups.map { it.toDto() }
 )
-
-fun Infected.toCompressed(): InfectedCompressedDto {
-    //Introduce local variable to prevent redundant function call of Infected::historyItems::sortedByDescending
-    val sortedHistory = this.historyItems.sortedByDescending { it.timestamp }
-    val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
-
-    val latestMidnight = Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli()
-    val todayTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_REACHED }.map { it.timestamp }.firstOrNull()
-
-    return InfectedCompressedDto(
-            id = this.id,
-            forename = this.forename,
-            surname = this.surname,
-            lat = this.lat,
-            lon = this.lon,
-            phone = this.contactData.filter { it.contactKey.equals("phone") }.map { it.contactValue }.firstOrNull(),
-            timestampCallToday = todayTimestamp,
-            personalFeeling = lastSuccessfulCall?.personalFeeling,
-            sumInitialDiseases = this.initialDiseases.size,
-            sumSymptoms = lastSuccessfulCall?.symptoms?.size
-    )
-}
 
 fun ContactItem.toDto() = ContactItemDto(
         id = this.id,

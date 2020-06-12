@@ -13,9 +13,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -64,7 +62,7 @@ class HistoryController {
             ApiResponse(code = 404, message = "Infected not found")
     )
     @ApiOperation("Pushes a new history item to the database")
-    fun addHistoryItem(@RequestBody historyDto: HistoryItemInsertDto): ResponseEntity<HistoryItemDto> {
+    fun addHistoryItem(@RequestBody historyDto: HistoryItemInsertDto): HistoryItemDto {
         val infected = infectedRepository.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
 
         // Fetch symptoms
@@ -87,7 +85,7 @@ class HistoryController {
         infectedRepository.changeLockedState(infected.id, System.currentTimeMillis())
 
         // Return stored DTO
-        return ResponseEntity(item.toDto(), HttpStatus.CREATED)
+        return item.toDto()
     }
 
 }

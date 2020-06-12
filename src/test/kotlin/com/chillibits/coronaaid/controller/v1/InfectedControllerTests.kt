@@ -3,16 +3,14 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.exception.exception.InfectedLockedException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.db.ConfigItem
-import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.db.Infected
-import com.chillibits.coronaaid.model.dto.HistoryItemDto
-import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
 import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.shared.ConfigKeys
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
@@ -43,8 +41,6 @@ class InfectedControllerTests {
     private val testBirthDate = LocalDate.now()
     private val testData = getTestData()
     private val assertData = getAssertData()
-    private val compressedAssertData = getCompressedAssertData()
-    private val currentTimestamp = System.currentTimeMillis()
 
     @TestConfiguration
     class InfectedControllerImplTestContextConfiguration {
@@ -69,15 +65,8 @@ class InfectedControllerTests {
     @Test
     @DisplayName("Test for getting all infected - success")
     fun testGetAllInfected() {
-        val result = infectedController.getAllInfected(false)
+        val result = infectedController.getAllInfected()
         assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1])
-    }
-
-    @Test
-    @DisplayName("Test for getting all infected compressed - success")
-    fun testGetAllInfectedCompressed() {
-        val result = infectedController.getAllInfected(true)
-        assertThat(result).containsExactlyInAnyOrder(compressedAssertData[0], compressedAssertData[1])
     }
 
     @Test
@@ -104,7 +93,7 @@ class InfectedControllerTests {
     private fun getTestData(): List<Infected> {
         val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085, healthInsuranceNumber = "M123456",
-                        lockedTimestamp = 0, historyItems = getHistoryTestData())
+                        lockedTimestamp = 0)
         val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718,  "M654321",
                         lockedTimestamp = System.currentTimeMillis())
@@ -114,34 +103,10 @@ class InfectedControllerTests {
     private fun getAssertData(): List<InfectedDto> {
         val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085,  "M123456",
-                         emptyList(), emptyList(), emptyList(), getHistoryAssertData(), emptyList())
+                         emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
         val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718, "M654321",
                         emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
         return listOf(infected1, infected2)
-    }
-
-    private fun getHistoryTestData(): List<HistoryItem> {
-        val history1 = HistoryItem(0, null, 123456, emptyList(), HistoryItem.STATUS_REACHED,
-                                    6, null)
-        val history2 = HistoryItem(1, null, currentTimestamp, emptyList(), HistoryItem.STATUS_NOT_REACHABLE,
-                                    1, "Bad person")
-        return listOf(history1, history2)
-    }
-
-    private fun getHistoryAssertData(): List<HistoryItemDto> {
-        val history1 = HistoryItemDto(0, null, 123456, emptyList(), HistoryItem.STATUS_REACHED,
-                                    6, null)
-        val history2 = HistoryItemDto(1, null, currentTimestamp, emptyList(), HistoryItem.STATUS_NOT_REACHABLE,
-                                    1, "Bad person")
-        return listOf(history1, history2)
-    }
-
-    private fun getCompressedAssertData(): List<InfectedCompressedDto> {
-        val compressed1 = InfectedCompressedDto(0, "John", "Doe", 49.0264134, 8.3831085, null,
-                                                null, 6, 0, 0)
-        val compressed2 = InfectedCompressedDto(1, "Joe", "Dalton", 49.4874639, 8.4763718, null,
-                                                null, null, 0, null)
-        return listOf(compressed1, compressed2)
     }
 }

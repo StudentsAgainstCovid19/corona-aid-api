@@ -19,6 +19,7 @@ class CoronaAidApplication: CommandLineRunner {
 
 	@Autowired
 	private lateinit var infectedRepository: InfectedRepository
+
 	@Autowired
 	private lateinit var contactRepository: ContactRepository
 

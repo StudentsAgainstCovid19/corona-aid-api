@@ -60,6 +60,20 @@ class InfectedController {
     }
 
     @PutMapping(
+            path = ["/infected/lock/{infectedId}"],
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
+    )
+    @ApiOperation("Lock a unlocked infected")
+    @ApiResponses(
+            ApiResponse(code = 404, message = "Infected not found")
+    )
+    fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().run {
+        infectedRepository.changeLockedState(infectedId, this)
+        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
+        this
+    }
+
+    @PutMapping(
             path = ["/infected/unlock/{infectedId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
@@ -67,8 +81,8 @@ class InfectedController {
     @ApiResponses(
             ApiResponse(code = 404, message = "Infected not found")
     )
-    fun unlockSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
-        infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
-        return infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
+    fun unlockSingleInfected(@PathVariable infectedId: Int) {
+        infectedRepository.changeLockedState(infectedId, 0)
+        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 }

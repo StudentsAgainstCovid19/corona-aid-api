@@ -19,6 +19,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -41,6 +42,7 @@ class InfectedControllerTests {
     private lateinit var configRepository: ConfigRepository
 
     private val testBirthDate = LocalDate.now()
+    private val testTimestamp = System.currentTimeMillis()
     private val testData = getTestData()
     private val assertData = getAssertData()
     private val compressedAssertData = getCompressedAssertData()
@@ -99,6 +101,32 @@ class InfectedControllerTests {
         assertThrows<InfectedLockedException> { infectedController.getSingleInfected(testData[1].id) }
     }
 
+    @Test
+    @DisplayName("Test for locking a single infected manually - successful")
+    fun testLockSingleInfected() {
+        val timestamp = infectedController.lockSingleInfected(testData[0].id)
+        verify(infectedRepository).changeLockedState(testData[0].id, timestamp)
+    }
+
+    @Test
+    @DisplayName("Test for locking a single infected manually - infected not found")
+    fun testLockSingleInfectedNotFound() {
+        assertThrows<InfectedNotFoundException> { infectedController.lockSingleInfected(10) }
+    }
+
+    @Test
+    @DisplayName("Test for unlocking a single infected manually - successful")
+    fun testUnlockSingleInfected() {
+        infectedController.unlockSingleInfected(testData[1].id)
+        verify(infectedRepository).changeLockedState(testData[1].id, 0)
+    }
+
+    @Test
+    @DisplayName("Test for unlocking a single infected manually - infected not found")
+    fun testUnlockSingleInfectedNotFound() {
+        assertThrows<InfectedNotFoundException> { infectedController.unlockSingleInfected(10) }
+    }
+
     // -------------------------------------------------- Test data ----------------------------------------------------
 
     private fun getTestData(): List<Infected> {
@@ -107,7 +135,7 @@ class InfectedControllerTests {
                         lockedTimestamp = 0, historyItems = getHistoryTestData())
         val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718,  "M654321",
-                        lockedTimestamp = System.currentTimeMillis())
+                        lockedTimestamp = testTimestamp)
         return listOf(infected1, infected2)
     }
 

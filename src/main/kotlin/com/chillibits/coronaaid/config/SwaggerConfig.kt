@@ -21,8 +21,9 @@ class SwaggerConfig: ServletContextAware {
     private lateinit var context: ServletContext
 
     @Bean
-    public fun api(): Docket {
+    fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_12)
+                .protocols(setOf("https"))
                 .host("api.sac19.jatsqi.com")
                 .pathProvider(object: RelativePathProvider(context) {
 

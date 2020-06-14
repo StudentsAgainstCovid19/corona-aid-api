@@ -1,0 +1,43 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: CI with Docker
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+      - name: CodeCov report deploy
+        run: bash <(curl -s https://codecov.io/bash)
+      - name: Prepare environment
+        run: |
+          sudo apt-get install --yes --no-install-recommends libxml-xpath-perl
+          export ARTIFACT_ID=$(xpath -q -e "/project/artifactId/text()" pom.xml)
+          echo "::set-env name=ARTIFACT_ID::${ARTIFACT_ID}"
+          export VERSION=$(xpath -q -e "/project/version/text()" pom.xml)
+          export VERSION=${VERSION//-SNAPSHOT}-$(git rev-parse --short ${GITHUB_SHA})
+          echo "::set-env name=VERSION::${VERSION}"
+      - name: GH Packages deploy
+        uses: actions/upload-artifact@v1
+        with:
+          name: target
+          path: target
+      - name: docker build and push
+        run: |
+          echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
+          docker build -t docker.pkg.github.com/studentsagainstcovid19/corona-aid-api-dev/${ARTIFACT_ID}:${VERSION} -t docker.pkg.github.com/studentsagainstcovid19/corona-aid-api-dev/${ARTIFACT_ID}:latest .
+          docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api-dev/${ARTIFACT_ID}:${VERSION}
+          docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api-dev/${ARTIFACT_ID}:latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -13,7 +13,7 @@ data class Symptom (
 
         // List of history items
         @ManyToMany(mappedBy = "symptoms")
-        val historyItems: List<HistoryItem>,
+        val historyItems: Set<HistoryItem>,
 
         // Name or indication of the symptom
         val name: String,

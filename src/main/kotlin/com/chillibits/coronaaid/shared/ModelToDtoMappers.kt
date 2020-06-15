@@ -8,7 +8,15 @@ import com.chillibits.coronaaid.model.db.InitialDisease
 import com.chillibits.coronaaid.model.db.ResidentialGroup
 import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.db.Test
-import com.chillibits.coronaaid.model.dto.*
+import com.chillibits.coronaaid.model.dto.ConfigItemDto
+import com.chillibits.coronaaid.model.dto.ContactItemDto
+import com.chillibits.coronaaid.model.dto.HistoryItemDto
+import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
+import com.chillibits.coronaaid.model.dto.InfectedDto
+import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
+import com.chillibits.coronaaid.model.dto.ResidentialGroupDto
+import com.chillibits.coronaaid.model.dto.SymptomDto
+import com.chillibits.coronaaid.model.dto.TestDto
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -75,7 +83,7 @@ fun HistoryItem.toDto() = HistoryItemDto(
         id = this.id,
         infectedId = this.infectedId?.id,
         timestamp = this.timestamp,
-        symptoms = this.symptoms.map { it.toDto() },
+        symptoms = this.symptoms.map { it.toDto() }.toSet(),
         status = this.status,
         personalFeeling = this.personalFeeling,
         notes = this.notes

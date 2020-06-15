@@ -38,7 +38,7 @@ class HistoryController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all history items")
-    fun getAllHistoryItems(): List<HistoryItemDto> = historyRepository.findAll().map { it.toDto() }
+    fun getAllHistoryItems(): Set<HistoryItemDto> = historyRepository.findAll().map { it.toDto() }.toSet()
 
     @GetMapping(
             path = ["/history/{infectedId}"],
@@ -48,9 +48,9 @@ class HistoryController {
             ApiResponse(code = 404, message = "Infected not found")
     )
     @ApiOperation("Returns all history items for a specific person")
-    fun getHistoryItemsForSinglePerson(@PathVariable infectedId: Int): List<HistoryItemDto> {
+    fun getHistoryItemsForSinglePerson(@PathVariable infectedId: Int): Set<HistoryItemDto> {
         if(infectedRepository.findById(infectedId).isEmpty) throw InfectedNotFoundException(infectedId)
-        return historyRepository.getHistoryItemsForPerson(infectedId).map { it.toDto() }
+        return historyRepository.getHistoryItemsForPerson(infectedId).map { it.toDto() }.toSet()
     }
 
     @PostMapping(
@@ -66,7 +66,7 @@ class HistoryController {
         val infected = infectedRepository.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
 
         // Fetch symptoms
-        val symptoms = historyDto.symptoms?.map { symptomRepository.findById(it) }?.filter { it.isPresent }?.map { it.get() }
+        val symptoms = historyDto.symptoms?.map { symptomRepository.findById(it) }?.filter { it.isPresent }?.map { it.get() }?.toSet()
 
         // Construct DAO object
         val item = historyRepository.save(
@@ -74,7 +74,7 @@ class HistoryController {
                     0,
                     infected,
                     historyDto.timestamp,
-                    symptoms ?: emptyList(),
+                    symptoms ?: emptySet(),
                     historyDto.status,
                     historyDto.personalFeeling,
                     historyDto.notes

@@ -27,15 +27,15 @@ class TestController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all tests")
-    fun getAllTests(): List<TestDto> = testRepository.findAll().map { it.toDto() }
+    fun getAllTests(): Set<TestDto> = testRepository.findAll().map { it.toDto() }.toSet()
 
     @GetMapping(
             path = ["/test/{infectedId}"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all tests for a specific person")
-    fun getTestsForSinglePerson(@PathVariable infectedId: Int): List<TestDto>
-            = testRepository.findTestsForPerson(infectedId).map { it.toDto()}
+    fun getTestsForSinglePerson(@PathVariable infectedId: Int): Set<TestDto>
+            = testRepository.findTestsForPerson(infectedId).map { it.toDto()}.toSet()
 
     @PostMapping(
             path = ["/test"],

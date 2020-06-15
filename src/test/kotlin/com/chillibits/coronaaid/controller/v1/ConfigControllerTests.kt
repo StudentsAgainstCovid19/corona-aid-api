@@ -44,8 +44,8 @@ class ConfigControllerTests {
     @Before
     fun init() {
         // Setup fake function calls
-        Mockito.`when`(configRepository.findAll()).thenReturn(testData)
-        Mockito.`when`(configRepository.findByConfigKey(testData[0].configKey)).thenReturn(testData[0])
+        Mockito.`when`(configRepository.findAll()).thenReturn(testData.toList())
+        Mockito.`when`(configRepository.findByConfigKey(testData.elementAt(0).configKey)).thenReturn(testData.elementAt(0))
         Mockito.`when`(configRepository.findByConfigKey(nonExistingConfigKey)).thenReturn(null)
     }
 
@@ -55,14 +55,14 @@ class ConfigControllerTests {
     @DisplayName("Test for getting all config properties - success")
     fun testGetAllConfigItems() {
         val result = configController.getAllConfigItems()
-        assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1])
+        assertThat(result).containsExactlyInAnyOrder(assertData.elementAt(0), assertData.elementAt(1))
     }
 
     @Test
     @DisplayName("Test for getting single config property - success")
     fun getSingleConfigItem() {
-        val result = configController.getSingleConfigItem(testData[0].configKey)
-        assertEquals(assertData[0], result)
+        val result = configController.getSingleConfigItem(testData.elementAt(0).configKey)
+        assertEquals(assertData.elementAt(0), result)
     }
 
     @Test
@@ -73,15 +73,15 @@ class ConfigControllerTests {
 
     // -------------------------------------------------- Test data ----------------------------------------------------
 
-    private fun getTestData(): List<ConfigItem> {
+    private fun getTestData(): Set<ConfigItem> {
         val item1 = ConfigItem(0, "priorityAgeWeight", "1.57")
         val item2 = ConfigItem(1, "priorityDiseaseWeight", "2.31")
-        return listOf(item1, item2)
+        return setOf(item1, item2)
     }
 
-    private fun getAssertData(): List<ConfigItemDto> {
+    private fun getAssertData(): Set<ConfigItemDto> {
         val item1 = ConfigItemDto(0, "priorityAgeWeight", "1.57")
         val item2 = ConfigItemDto(1, "priorityDiseaseWeight", "2.31")
-        return listOf(item1, item2)
+        return setOf(item1, item2)
     }
 }

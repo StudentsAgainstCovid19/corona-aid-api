@@ -3,7 +3,6 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.repository.SymptomRepository
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -41,7 +40,7 @@ class SymptomControllerTests {
     @Before
     fun init() {
         // Setup fake function calls
-        Mockito.`when`(symptomRepository.findAll()).thenReturn(testData)
+        Mockito.`when`(symptomRepository.findAll()).thenReturn(testData.toList())
     }
 
     // ---------------------------------------------------- Tests ------------------------------------------------------
@@ -50,20 +49,20 @@ class SymptomControllerTests {
     @DisplayName("Test for getting all symptoms")
     fun testGetAllSymptoms() {
         val result = symptomController.getAllSymptoms()
-        assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1])
+        assertThat(result).containsExactlyInAnyOrder(assertData.elementAt(0), assertData.elementAt(1))
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
 
-    private fun getTestData(): List<Symptom> {
-        val symptom1 = Symptom(0, emptyList(), "fever", 7, 80)
-        val symptom2 = Symptom(1, emptyList(), "fatigue", 2, 100)
-        return listOf(symptom1, symptom2)
+    private fun getTestData(): Set<Symptom> {
+        val symptom1 = Symptom(0, emptySet(), "fever", 7, 80)
+        val symptom2 = Symptom(1, emptySet(), "fatigue", 2, 100)
+        return setOf(symptom1, symptom2)
     }
 
-    private fun getAssertData(): List<SymptomDto> {
+    private fun getAssertData(): Set<SymptomDto> {
         val symptom1 = SymptomDto(0,"fever", 7, 80)
         val symptom2 = SymptomDto(1,"fatigue", 2, 100)
-        return listOf(symptom1, symptom2)
+        return setOf(symptom1, symptom2)
     }
 }

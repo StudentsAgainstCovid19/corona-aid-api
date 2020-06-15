@@ -20,5 +20,5 @@ class SymptomController {
             path = ["/symptom"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
-    fun getAllSymptoms(): List<SymptomDto> = symptomRepository.findAll().map { it.toDto() }
+    fun getAllSymptoms(): Set<SymptomDto> = symptomRepository.findAll().map { it.toDto() }.toSet()
 }

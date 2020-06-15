@@ -26,7 +26,7 @@ class ConfigController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all config items")
-    fun getAllConfigItems(): List<ConfigItemDto> = configRepository.findAll().map { it.toDto() }
+    fun getAllConfigItems(): Set<ConfigItemDto> = configRepository.findAll().map { it.toDto() }.toSet()
 
     @GetMapping(
             path = ["/config/{configKey}"],

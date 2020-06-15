@@ -19,6 +19,7 @@ class CoronaAidApplication: CommandLineRunner {
 
 	@Autowired
 	private lateinit var infectedRepository: InfectedRepository
+
 	@Autowired
 	private lateinit var contactRepository: ContactRepository
 
@@ -56,7 +57,8 @@ class CoronaAidApplication: CommandLineRunner {
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:63342", "https://sac19.jatsqi.com")
+						.allowedMethods("GET", "HEAD", "POST", "PUT")
+						.allowedOrigins("http://localhost:63342", "https://sac19.jatsqi.com", "https://sac19-dev.jatsqi.com")
 			}
 		}
 	}

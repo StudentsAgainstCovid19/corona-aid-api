@@ -22,4 +22,13 @@ data class ConfigItem (
 
         // Value of the key-value pair (do not name this field 'value'. This would cause an MySQL error)
         val configValue: String
-)
+) {
+        override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+                other as ConfigItem
+                return id == other.id
+        }
+
+        override fun hashCode() = id
+}

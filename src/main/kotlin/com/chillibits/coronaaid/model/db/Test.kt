@@ -27,7 +27,6 @@ data class Test (
 
         // Test result - 0: Scheduled, 1: Positive, 2: Negative, 3: Invalid
         val result: Int
-
 ) {
     companion object {
         // Constants
@@ -36,4 +35,13 @@ data class Test (
         const val RESULT_NEGATIVE = 2
         const val RESULT_INVALID = 3
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as Test
+        return id == other.id
+    }
+
+    override fun hashCode() = id
 }

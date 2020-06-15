@@ -11,11 +11,14 @@ import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.ConfigItemDto
 import com.chillibits.coronaaid.model.dto.ContactItemDto
 import com.chillibits.coronaaid.model.dto.HistoryItemDto
+import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
 import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
 import com.chillibits.coronaaid.model.dto.ResidentialGroupDto
 import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.model.dto.TestDto
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 fun Infected.toDto() = InfectedDto(
         id = this.id,
@@ -29,12 +32,34 @@ fun Infected.toDto() = InfectedDto(
         lat = this.lat,
         lon = this.lon,
         healthInsuranceNumber = this.healthInsuranceNumber,
-        contactData = this.contactData.map { it.toDto() },
-        tests = this.tests.map { it.toDto() },
-        initialDiseases = this.initialDiseases.map { it.toDto() },
-        historyItems = this.historyItems.map { it.toDto() },
-        residentialGroups = this.residentialGroups.map { it.toDto() }
+        contactData = this.contactData.map { it.toDto() }.toSet(),
+        tests = this.tests.map { it.toDto() }.toSet(),
+        initialDiseases = this.initialDiseases.map { it.toDto() }.toSet(),
+        historyItems = this.historyItems.map { it.toDto() }.toSet(),
+        residentialGroups = this.residentialGroups.map { it.toDto() }.toSet()
 )
+
+fun Infected.toCompressed(): InfectedCompressedDto {
+    //Introduce local variable to prevent redundant function call of Infected::historyItems::sortedByDescending
+    val sortedHistory = this.historyItems.sortedByDescending { it.timestamp }
+    val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
+
+    val latestMidnight = Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli()
+    val todayTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_REACHED }.map { it.timestamp }.firstOrNull()
+
+    return InfectedCompressedDto(
+            id = this.id,
+            forename = this.forename,
+            surname = this.surname,
+            lat = this.lat,
+            lon = this.lon,
+            phone = this.contactData.filter { it.contactKey.equals("phone") }.map { it.contactValue }.firstOrNull(),
+            timestampCallToday = todayTimestamp,
+            personalFeeling = lastSuccessfulCall?.personalFeeling,
+            sumInitialDiseases = this.initialDiseases.size,
+            sumSymptoms = lastSuccessfulCall?.symptoms?.size
+    )
+}
 
 fun ContactItem.toDto() = ContactItemDto(
         id = this.id,
@@ -44,6 +69,7 @@ fun ContactItem.toDto() = ContactItemDto(
 
 fun Test.toDto() = TestDto(
         id = this.id,
+        infectedId = this.infectedId?.id,
         timestamp = this.timestamp,
         result = this.result
 )
@@ -57,7 +83,7 @@ fun HistoryItem.toDto() = HistoryItemDto(
         id = this.id,
         infectedId = this.infectedId?.id,
         timestamp = this.timestamp,
-        symptoms = this.symptoms.map { it.toDto() },
+        symptoms = this.symptoms.map { it.toDto() }.toSet(),
         status = this.status,
         personalFeeling = this.personalFeeling,
         notes = this.notes

@@ -25,11 +25,11 @@ fun InfectedDto.toModel() = Infected(
         lat = this.lat,
         lon = this.lon,
         healthInsuranceNumber = this.healthInsuranceNumber,
-        contactData = this.contactData.map { it.toModel() },
-        tests = this.tests.map { it.toModel() },
-        initialDiseases = this.initialDiseases.map { it.toModel() },
-        historyItems = this.historyItems.map { it.toModel() },
-        residentialGroups = this.residentialGroups.map { it.toModel() },
+        contactData = this.contactData.map { it.toModel() }.toSet(),
+        tests = this.tests.map { it.toModel() }.toSet(),
+        initialDiseases = this.initialDiseases.map { it.toModel() }.toSet(),
+        historyItems = this.historyItems.map { it.toModel() }.toSet(),
+        residentialGroups = this.residentialGroups.map { it.toModel() }.toSet(),
         lockedTimestamp = System.currentTimeMillis()
 )
 
@@ -47,14 +47,14 @@ fun InitialDiseaseDto.toModel() = InitialDisease(
 fun HistoryItemDto.toModel() = HistoryItem(
         id = this.id,
         timestamp = this.timestamp,
-        symptoms = emptyList(),
+        symptoms = emptySet(),
         status = this.status,
         personalFeeling = this.personalFeeling
 )
 
 fun ResidentialGroupDto.toModel() = ResidentialGroup(
         id = this.id,
-        infected = emptyList()
+        infected = emptySet()
 )
 
 fun TestDto.toModel() = Test(

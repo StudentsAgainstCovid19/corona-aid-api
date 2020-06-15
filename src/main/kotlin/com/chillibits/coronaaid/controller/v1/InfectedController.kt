@@ -6,6 +6,7 @@ import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.shared.ConfigKeys
+import com.chillibits.coronaaid.shared.toCompressed
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -23,6 +26,7 @@ class InfectedController {
 
     @Autowired
     private lateinit var infectedRepository: InfectedRepository
+
     @Autowired
     private lateinit var configRepository: ConfigRepository
 
@@ -31,7 +35,13 @@ class InfectedController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all infected persons with all available attributes")
-    fun getAllInfected(): List<InfectedDto> = infectedRepository.findAll().map { it.toDto() }
+    fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): Set<Any> {
+        return if(compressDto) {
+            infectedRepository.findAllEagerly().map { it.toCompressed() }.toSet()
+        } else {
+            infectedRepository.findAllEagerly().map { it.toDto() }.toSet()
+        }
+    }
 
     @GetMapping(
             path = ["/infected/{infectedId}"],
@@ -51,10 +61,35 @@ class InfectedController {
                 throw InfectedLockedException(infectedId)
         }
 
-
         // Lock infected for other access
         infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
 
         return infected.toDto()
+    }
+
+    @PutMapping(
+            path = ["/infected/lock/{infectedId}"],
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
+    )
+    @ApiOperation("Lock a unlocked infected")
+    @ApiResponses(
+            ApiResponse(code = 404, message = "Infected not found")
+    )
+    fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().apply {
+        infectedRepository.changeLockedState(infectedId, this)
+        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
+    }
+
+    @PutMapping(
+            path = ["/infected/unlock/{infectedId}"],
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
+    )
+    @ApiOperation("Unlock a locked infected")
+    @ApiResponses(
+            ApiResponse(code = 404, message = "Infected not found")
+    )
+    fun unlockSingleInfected(@PathVariable infectedId: Int) {
+        infectedRepository.changeLockedState(infectedId, 0)
+        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 }

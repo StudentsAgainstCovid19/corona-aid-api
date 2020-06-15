@@ -19,7 +19,7 @@ data class Disease (
 
         // List of initial diseases
         @OneToMany
-        val initialDiseases: List<InitialDisease>,
+        val initialDiseases: Set<InitialDisease>,
 
         // Name or indication of the disease
         @Column(unique = true)
@@ -30,4 +30,13 @@ data class Disease (
 
         // Probability of occurrence in the wild (percentage)
         val probability: Int
-)
+) {
+        override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+                other as Disease
+                return id == other.id
+        }
+
+        override fun hashCode() = id
+}

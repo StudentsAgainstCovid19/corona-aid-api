@@ -1,15 +1,18 @@
 package com.chillibits.coronaaid.model.db
 
 import java.time.LocalDate
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.ManyToMany
-import javax.persistence.OneToMany
-import javax.persistence.Table
+import javax.persistence.*
 
+@NamedEntityGraph(
+        name = "Infected.loadAll",
+        attributeNodes = [
+                NamedAttributeNode("contactData"),
+                NamedAttributeNode("historyItems"),
+                NamedAttributeNode("initialDiseases"),
+                NamedAttributeNode("residentialGroups"),
+                NamedAttributeNode("tests")
+        ]
+)
 @Entity
 @Table(name = "infected")
 data class Infected (
@@ -54,22 +57,31 @@ data class Infected (
 
         // List of contact data key-value pairs
         @OneToMany(mappedBy = "infectedId")
-        val contactData: List<ContactItem> = emptyList(),
+        val contactData: Set<ContactItem> = emptySet(),
 
         // List of tests
         @OneToMany(mappedBy = "infectedId")
-        val tests: List<Test> = emptyList(),
+        val tests: Set<Test> = emptySet(),
 
         // List of initial diseases
         @OneToMany(mappedBy = "infectedId")
-        val initialDiseases: List<InitialDisease> = emptyList(),
+        val initialDiseases: Set<InitialDisease> = emptySet(),
 
         // List of history items
         @OneToMany(mappedBy = "infectedId")
-        val historyItems: List<HistoryItem> = emptyList(),
+        val historyItems: Set<HistoryItem> = emptySet(),
 
         // List of residential groups
         @ManyToMany(mappedBy = "infected")
-        val residentialGroups: List<ResidentialGroup> = emptyList()
+        val residentialGroups: Set<ResidentialGroup> = emptySet()
 
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as Infected
+        return id == other.id
+    }
+
+    override fun hashCode() = id
+}

@@ -57,6 +57,7 @@ class CoronaAidApplication: CommandLineRunner {
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
+						.allowedMethods("GET", "HEAD", "POST", "PUT")
 						.allowedOrigins("http://localhost:63342", "https://sac19.jatsqi.com", "https://sac19-dev.jatsqi.com")
 			}
 		}

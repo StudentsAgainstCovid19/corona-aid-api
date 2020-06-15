@@ -26,15 +26,9 @@ data class ConfigItem (
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (javaClass != other?.javaClass) return false
-
-                other as ConfigItem
-
-                if (id != other.id) return false
-
-                return true
+                other as HistoryItem
+                return id == other.id
         }
 
-        override fun hashCode(): Int {
-                return id
-        }
+        override fun hashCode() = id
 }

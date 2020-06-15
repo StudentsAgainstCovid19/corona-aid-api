@@ -8,9 +8,7 @@ import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.service.ApiInfo
 import springfox.documentation.service.Contact
 import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spring.web.paths.RelativePathProvider
 import springfox.documentation.spring.web.plugins.Docket
-import springfox.documentation.swagger.web.UiConfiguration
 import springfox.documentation.swagger.web.UiConfigurationBuilder
 import springfox.documentation.swagger2.annotations.EnableSwagger2
 import javax.servlet.ServletContext
@@ -23,27 +21,20 @@ class SwaggerConfig: ServletContextAware {
     private lateinit var context: ServletContext
 
     @Bean
-    fun api(): Docket {
-        return Docket(DocumentationType.SWAGGER_12)
-                .protocols(setOf("https"))
-                .host("api.sac19.jatsqi.com")
-                .pathProvider(object: RelativePathProvider(context) {
-
-                })
-                .enableUrlTemplating(true)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.chillibits.coronaaid"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo())
-    }
+    fun api() = Docket(DocumentationType.SWAGGER_12)
+            .protocols(setOf("https"))
+            .host("api.sac19.jatsqi.com")
+            .enableUrlTemplating(true)
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("com.chillibits.coronaaid"))
+            .paths(PathSelectors.any())
+            .build()
+            .apiInfo(apiInfo())
 
     @Bean
-    fun uiConfig(): UiConfiguration {
-        return UiConfigurationBuilder.builder()
-                .defaultModelsExpandDepth(-1)
-                .build()
-    }
+    fun uiConfig() = UiConfigurationBuilder.builder()
+            .defaultModelsExpandDepth(-1)
+            .build()
 
     private fun apiInfo() = ApiInfo(
             "Corona Aid API",

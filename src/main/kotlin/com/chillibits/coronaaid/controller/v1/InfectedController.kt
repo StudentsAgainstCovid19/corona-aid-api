@@ -61,7 +61,6 @@ class InfectedController {
                 throw InfectedLockedException(infectedId)
         }
 
-
         // Lock infected for other access
         infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
 
@@ -76,10 +75,9 @@ class InfectedController {
     @ApiResponses(
             ApiResponse(code = 404, message = "Infected not found")
     )
-    fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().run {
+    fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().apply {
         infectedRepository.changeLockedState(infectedId, this)
         infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
-        this
     }
 
     @PutMapping(

@@ -45,4 +45,21 @@ data class HistoryItem (
         const val STATUS_REACHED = 1
         const val STATUS_FLATMATE_ANSWERED = 2
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as HistoryItem
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
+
+
 }

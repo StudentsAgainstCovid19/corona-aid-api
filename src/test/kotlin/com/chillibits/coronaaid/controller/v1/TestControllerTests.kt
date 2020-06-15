@@ -93,10 +93,10 @@ class TestControllerTests {
     private fun getAssertData(): List<TestDto> {
         // Tests
         val test1 = TestDto(0, 0, testTimestamp, 0)
-        val test2 = TestDto(1, 0, testTimestamp, 2)
-        val test3 = TestDto(2, 0, testTimestamp, 3)
+        val test2 = TestDto(1, 1, testTimestamp, 2)
+        val test3 = TestDto(2, 1, testTimestamp, 3)
         val test4 = TestDto(3, 0, testTimestamp, 1)
-        val test5 = TestDto(4, 0, testTimestamp, 1)
+        val test5 = TestDto(4, null, testTimestamp, 1)
         return listOf(test1, test2, test3, test4, test5)
     }
 }

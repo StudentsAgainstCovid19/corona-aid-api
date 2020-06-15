@@ -15,11 +15,11 @@ data class InfectedDto (
         val lat: Double,
         val lon: Double,
         val healthInsuranceNumber: String,
-        val contactData: List<ContactItemDto>,
-        val tests: List<TestDto>,
-        val initialDiseases: List<InitialDiseaseDto>,
-        val historyItems: List<HistoryItemDto>,
-        val residentialGroups: List<ResidentialGroupDto>
+        val contactData: Set<ContactItemDto>,
+        val tests: Set<TestDto>,
+        val initialDiseases: Set<InitialDiseaseDto>,
+        val historyItems: Set<HistoryItemDto>,
+        val residentialGroups: Set<ResidentialGroupDto>
 ) {
         val age = ChronoUnit.YEARS.between(this.birthDate, LocalDate.now())
 }

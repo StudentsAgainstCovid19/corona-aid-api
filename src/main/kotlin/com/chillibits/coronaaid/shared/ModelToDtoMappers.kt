@@ -24,11 +24,11 @@ fun Infected.toDto() = InfectedDto(
         lat = this.lat,
         lon = this.lon,
         healthInsuranceNumber = this.healthInsuranceNumber,
-        contactData = this.contactData.map { it.toDto() },
-        tests = this.tests.map { it.toDto() },
-        initialDiseases = this.initialDiseases.map { it.toDto() },
-        historyItems = this.historyItems.map { it.toDto() },
-        residentialGroups = this.residentialGroups.map { it.toDto() }
+        contactData = this.contactData.map { it.toDto() }.toSet(),
+        tests = this.tests.map { it.toDto() }.toSet(),
+        initialDiseases = this.initialDiseases.map { it.toDto() }.toSet(),
+        historyItems = this.historyItems.map { it.toDto() }.toSet(),
+        residentialGroups = this.residentialGroups.map { it.toDto() }.toSet()
 )
 
 fun Infected.toCompressed(): InfectedCompressedDto {
@@ -61,7 +61,7 @@ fun ContactItem.toDto() = ContactItemDto(
 
 fun Test.toDto() = TestDto(
         id = this.id,
-        infectedId = this.infectedId?.id ?: -1,
+        infectedId = this.infectedId?.id,
         timestamp = this.timestamp,
         result = this.result
 )

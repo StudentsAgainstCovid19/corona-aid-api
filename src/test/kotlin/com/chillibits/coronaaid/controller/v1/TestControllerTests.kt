@@ -1,13 +1,17 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.TestDto
+import com.chillibits.coronaaid.model.dto.TestInsertDto
+import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.repository.TestRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertThrows
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +21,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDate
+import java.time.Month
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @ActiveProfiles("logging")
@@ -25,8 +31,12 @@ class TestControllerTests {
 
     @Autowired
     private lateinit var testController: TestController
+
     @MockBean
     private lateinit var testRepository: TestRepository
+
+    @MockBean
+    private lateinit var infectedRepository: InfectedRepository
 
     private val testBirthDate = LocalDate.now()
     private val testTimestamp = System.currentTimeMillis()
@@ -43,9 +53,14 @@ class TestControllerTests {
     @Before
     fun init() {
         // Setup fake function calls
+        // Test repository
         Mockito.`when`(testRepository.findAll()).thenReturn(testData.toList())
         Mockito.`when`(testRepository.findTestsForPerson(testData.elementAt(0).infectedId!!.id)).thenReturn(setOf(testData.elementAt(0), testData.elementAt(3)))
-        Mockito.`when`(testRepository.save(testData.elementAt(4))).thenReturn(testData.elementAt(4))
+        Mockito.`when`(testRepository.save(getPostRequiredTestSaveInput())).thenReturn(getPostRepositorySaveOutput())
+
+        // Infected repository
+        Mockito.`when`(infectedRepository.findById(5)).thenReturn(Optional.of(getDummyInfected()))
+        Mockito.`when`(infectedRepository.findById(-10)).thenReturn(Optional.empty())
     }
 
     // ---------------------------------------------------- Tests ------------------------------------------------------
@@ -67,8 +82,14 @@ class TestControllerTests {
     @org.junit.Test
     @DisplayName("Test for pushing test into db - success")
     fun testAddTest() {
-        val result = testController.addTest(assertData.elementAt(4))
-        assertEquals(testData.elementAt(4), result)
+        val result = testController.addTest(getPostInputDto())
+        assertEquals(result, getPostExpectedPostOutputDto())
+    }
+
+    @org.junit.Test
+    @DisplayName("Test for pushing test into db - success")
+    fun testAddTestUnknownInfected() {
+        assertThrows<InfectedNotFoundException> { testController.addTest(getPostUnknownInfected()) }
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
@@ -99,4 +120,21 @@ class TestControllerTests {
         val test5 = TestDto(4, null, testTimestamp, 1)
         return setOf(test1, test2, test3, test4, test5)
     }
+
+    private fun getDummyInfected()
+            = Infected(5, "Angelo", "Merte", LocalDate.of(1800, Month.JANUARY, 10),
+            "Berlin", "11111", "Nuclearstreet", "666", 420.0, 360.0,
+            healthInsuranceNumber = "M999999", lockedTimestamp = 54321L)
+
+    private fun getPostInputDto()
+            = TestInsertDto(5, 12345, 2)
+    private fun getPostRequiredTestSaveInput()
+            = Test(0, getDummyInfected(), 12345, 2)
+    private fun getPostRepositorySaveOutput()
+            = Test(999, getDummyInfected(), 12345, 2)
+    private fun getPostExpectedPostOutputDto()
+            = TestDto(999, getDummyInfected().id, 12345, 2)
+    private fun getPostUnknownInfected()
+            = TestInsertDto(-10, 12345, 2)
+
 }

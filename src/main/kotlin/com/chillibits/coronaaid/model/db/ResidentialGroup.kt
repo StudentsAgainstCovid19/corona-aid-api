@@ -26,4 +26,19 @@ data class ResidentialGroup (
                 inverseJoinColumns = [JoinColumn(name = "group_id", referencedColumnName = "id")]
         )
         val infected: List<Infected>
-)
+) {
+        override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+
+                other as ResidentialGroup
+
+                if (id != other.id) return false
+
+                return true
+        }
+
+        override fun hashCode(): Int {
+                return id
+        }
+}

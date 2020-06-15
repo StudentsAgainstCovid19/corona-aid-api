@@ -49,17 +49,9 @@ data class HistoryItem (
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as HistoryItem
-
-        if (id != other.id) return false
-
-        return true
+        return id == other.id
     }
 
-    override fun hashCode(): Int {
-        return id
-    }
-
-
+    override fun hashCode() = id
 }

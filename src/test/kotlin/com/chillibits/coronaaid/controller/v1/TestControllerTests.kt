@@ -43,9 +43,9 @@ class TestControllerTests {
     @Before
     fun init() {
         // Setup fake function calls
-        Mockito.`when`(testRepository.findAll()).thenReturn(testData)
-        Mockito.`when`(testRepository.findTestsForPerson(testData[0].infectedId!!.id)).thenReturn(listOf(testData[0], testData[3]))
-        Mockito.`when`(testRepository.save(testData[4])).thenReturn(testData[4])
+        Mockito.`when`(testRepository.findAll()).thenReturn(testData.toList())
+        Mockito.`when`(testRepository.findTestsForPerson(testData.elementAt(0).infectedId!!.id)).thenReturn(setOf(testData.elementAt(0), testData.elementAt(3)))
+        Mockito.`when`(testRepository.save(testData.elementAt(4))).thenReturn(testData.elementAt(4))
     }
 
     // ---------------------------------------------------- Tests ------------------------------------------------------
@@ -54,26 +54,26 @@ class TestControllerTests {
     @DisplayName("Test for getting all tests - success")
     fun testGetAllTests() {
         val result = testController.getAllTests()
-        assertThat(result).containsExactlyInAnyOrder(assertData[0], assertData[1], assertData[2], assertData[3], assertData[4])
+        assertThat(result).containsExactlyInAnyOrder(assertData.elementAt(0), assertData.elementAt(1), assertData.elementAt(2), assertData.elementAt(3), assertData.elementAt(4))
     }
 
     @org.junit.Test
     @DisplayName("Test for getting all tests from single person - success")
     fun testGetTestsFromForPerson() {
-        val result = testController.getTestsForSinglePerson(testData[0].infectedId!!.id)
-        assertEquals(listOf(assertData[0], assertData[3]), result)
+        val result = testController.getTestsForSinglePerson(testData.elementAt(0).infectedId!!.id)
+        assertEquals(setOf(assertData.elementAt(0), assertData.elementAt(3)), result)
     }
 
     @org.junit.Test
     @DisplayName("Test for pushing test into db - success")
     fun testAddTest() {
-        val result = testController.addTest(assertData[4])
-        assertEquals(testData[4], result)
+        val result = testController.addTest(assertData.elementAt(4))
+        assertEquals(testData.elementAt(4), result)
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
 
-    private fun getTestData(): List<Test> {
+    private fun getTestData(): Set<Test> {
         val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                                 "Erzbergerstraße", "121", 49.0264134, 8.3831085, "M654321",
                                 lockedTimestamp = testTimestamp)
@@ -87,16 +87,16 @@ class TestControllerTests {
         val test3 = Test(2, infected2, testTimestamp, 3)
         val test4 = Test(3, infected1, testTimestamp, 1)
         val test5 = Test(4, null, testTimestamp, 1)
-        return listOf(test1, test2, test3, test4, test5)
+        return setOf(test1, test2, test3, test4, test5)
     }
 
-    private fun getAssertData(): List<TestDto> {
+    private fun getAssertData(): Set<TestDto> {
         // Tests
         val test1 = TestDto(0, 0, testTimestamp, 0)
         val test2 = TestDto(1, 1, testTimestamp, 2)
         val test3 = TestDto(2, 1, testTimestamp, 3)
         val test4 = TestDto(3, 0, testTimestamp, 1)
         val test5 = TestDto(4, null, testTimestamp, 1)
-        return listOf(test1, test2, test3, test4, test5)
+        return setOf(test1, test2, test3, test4, test5)
     }
 }

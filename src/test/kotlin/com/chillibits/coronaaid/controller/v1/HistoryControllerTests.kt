@@ -11,6 +11,7 @@ import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
@@ -58,8 +59,8 @@ class HistoryControllerTests {
     @Before
     fun init() {
         // History repository
-        Mockito.`when`(historyRepository.findAll()).thenReturn(testData)
-        Mockito.`when`(historyRepository.getHistoryItemsForPerson(5)).thenReturn(listOf(testData[0]))
+        Mockito.`when`(historyRepository.findAll()).thenReturn(testData.toList())
+        Mockito.`when`(historyRepository.getHistoryItemsForPerson(5)).thenReturn(setOf(testData.elementAt(0)))
         Mockito.`when`(historyRepository.save(getPostRequiredRepositorySaveInput())).thenReturn(getPostRepositorySaveOutput())
 
         // Symptom repository
@@ -75,12 +76,12 @@ class HistoryControllerTests {
 
     @Test
     fun testGetAllHistoryItems() {
-        assertThat(historyController.getAllHistoryItems()).containsExactlyInAnyOrder(assertData[0], assertData[1])
+        assertThat(historyController.getAllHistoryItems()).containsExactlyInAnyOrder(assertData.elementAt(0), assertData.elementAt(1))
     }
 
     @Test
     fun testGetHistoryItemsForSinglePerson() {
-        assertThat(historyController.getHistoryItemsForSinglePerson(5)).isEqualTo(listOf(assertData[0]))
+        assertEquals(setOf(assertData.elementAt(0)), historyController.getHistoryItemsForSinglePerson(5))
     }
 
     @Test
@@ -91,7 +92,7 @@ class HistoryControllerTests {
     @Test
     fun testPostSingleHistoryItem() {
         val result = historyController.addHistoryItem(getPostInputDto()) //simulate client request
-        assertThat(result).isEqualTo(getPostExpectedPostOutputDto())
+        assertEquals(getPostExpectedPostOutputDto(), result)
     }
 
     @Test
@@ -106,29 +107,29 @@ class HistoryControllerTests {
             "Pjöngjang", "kim-111", "Nuclearstreet", "666", 420.0, 360.0,
             healthInsuranceNumber = "M123456", lockedTimestamp = 99999L)
 
-    private fun getHistoryTestData(): List<HistoryItem> {
-        val historyItem1 = HistoryItem(0, getDummyInfected(), 1234, emptyList(), 0, 1)
-        val historyItem2 = HistoryItem(1, null, 4321, emptyList(), 1, 0)
-        return listOf(historyItem1, historyItem2)
+    private fun getHistoryTestData(): Set<HistoryItem> {
+        val historyItem1 = HistoryItem(0, getDummyInfected(), 1234, emptySet(), 0, 1)
+        val historyItem2 = HistoryItem(1, null, 4321, emptySet(), 1, 0)
+        return setOf(historyItem1, historyItem2)
     }
 
-    private fun getHistoryAssertData(): List<HistoryItemDto> {
-        val historyItem1 = HistoryItemDto(0, getDummyInfected().id, 1234, emptyList(), 0, 1, null)
-        val historyItem2 = HistoryItemDto(1, null, 4321, emptyList(), 1, 0, null)
-        return listOf(historyItem1, historyItem2)
+    private fun getHistoryAssertData(): Set<HistoryItemDto> {
+        val historyItem1 = HistoryItemDto(0, getDummyInfected().id, 1234, emptySet(), 0, 1, null)
+        val historyItem2 = HistoryItemDto(1, null, 4321, emptySet(), 1, 0, null)
+        return setOf(historyItem1, historyItem2)
     }
 
-    private fun getPostSymptomTestData() = listOf(Symptom(0, emptyList(), "fever", 7, 80))
+    private fun getPostSymptomTestData() = listOf(Symptom(0, emptySet(), "fever", 7, 80))
     private fun getPostSymptomAssertData() = listOf(SymptomDto(0, "fever", 7, 80))
 
     private fun getPostInputDto()
-            = HistoryItemInsertDto(getDummyInfected().id, 9999, listOf(0), 2, 5, "aggressive")
+            = HistoryItemInsertDto(getDummyInfected().id, 9999, setOf(0), 2, 5, "aggressive")
     private fun getPostRequiredRepositorySaveInput()
-            = HistoryItem(0, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5, "aggressive")
+            = HistoryItem(0, getDummyInfected(), 9999, setOf(getPostSymptomTestData()[0]), 2, 5, "aggressive")
     private fun getPostRepositorySaveOutput()
-            = HistoryItem(100, getDummyInfected(), 9999, listOf(getPostSymptomTestData()[0]), 2, 5, "aggressive")
+            = HistoryItem(100, getDummyInfected(), 9999, setOf(getPostSymptomTestData()[0]), 2, 5, "aggressive")
     private fun getPostExpectedPostOutputDto()
-            = HistoryItemDto(100, getDummyInfected().id, 9999, listOf(getPostSymptomAssertData()[0]), 2, 5, "aggressive")
+            = HistoryItemDto(100, getDummyInfected().id, 9999, setOf(getPostSymptomAssertData()[0]), 2, 5, "aggressive")
     private fun getPostUnknownInfectedDto()
-            = HistoryItemInsertDto(919191, 9999, listOf(0), 2, 5, null)
+            = HistoryItemInsertDto(919191, 9999, setOf(0), 2, 5, null)
 }

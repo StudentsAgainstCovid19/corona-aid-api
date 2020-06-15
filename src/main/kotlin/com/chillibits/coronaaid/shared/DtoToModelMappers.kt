@@ -47,14 +47,14 @@ fun InitialDiseaseDto.toModel() = InitialDisease(
 fun HistoryItemDto.toModel() = HistoryItem(
         id = this.id,
         timestamp = this.timestamp,
-        symptoms = emptyList(),
+        symptoms = emptySet(),
         status = this.status,
         personalFeeling = this.personalFeeling
 )
 
 fun ResidentialGroupDto.toModel() = ResidentialGroup(
         id = this.id,
-        infected = emptyList()
+        infected = emptySet()
 )
 
 fun TestDto.toModel() = Test(

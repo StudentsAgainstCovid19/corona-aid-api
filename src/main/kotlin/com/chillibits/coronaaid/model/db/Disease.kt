@@ -19,7 +19,7 @@ data class Disease (
 
         // List of initial diseases
         @OneToMany
-        val initialDiseases: List<InitialDisease>,
+        val initialDiseases: Set<InitialDisease>,
 
         // Name or indication of the disease
         @Column(unique = true)

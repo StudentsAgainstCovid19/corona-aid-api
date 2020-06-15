@@ -35,11 +35,11 @@ class InfectedController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all infected persons with all available attributes")
-    fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): List<Any> {
-        if(compressDto) {
-            return infectedRepository.findAllEagerly().map { it.toCompressed() }
+    fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): Set<Any> {
+        return if(compressDto) {
+            infectedRepository.findAllEagerly().map { it.toCompressed() }.toSet()
         } else {
-            return infectedRepository.findAllEagerly().map { it.toDto() }
+            infectedRepository.findAllEagerly().map { it.toDto() }.toSet()
         }
     }
 

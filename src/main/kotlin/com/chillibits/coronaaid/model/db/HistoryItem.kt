@@ -26,7 +26,7 @@ data class HistoryItem (
                 joinColumns = [JoinColumn(name = "history_item_id", referencedColumnName = "id")],
                 inverseJoinColumns = [JoinColumn(name = "symptom_id", referencedColumnName = "id")]
         )
-        val symptoms: List<Symptom>,
+        val symptoms: Set<Symptom>,
 
         // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered
         val status: Int,
@@ -36,7 +36,7 @@ data class HistoryItem (
 
         //Notes about the infected person
         @Column(columnDefinition = "TEXT")
-        val notes : String? = null
+        val notes: String? = null
 
 ) {
     companion object {

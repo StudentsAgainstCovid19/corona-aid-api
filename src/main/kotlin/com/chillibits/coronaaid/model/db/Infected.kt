@@ -1,10 +1,18 @@
 package com.chillibits.coronaaid.model.db
 
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import java.time.LocalDate
 import javax.persistence.*
 
+@NamedEntityGraph(
+        name = "Infected.loadAll",
+        attributeNodes = [
+                NamedAttributeNode("contactData"),
+                NamedAttributeNode("historyItems"),
+                NamedAttributeNode("initialDiseases"),
+                NamedAttributeNode("residentialGroups"),
+                NamedAttributeNode("tests")
+        ]
+)
 @Entity
 @Table(name = "infected")
 data class Infected (
@@ -48,27 +56,23 @@ data class Infected (
         var lockedTimestamp: Long,
 
         // List of contact data key-value pairs
-        @OneToMany(mappedBy = "infectedId", fetch = FetchType.EAGER)
-        @Fetch(value = FetchMode.SUBSELECT)
-        val contactData: List<ContactItem> = emptyList(),
+        @OneToMany(mappedBy = "infectedId")
+        val contactData: Set<ContactItem> = emptySet(),
 
         // List of tests
         @OneToMany(mappedBy = "infectedId")
-        val tests: List<Test> = emptyList(),
+        val tests: Set<Test> = emptySet(),
 
         // List of initial diseases
-        @OneToMany(mappedBy = "infectedId", fetch = FetchType.EAGER)
-        @Fetch(value = FetchMode.SUBSELECT)
-        val initialDiseases: List<InitialDisease> = emptyList(),
+        @OneToMany(mappedBy = "infectedId")
+        val initialDiseases: Set<InitialDisease> = emptySet(),
 
         // List of history items
-        @OneToMany(mappedBy = "infectedId", fetch = FetchType.EAGER)
-        @Fetch(value = FetchMode.SUBSELECT)
-        val historyItems: List<HistoryItem> = emptyList(),
+        @OneToMany(mappedBy = "infectedId")
+        val historyItems: Set<HistoryItem> = emptySet(),
 
         // List of residential groups
-        @ManyToMany(mappedBy = "infected", fetch = FetchType.EAGER)
-        @Fetch(value = FetchMode.SUBSELECT)
-        val residentialGroups: List<ResidentialGroup> = emptyList()
+        @ManyToMany(mappedBy = "infected")
+        val residentialGroups: Set<ResidentialGroup> = emptySet()
 
 )

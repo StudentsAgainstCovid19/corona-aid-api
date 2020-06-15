@@ -1,12 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "contact")
@@ -18,7 +12,7 @@ data class ContactItem (
         val id: Int = 0,
 
         // Foreign key to the affected infected
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "infected_id")
         val infectedId: Infected? = null,
 
@@ -27,4 +21,19 @@ data class ContactItem (
 
         // Value of the key-value pair (do not name this field 'value'. This would cause an MySQL error)
         val contactValue: String
-)
+) {
+        override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (javaClass != other?.javaClass) return false
+
+                other as ContactItem
+
+                if (id != other.id) return false
+
+                return true
+        }
+
+        override fun hashCode(): Int {
+                return id
+        }
+}

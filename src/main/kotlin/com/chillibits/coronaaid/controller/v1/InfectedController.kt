@@ -37,9 +37,9 @@ class InfectedController {
     @ApiOperation("Returns all infected persons with all available attributes")
     fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): List<Any> {
         if(compressDto) {
-            return infectedRepository.findAll().map { it.toCompressed() }
+            return infectedRepository.findAllEagerly().map { it.toCompressed() }
         } else {
-            return infectedRepository.findAll().map { it.toDto() }
+            return infectedRepository.findAllEagerly().map { it.toDto() }
         }
     }
 

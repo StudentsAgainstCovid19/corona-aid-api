@@ -58,7 +58,7 @@ class InfectedControllerTests {
     @Before
     fun init() {
         // Setup fake function calls
-        Mockito.`when`(infectedRepository.findAll()).thenReturn(testData)
+        Mockito.`when`(infectedRepository.findAllEagerly()).thenReturn(testData)
         Mockito.`when`(infectedRepository.findById(testData[0].id)).thenReturn(Optional.of(testData[0]))
         Mockito.`when`(infectedRepository.findById(testData[1].id)).thenReturn(Optional.of(testData[1]))
         Mockito.`when`(infectedRepository.findById(10)).thenReturn(Optional.empty())
@@ -132,7 +132,7 @@ class InfectedControllerTests {
     private fun getTestData(): List<Infected> {
         val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085, healthInsuranceNumber = "M123456",
-                        lockedTimestamp = 0, historyItems = getHistoryTestData())
+                        lockedTimestamp = 0, historyItems = getHistoryTestData().toSet())
         val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718,  "M654321",
                         lockedTimestamp = testTimestamp)
@@ -142,10 +142,10 @@ class InfectedControllerTests {
     private fun getAssertData(): List<InfectedDto> {
         val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085,  "M123456",
-                         emptyList(), emptyList(), emptyList(), getHistoryAssertData(), emptyList())
+                         emptySet(), emptySet(), emptySet(), getHistoryAssertData().toSet(), emptySet())
         val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718, "M654321",
-                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList())
+                        emptySet(), emptySet(), emptySet(), emptySet(), emptySet())
         return listOf(infected1, infected2)
     }
 

@@ -9,6 +9,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 class SocketTextHandler: TextWebSocketHandler() {
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         println(message.payload)
-        session.sendMessage(TextMessage("This is a test answer"))
+        session.sendMessage(TextMessage("<message>This is a test answer</message>"))
     }
 }

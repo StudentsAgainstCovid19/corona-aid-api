@@ -9,12 +9,12 @@ import org.springframework.scheduling.annotation.Scheduled
 import javax.annotation.PostConstruct
 
 @Configuration
-class CronJobs {
+class CronJobsConfig {
 
     @Autowired
     private lateinit var infectedRepository: InfectedRepository
 
-    val log: Logger = LoggerFactory.getLogger(CronJobs::class.java)
+    val log: Logger = LoggerFactory.getLogger(CronJobsConfig::class.java)
 
     @PostConstruct
     public fun onStartup() {

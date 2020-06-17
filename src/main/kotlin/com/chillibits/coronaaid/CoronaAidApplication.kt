@@ -58,7 +58,7 @@ class CoronaAidApplication: CommandLineRunner {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
 						.allowedMethods("GET", "HEAD", "POST", "PUT")
-						.allowedOrigins("http://localhost:63342", "https://sac19.jatsqi.com", "https://sac19-dev.jatsqi.com")
+						.allowedOrigins("http://localhost:63342", "http://localhost:63343", "https://sac19.jatsqi.com", "https://sac19-dev.jatsqi.com")
 			}
 		}
 	}

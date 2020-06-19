@@ -45,7 +45,7 @@ fun Infected.toCompressed(): InfectedCompressedDto {
     val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
 
     val latestMidnight = Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli()
-    val todayTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_REACHED }.map { it.timestamp }.firstOrNull()
+    val todayTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_NOT_REACHABLE }.map { it.timestamp }.firstOrNull()
 
     return InfectedCompressedDto(
             id = this.id,

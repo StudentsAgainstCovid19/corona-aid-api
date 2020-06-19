@@ -18,7 +18,10 @@ import com.chillibits.coronaaid.model.dto.ResidentialGroupDto
 import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.model.dto.TestDto
 import java.time.Instant
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+
+fun LocalDate.yearsBetween(other : LocalDate): Long = ChronoUnit.YEARS.between(this, other)
 
 fun Infected.toDto() = InfectedDto(
         id = this.id,
@@ -45,16 +48,19 @@ fun Infected.toCompressed(): InfectedCompressedDto {
     val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
 
     val latestMidnight = Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli()
-    val todayTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_NOT_REACHABLE }.map { it.timestamp }.firstOrNull()
+    val todayUnsuccessfulTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_NOT_REACHABLE }.map { it.timestamp }.firstOrNull()
+    val doneToday = sortedHistory.any { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_REACHED }
 
     return InfectedCompressedDto(
             id = this.id,
+            age = this.birthDate.yearsBetween(LocalDate.now()),
             forename = this.forename,
             surname = this.surname,
             lat = this.lat,
             lon = this.lon,
             phone = this.contactData.filter { it.contactKey.equals("phone") }.map { it.contactValue }.firstOrNull(),
-            timestampCallToday = todayTimestamp,
+            done = doneToday,
+            lastUnsuccessfulCallToday = todayUnsuccessfulTimestamp,
             personalFeeling = lastSuccessfulCall?.personalFeeling,
             sumInitialDiseases = this.initialDiseases.size,
             sumSymptoms = lastSuccessfulCall?.symptoms?.size

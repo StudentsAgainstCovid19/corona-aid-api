@@ -1,7 +1,7 @@
 package com.chillibits.coronaaid.model.dto
 
+import com.chillibits.coronaaid.shared.yearsBetween
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 data class InfectedDto (
         val id: Int,
@@ -21,5 +21,5 @@ data class InfectedDto (
         val historyItems: Set<HistoryItemDto>,
         val residentialGroups: Set<ResidentialGroupDto>
 ) {
-        val age = ChronoUnit.YEARS.between(this.birthDate, LocalDate.now())
+        val age = this.birthDate.yearsBetween(LocalDate.now())
 }

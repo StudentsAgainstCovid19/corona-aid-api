@@ -41,7 +41,7 @@ class InfectedControllerTests {
     @MockBean
     private lateinit var configRepository: ConfigRepository
 
-    private val testBirthDate = LocalDate.now()
+    private val testBirthDate = LocalDate.of(2000, 2, 7)
     private val testTimestamp = System.currentTimeMillis()
     private val testData = getTestData()
     private val assertData = getAssertData()
@@ -166,10 +166,10 @@ class InfectedControllerTests {
     }
 
     private fun getCompressedAssertData(): Set<InfectedCompressedDto> {
-        val compressed1 = InfectedCompressedDto(0, "John", "Doe", 49.0264134, 8.3831085, null,
-                                                null, 6, 0, 0)
-        val compressed2 = InfectedCompressedDto(1, "Joe", "Dalton", 49.4874639, 8.4763718, null,
-                                                null, null, 0, null)
+        val compressed1 = InfectedCompressedDto(0, 20,"John", "Doe", 49.0264134, 8.3831085, null,
+                                                false, null, 6, 0, 0)
+        val compressed2 = InfectedCompressedDto(1, 20, "Joe", "Dalton", 49.4874639, 8.4763718, null,
+                                                false, null, null, 0, null)
         return setOf(compressed1, compressed2)
     }
 }

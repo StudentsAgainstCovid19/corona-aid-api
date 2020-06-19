@@ -65,7 +65,7 @@ class CoronaAidApplication: CommandLineRunner {
 								"https://dev.sac19.jatsqi.com",
 								"https://covid-aid.eu",
 								"https://dev.covid-aid.eu"
-						
+						)
 			}
 		}
 	}

@@ -62,7 +62,7 @@ class CoronaAidApplication: CommandLineRunner {
 								"http://localhost:63342",
 								"http://localhost:63343",
 								"https://sac19.jatsqi.com",
-								"https://sac19-dev.jatsqi.com",
+								"https://dev.sac19.jatsqi.com",
 								"https://covid-aid.eu",
 								"https://dev.covid-aid.eu"
 						)

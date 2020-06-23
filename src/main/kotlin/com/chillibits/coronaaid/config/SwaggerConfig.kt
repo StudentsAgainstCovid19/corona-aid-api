@@ -23,7 +23,7 @@ class SwaggerConfig: ServletContextAware {
     @Bean
     fun api() = Docket(DocumentationType.SWAGGER_12)
             .protocols(setOf("https"))
-            .host("api.sac19.jatsqi.com")
+            .host("api.corona-aid-ka.de")
             .enableUrlTemplating(true)
             .select()
             .apis(RequestHandlerSelectors.basePackage("com.chillibits.coronaaid"))

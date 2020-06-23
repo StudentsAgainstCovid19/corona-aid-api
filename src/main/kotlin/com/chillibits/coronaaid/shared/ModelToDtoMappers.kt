@@ -30,7 +30,7 @@ fun Infected.toDto() = InfectedDto(
         historyItems = this.historyItems.map { it.toDto() }.toSet()
 )
 
-fun Infected.toCompressed(): InfectedCompressedDto {
+fun Infected.toCompressed(configAutoResetOffset : Long): InfectedCompressedDto {
     //Introduce local variable to prevent redundant function call of Infected::historyItems::sortedByDescending
     val sortedHistory = this.historyItems.sortedByDescending { it.timestamp }
     val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
@@ -46,6 +46,7 @@ fun Infected.toCompressed(): InfectedCompressedDto {
             lat = this.lat,
             lon = this.lon,
             phone = this.contactData.filter { it.contactKey.equals("phone") }.map { it.contactValue }.firstOrNull(),
+            locked = this.lockedTimestamp > System.currentTimeMillis() - configAutoResetOffset * 1000,
             done = this.done,
             lastUnsuccessfulCallToday = todayUnsuccessfulTimestamp,
             personalFeeling = lastSuccessfulCall?.personalFeeling,

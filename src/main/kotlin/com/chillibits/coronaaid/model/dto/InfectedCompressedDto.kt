@@ -14,6 +14,7 @@ data class InfectedCompressedDto(
         val lon: Double,
         val phone: String?,
         val done : Boolean,
+        val locked : Boolean,
         val lastUnsuccessfulCallToday: Long?,
         val personalFeeling: Int?,
         val sumInitialDiseases: Int?,

@@ -6,6 +6,7 @@ import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.shared.ConfigKeys
+import com.chillibits.coronaaid.shared.ConfigKeys.CK_AUTO_RESET_OFFSET_DEFAULT
 import com.chillibits.coronaaid.shared.toCompressed
 import com.chillibits.coronaaid.shared.toDto
 import io.swagger.annotations.Api
@@ -37,7 +38,8 @@ class InfectedController {
     @ApiOperation("Returns all infected persons with all available attributes")
     fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): Set<Any> {
         return if(compressDto) {
-            infectedRepository.findAllEagerly().map { it.toCompressed() }.toSet()
+            val configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+            infectedRepository.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
         } else {
             infectedRepository.findAllEagerly().map { it.toDto() }.toSet()
         }

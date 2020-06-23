@@ -14,6 +14,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import java.time.LocalDate
 import java.time.Month
 
+val allowedOrigins = setOf(
+		"http://localhost:63342",
+		"http://localhost:63343",
+		"https://sac19.jatsqi.com",
+		"https://dev.sac19.jatsqi.com",
+		"https://www.corona-aid-ka.de",
+		"https://dev.corona-aid-ka.de"
+)
+
 @SpringBootApplication
 class CoronaAidApplication: CommandLineRunner {
 
@@ -58,14 +67,7 @@ class CoronaAidApplication: CommandLineRunner {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
 						.allowedMethods("GET", "HEAD", "POST", "PUT")
-						.allowedOrigins(
-								"http://localhost:63342",
-								"http://localhost:63343",
-								"https://sac19.jatsqi.com",
-								"https://dev.sac19.jatsqi.com",
-								"https://covid-aid.eu",
-								"https://dev.covid-aid.eu"
-						)
+						.allowedOrigins(*allowedOrigins.toTypedArray())
 			}
 		}
 	}

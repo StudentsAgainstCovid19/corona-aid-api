@@ -142,10 +142,10 @@ class InfectedControllerTests {
     private fun getAssertData(): Set<InfectedDto> {
         val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085,  "M123456",
-                         emptySet(), emptySet(), emptySet(), getHistoryAssertData().toSet(), emptySet())
+                         emptySet(), emptySet(), emptySet(), getHistoryAssertData().toSet())
         val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718, "M654321",
-                        emptySet(), emptySet(), emptySet(), emptySet(), emptySet())
+                        emptySet(), emptySet(), emptySet(), emptySet())
         return setOf(infected1, infected2)
     }
 

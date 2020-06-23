@@ -9,7 +9,6 @@ import javax.persistence.*
                 NamedAttributeNode("contactData"),
                 NamedAttributeNode("historyItems"),
                 NamedAttributeNode("initialDiseases"),
-                NamedAttributeNode("residentialGroups"),
                 NamedAttributeNode("tests")
         ]
 )
@@ -69,12 +68,7 @@ data class Infected (
 
         // List of history items
         @OneToMany(mappedBy = "infectedId")
-        val historyItems: Set<HistoryItem> = emptySet(),
-
-        // List of residential groups
-        @ManyToMany(mappedBy = "infected")
-        val residentialGroups: Set<ResidentialGroup> = emptySet()
-
+        val historyItems: Set<HistoryItem> = emptySet()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -1,6 +1,8 @@
 package com.chillibits.coronaaid.model.dto
 
 import com.chillibits.coronaaid.shared.yearsBetween
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import java.time.LocalDate
 
 data class InfectedDto (
@@ -15,11 +17,18 @@ data class InfectedDto (
         val lat: Double,
         val lon: Double,
         val healthInsuranceNumber: String,
+        @JacksonXmlElementWrapper(localName = "contactData")
+        @JacksonXmlProperty(localName = "contactItem")
         val contactData: Set<ContactItemDto>,
+        @JacksonXmlElementWrapper(localName = "tests")
+        @JacksonXmlProperty(localName = "test")
         val tests: Set<TestDto>,
+        @JacksonXmlElementWrapper(localName = "initialDiseases")
+        @JacksonXmlProperty(localName = "initialDisease")
         val initialDiseases: Set<InitialDiseaseDto>,
-        val historyItems: Set<HistoryItemDto>,
-        val residentialGroups: Set<ResidentialGroupDto>
+        @JacksonXmlElementWrapper(localName = "historyItems")
+        @JacksonXmlProperty(localName = "historyItem")
+        val historyItems: Set<HistoryItemDto>
 ) {
         val age = this.birthDate.yearsBetween(LocalDate.now())
 }

@@ -5,7 +5,6 @@ import com.chillibits.coronaaid.model.db.ContactItem
 import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.db.InitialDisease
-import com.chillibits.coronaaid.model.db.ResidentialGroup
 import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.ConfigItemDto
@@ -14,7 +13,6 @@ import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
 import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
-import com.chillibits.coronaaid.model.dto.ResidentialGroupDto
 import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.model.dto.TestDto
 import java.time.Instant
@@ -38,8 +36,7 @@ fun Infected.toDto() = InfectedDto(
         contactData = this.contactData.map { it.toDto() }.toSet(),
         tests = this.tests.map { it.toDto() }.toSet(),
         initialDiseases = this.initialDiseases.map { it.toDto() }.toSet(),
-        historyItems = this.historyItems.map { it.toDto() }.toSet(),
-        residentialGroups = this.residentialGroups.map { it.toDto() }.toSet()
+        historyItems = this.historyItems.map { it.toDto() }.toSet()
 )
 
 fun Infected.toCompressed(): InfectedCompressedDto {
@@ -93,10 +90,6 @@ fun HistoryItem.toDto() = HistoryItemDto(
         status = this.status,
         personalFeeling = this.personalFeeling,
         notes = this.notes
-)
-
-fun ResidentialGroup.toDto() = ResidentialGroupDto(
-        id = this.id
 )
 
 fun Symptom.toDto() = SymptomDto(

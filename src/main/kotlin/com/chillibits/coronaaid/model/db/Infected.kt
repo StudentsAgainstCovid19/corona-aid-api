@@ -74,7 +74,8 @@ data class Infected (
 ) {
 
     @Transient
-    val done = this.historyItems.any { it.timestamp >= Instant.now().truncateToMidnight() && it.status == HistoryItem.STATUS_REACHED }
+    var done = false
+        get() = this.historyItems.any { it.timestamp >= Instant.now().truncateToMidnight() && it.status == HistoryItem.STATUS_REACHED }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

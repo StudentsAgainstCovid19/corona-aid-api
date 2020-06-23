@@ -17,6 +17,7 @@ data class InfectedDto (
         val lat: Double,
         val lon: Double,
         val healthInsuranceNumber: String,
+        val done: Boolean,
         @JacksonXmlElementWrapper(localName = "contactData")
         @JacksonXmlProperty(localName = "contactItem")
         val contactData: Set<ContactItemDto>,

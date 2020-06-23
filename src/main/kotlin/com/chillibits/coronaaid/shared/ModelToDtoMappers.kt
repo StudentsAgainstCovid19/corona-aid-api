@@ -19,7 +19,10 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-fun LocalDate.yearsBetween(other : LocalDate): Long = ChronoUnit.YEARS.between(this, other)
+fun LocalDate.yearsBetween(other : LocalDate): Long =
+        ChronoUnit.YEARS.between(this, other)
+fun Instant.truncateToMidnight(): Long =
+        this.truncatedTo(ChronoUnit.DAYS).toEpochMilli()
 
 fun Infected.toDto() = InfectedDto(
         id = this.id,
@@ -33,6 +36,7 @@ fun Infected.toDto() = InfectedDto(
         lat = this.lat,
         lon = this.lon,
         healthInsuranceNumber = this.healthInsuranceNumber,
+        done = this.done,
         contactData = this.contactData.map { it.toDto() }.toSet(),
         tests = this.tests.map { it.toDto() }.toSet(),
         initialDiseases = this.initialDiseases.map { it.toDto() }.toSet(),
@@ -44,9 +48,8 @@ fun Infected.toCompressed(): InfectedCompressedDto {
     val sortedHistory = this.historyItems.sortedByDescending { it.timestamp }
     val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
 
-    val latestMidnight = Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli()
+    val latestMidnight = Instant.now().truncateToMidnight()
     val todayUnsuccessfulTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_NOT_REACHABLE }.map { it.timestamp }.firstOrNull()
-    val doneToday = sortedHistory.any { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_REACHED }
 
     return InfectedCompressedDto(
             id = this.id,
@@ -56,7 +59,7 @@ fun Infected.toCompressed(): InfectedCompressedDto {
             lat = this.lat,
             lon = this.lon,
             phone = this.contactData.filter { it.contactKey.equals("phone") }.map { it.contactValue }.firstOrNull(),
-            done = doneToday,
+            done = this.done,
             lastUnsuccessfulCallToday = todayUnsuccessfulTimestamp,
             personalFeeling = lastSuccessfulCall?.personalFeeling,
             sumInitialDiseases = this.initialDiseases.size,

@@ -26,7 +26,7 @@ data class InfectedDto (
         val tests: Set<TestDto>,
         @JacksonXmlElementWrapper(localName = "initialDiseases")
         @JacksonXmlProperty(localName = "initialDisease")
-        val initialDiseases: Set<InitialDiseaseDto>,
+        val initialDiseases: Set<DiseaseDto>,
         @JacksonXmlElementWrapper(localName = "historyItems")
         @JacksonXmlProperty(localName = "historyItem")
         val historyItems: Set<HistoryItemDto>

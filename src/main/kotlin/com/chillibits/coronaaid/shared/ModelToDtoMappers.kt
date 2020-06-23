@@ -1,20 +1,7 @@
 package com.chillibits.coronaaid.shared
 
-import com.chillibits.coronaaid.model.db.ConfigItem
-import com.chillibits.coronaaid.model.db.ContactItem
-import com.chillibits.coronaaid.model.db.HistoryItem
-import com.chillibits.coronaaid.model.db.Infected
-import com.chillibits.coronaaid.model.db.InitialDisease
-import com.chillibits.coronaaid.model.db.Symptom
-import com.chillibits.coronaaid.model.db.Test
-import com.chillibits.coronaaid.model.dto.ConfigItemDto
-import com.chillibits.coronaaid.model.dto.ContactItemDto
-import com.chillibits.coronaaid.model.dto.HistoryItemDto
-import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
-import com.chillibits.coronaaid.model.dto.InfectedDto
-import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
-import com.chillibits.coronaaid.model.dto.SymptomDto
-import com.chillibits.coronaaid.model.dto.TestDto
+import com.chillibits.coronaaid.model.db.*
+import com.chillibits.coronaaid.model.dto.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -80,11 +67,6 @@ fun Test.toDto() = TestDto(
         result = this.result
 )
 
-fun InitialDisease.toDto() = InitialDiseaseDto(
-        id = this.id,
-        degreeOfDanger = this.degreeOfDanger
-)
-
 fun HistoryItem.toDto() = HistoryItemDto(
         id = this.id,
         infectedId = this.infectedId?.id,
@@ -96,6 +78,13 @@ fun HistoryItem.toDto() = HistoryItemDto(
 )
 
 fun Symptom.toDto() = SymptomDto(
+        id = this.id,
+        name = this.name,
+        degreeOfDanger = this.degreeOfDanger,
+        probability = this.probability
+)
+
+fun Disease.toDto() = DiseaseDto(
         id = this.id,
         name = this.name,
         degreeOfDanger = this.degreeOfDanger,

@@ -1,12 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.OneToMany
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "disease")
@@ -18,8 +12,8 @@ data class Disease (
         val id: Int,
 
         // List of initial diseases
-        @OneToMany
-        val initialDiseases: Set<InitialDisease>,
+        @ManyToMany(mappedBy = "initialDiseases")
+        val initialDiseases: Set<Infected>,
 
         // Name or indication of the disease
         @Column(unique = true)

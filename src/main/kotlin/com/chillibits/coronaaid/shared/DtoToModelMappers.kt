@@ -1,15 +1,7 @@
 package com.chillibits.coronaaid.shared
 
-import com.chillibits.coronaaid.model.db.ContactItem
-import com.chillibits.coronaaid.model.db.HistoryItem
-import com.chillibits.coronaaid.model.db.Infected
-import com.chillibits.coronaaid.model.db.InitialDisease
-import com.chillibits.coronaaid.model.db.Test
-import com.chillibits.coronaaid.model.dto.ContactItemDto
-import com.chillibits.coronaaid.model.dto.HistoryItemDto
-import com.chillibits.coronaaid.model.dto.InfectedDto
-import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
-import com.chillibits.coronaaid.model.dto.TestDto
+import com.chillibits.coronaaid.model.db.*
+import com.chillibits.coronaaid.model.dto.*
 
 fun InfectedDto.toModel() = Infected(
         id = this.id,
@@ -36,17 +28,20 @@ fun ContactItemDto.toModel() = ContactItem(
         contactValue = this.contactValue
 )
 
-fun InitialDiseaseDto.toModel() = InitialDisease(
-        id = this.id,
-        degreeOfDanger = this.degreeOfDanger
-)
-
 fun HistoryItemDto.toModel() = HistoryItem(
         id = this.id,
         timestamp = this.timestamp,
         symptoms = emptySet(),
         status = this.status,
         personalFeeling = this.personalFeeling
+)
+
+fun DiseaseDto.toModel() = Disease(
+        id = this.id,
+        degreeOfDanger = this.degreeOfDanger,
+        probability = this.probability,
+        name = this.name,
+        initialDiseases = emptySet()
 )
 
 fun TestDto.toModel() = Test(

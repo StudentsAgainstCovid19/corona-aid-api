@@ -22,7 +22,7 @@ import java.time.temporal.ChronoUnit
 fun LocalDate.yearsBetween(other : LocalDate): Long =
         ChronoUnit.YEARS.between(this, other)
 fun Instant.truncateToMidnight(): Long =
-        Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli()
+        this.truncatedTo(ChronoUnit.DAYS).toEpochMilli()
 
 fun Infected.toDto() = InfectedDto(
         id = this.id,

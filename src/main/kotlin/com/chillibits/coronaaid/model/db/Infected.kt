@@ -1,5 +1,7 @@
 package com.chillibits.coronaaid.model.db
 
+import com.chillibits.coronaaid.shared.truncateToMidnight
+import java.time.Instant
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -70,6 +72,10 @@ data class Infected (
         @OneToMany(mappedBy = "infectedId")
         val historyItems: Set<HistoryItem> = emptySet()
 ) {
+
+    @Transient
+    val done = this.historyItems.any { it.timestamp >= Instant.now().truncateToMidnight() && it.status == HistoryItem.STATUS_REACHED }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

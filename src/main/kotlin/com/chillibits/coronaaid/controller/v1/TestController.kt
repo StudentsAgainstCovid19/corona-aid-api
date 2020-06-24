@@ -51,7 +51,8 @@ class TestController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiResponses(
-            ApiResponse(code = 406, message = "Test result invalid")
+            ApiResponse(code = 406, message = "Test result invalid"),
+            ApiResponse(code = 404, message = "Infected not found")
     )
     @ApiOperation("Pushes a new test to the database")
     fun addTest(@RequestBody testDto: TestInsertDto): TestDto? {

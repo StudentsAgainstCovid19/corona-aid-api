@@ -1,8 +1,10 @@
 package com.chillibits.coronaaid.config
 
 import com.chillibits.coronaaid.model.dto.InfectedRealtimeDto
+import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
+import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.SseEmitterStorage
 import com.chillibits.coronaaid.shared.toCompressed
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -23,6 +25,9 @@ class CronJobsConfig {
 
     @Autowired
     private lateinit var historyRepository: HistoryRepository
+
+    @Autowired
+    private lateinit var configRepository: ConfigRepository
 
     val log: Logger = LoggerFactory.getLogger(CronJobsConfig::class.java)
 
@@ -45,6 +50,8 @@ class CronJobsConfig {
     @Scheduled(fixedDelay = 15000)
     @Transactional
     public fun sendInterval() {
+        val offset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0
+
         val list = mutableSetOf<InfectedRealtimeDto>()
         val changed = historyRepository
                 .getHistoryItemIdChangedSince(System.currentTimeMillis() - 15000)
@@ -53,13 +60,13 @@ class CronJobsConfig {
 
         val writer = StringWriter()
         val mapper = ObjectMapper()
-        mapper.writeValue(writer, infected.map { it.toCompressed() }.map {
+        mapper.writeValue(writer, infected.map { it.toCompressed(offset) }.map {
             InfectedRealtimeDto(
                     it.id,
                     it.done,
                     it.lastUnsuccessfulCallToday != null,
                     it.lastUnsuccessfulCallTodayString,
-                    false
+                    it.locked
             )
         })
         SseEmitterStorage.sendToAll(writer.toString())

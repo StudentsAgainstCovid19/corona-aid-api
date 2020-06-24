@@ -24,8 +24,8 @@ interface InfectedRepository: JpaRepository<Infected, Int> {
     @Query("SELECT i FROM Infected i WHERE i.id IN (:infected)")
     fun findAllEagerly(@Param("infected") infected: Set<Int>): Set<Infected>
 
-    @Query("SELECT i.id FROM Infected i WHERE i.lockedTimestamp >= ?1")
-    fun findAllLockedSince(timestamp: Long): Set<Int>
+    @Query("SELECT i.id FROM Infected i WHERE ((i.lockedTimestamp >= ?1) OR (i.lockedTimestamp + ?2 >= ?1))")
+    fun findAllLockedSince(timestamp: Long, configAutoResetOffset: Long): Set<Int>
 
     @Modifying
     @Transactional

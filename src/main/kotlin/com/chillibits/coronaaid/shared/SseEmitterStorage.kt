@@ -29,7 +29,7 @@ object SseEmitterStorage {
         }
     }
 
-    fun sendToAll(obj: Any) {
+    fun sendToAll(obj: SseEmitter.SseEventBuilder) {
         mutex.withLock {
             val failed = mutableListOf<SseEmitter>()
 

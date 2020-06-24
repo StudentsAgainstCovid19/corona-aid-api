@@ -1,11 +1,8 @@
 package com.chillibits.coronaaid.controller.v1
 
-import com.chillibits.coronaaid.events.InfectedChangeEvent
-import com.chillibits.coronaaid.model.dto.InfectedRealtimeDto
+import com.chillibits.coronaaid.events.SseDataPreparedEvent
 import com.chillibits.coronaaid.repository.ConfigRepository
-import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.SseEmitterStorage
-import com.chillibits.coronaaid.shared.toCompressed
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import io.swagger.annotations.Api
 import org.apache.commons.collections4.queue.CircularFifoQueue
@@ -53,21 +50,10 @@ class RealtimeController {
     }
 
     @EventListener
-    fun handleInfectedChangedEvent(event: InfectedChangeEvent) {
+    fun handleInfectedChangedEvent(event: SseDataPreparedEvent) {
         sseEventId++
 
-        val offset = (configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0) * 1000
-        val mapped = event.changedInfected.map { it.toCompressed(offset) }.map {
-            InfectedRealtimeDto(
-                    it.id,
-                    it.done,
-                    it.lastUnsuccessfulCallToday != null,
-                    it.lastUnsuccessfulCallTodayString,
-                    it.locked
-            )
-        }
-
-        val content = XML_MAPPER.writeValueAsString(mapped)
+        val content = XML_MAPPER.writeValueAsString(event.changedInfected)
         val emittedData = SseEmitter.event()
                 .data(content)
                 .id(sseEventId.toString())

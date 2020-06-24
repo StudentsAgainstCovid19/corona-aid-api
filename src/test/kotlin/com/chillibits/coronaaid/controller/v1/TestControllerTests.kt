@@ -1,6 +1,7 @@
 package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
+import com.chillibits.coronaaid.exception.exception.InvalidTestResultException
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.TestDto
@@ -92,6 +93,12 @@ class TestControllerTests {
         assertThrows<InfectedNotFoundException> { testController.addTest(getPostUnknownInfected()) }
     }
 
+    @org.junit.Test
+    @DisplayName("Test for pushing test into db - success")
+    fun testAddTestInvalidResult() {
+        assertThrows<InvalidTestResultException> { testController.addTest(getPostInvalidTestResult()) }
+    }
+
     // -------------------------------------------------- Test data ----------------------------------------------------
 
     private fun getTestData(): Set<Test> {
@@ -127,14 +134,15 @@ class TestControllerTests {
             healthInsuranceNumber = "M999999", lockedTimestamp = 54321L)
 
     private fun getPostInputDto()
-            = TestInsertDto(5, 12345, 2)
+            = TestInsertDto(5, 12345, 0)
     private fun getPostRequiredTestSaveInput()
-            = Test(0, getDummyInfected(), 12345, 2)
+            = Test(0, getDummyInfected(), 12345, 0)
     private fun getPostRepositorySaveOutput()
-            = Test(999, getDummyInfected(), 12345, 2)
+            = Test(999, getDummyInfected(), 12345, 0)
     private fun getPostExpectedPostOutputDto()
-            = TestDto(999, getDummyInfected().id, 12345, 2)
+            = TestDto(999, getDummyInfected().id, 12345, 0)
     private fun getPostUnknownInfected()
+            = TestInsertDto(-10, 12345, 0)
+    private fun getPostInvalidTestResult()
             = TestInsertDto(-10, 12345, 2)
-
 }

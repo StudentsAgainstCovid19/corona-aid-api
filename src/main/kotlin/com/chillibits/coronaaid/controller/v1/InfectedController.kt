@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.events.InfectedChangeEvent
 import com.chillibits.coronaaid.exception.exception.InfectedLockedException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.dto.InfectedDto
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -31,6 +33,9 @@ class InfectedController {
     @Autowired
     private lateinit var configRepository: ConfigRepository
 
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
     @GetMapping(
             path = ["/infected"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
@@ -38,7 +43,9 @@ class InfectedController {
     @ApiOperation("Returns all infected persons with all available attributes")
     fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): Set<Any> {
         return if(compressDto) {
-            val configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+            var configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+            configResetOffset *= 1000
+
             infectedRepository.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
         } else {
             infectedRepository.findAllEagerly().map { it.toDto() }.toSet()
@@ -79,6 +86,10 @@ class InfectedController {
     )
     fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().apply {
         infectedRepository.changeLockedState(infectedId, this)
+
+        // Notify SSE Task
+        applicationEventPublisher.publishEvent(InfectedChangeEvent(this, setOf(infectedId)))
+
         infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 
@@ -92,6 +103,10 @@ class InfectedController {
     )
     fun unlockSingleInfected(@PathVariable infectedId: Int) {
         infectedRepository.changeLockedState(infectedId, 0)
+
+        // Notify SSE Task
+        applicationEventPublisher.publishEvent(InfectedChangeEvent(this, setOf(infectedId)))
+
         infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 }

@@ -38,7 +38,9 @@ class InfectedController {
     @ApiOperation("Returns all infected persons with all available attributes")
     fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): Set<Any> {
         return if(compressDto) {
-            val configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+            var configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+            configResetOffset *= 1000
+
             infectedRepository.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
         } else {
             infectedRepository.findAllEagerly().map { it.toDto() }.toSet()

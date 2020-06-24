@@ -46,7 +46,7 @@ fun Infected.toCompressed(configAutoResetOffset : Long): InfectedCompressedDto {
             lat = this.lat,
             lon = this.lon,
             phone = this.contactData.filter { it.contactKey.equals("phone") }.map { it.contactValue }.firstOrNull(),
-            locked = this.lockedTimestamp > System.currentTimeMillis() - configAutoResetOffset * 1000,
+            locked = this.lockedTimestamp > System.currentTimeMillis() - configAutoResetOffset,
             done = this.done,
             lastUnsuccessfulCallToday = todayUnsuccessfulTimestamp,
             personalFeeling = lastSuccessfulCall?.personalFeeling,

@@ -1,5 +1,7 @@
 package com.chillibits.coronaaid.model.db
 
+import com.chillibits.coronaaid.shared.truncateToMidnight
+import java.time.Instant
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -9,7 +11,6 @@ import javax.persistence.*
                 NamedAttributeNode("contactData"),
                 NamedAttributeNode("historyItems"),
                 NamedAttributeNode("initialDiseases"),
-                NamedAttributeNode("residentialGroups"),
                 NamedAttributeNode("tests")
         ]
 )
@@ -64,18 +65,21 @@ data class Infected (
         val tests: Set<Test> = emptySet(),
 
         // List of initial diseases
-        @OneToMany(mappedBy = "infectedId")
-        val initialDiseases: Set<InitialDisease> = emptySet(),
+        @ManyToMany
+        @JoinTable(name = "infected_initial_diseases",
+                joinColumns = [JoinColumn(name = "infected_id", referencedColumnName = "id")],
+                inverseJoinColumns = [JoinColumn(name = "disease_id", referencedColumnName = "id")])
+        val initialDiseases: Set<Disease> = emptySet(),
 
         // List of history items
         @OneToMany(mappedBy = "infectedId")
-        val historyItems: Set<HistoryItem> = emptySet(),
-
-        // List of residential groups
-        @ManyToMany(mappedBy = "infected")
-        val residentialGroups: Set<ResidentialGroup> = emptySet()
-
+        val historyItems: Set<HistoryItem> = emptySet()
 ) {
+
+    @Transient
+    var done = false
+        get() = this.historyItems.any { it.timestamp >= Instant.now().truncateToMidnight() && it.status == HistoryItem.STATUS_REACHED }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

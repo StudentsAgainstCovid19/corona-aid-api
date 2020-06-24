@@ -11,7 +11,7 @@ interface InfectedRepository: JpaRepository<Infected, Int> {
 
     @EntityGraph(
             value= "Infected.loadAll",
-            attributePaths = ["contactData", "tests", "historyItems", "initialDiseases", "residentialGroups"],
+            attributePaths = ["contactData", "tests", "historyItems", "initialDiseases"],
             type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT i FROM Infected i")
     fun findAllEagerly(): Set<Infected>

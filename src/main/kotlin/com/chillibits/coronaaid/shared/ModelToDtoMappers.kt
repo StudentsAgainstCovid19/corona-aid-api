@@ -1,24 +1,15 @@
 package com.chillibits.coronaaid.shared
 
-import com.chillibits.coronaaid.model.db.ConfigItem
-import com.chillibits.coronaaid.model.db.ContactItem
-import com.chillibits.coronaaid.model.db.HistoryItem
-import com.chillibits.coronaaid.model.db.Infected
-import com.chillibits.coronaaid.model.db.InitialDisease
-import com.chillibits.coronaaid.model.db.ResidentialGroup
-import com.chillibits.coronaaid.model.db.Symptom
-import com.chillibits.coronaaid.model.db.Test
-import com.chillibits.coronaaid.model.dto.ConfigItemDto
-import com.chillibits.coronaaid.model.dto.ContactItemDto
-import com.chillibits.coronaaid.model.dto.HistoryItemDto
-import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
-import com.chillibits.coronaaid.model.dto.InfectedDto
-import com.chillibits.coronaaid.model.dto.InitialDiseaseDto
-import com.chillibits.coronaaid.model.dto.ResidentialGroupDto
-import com.chillibits.coronaaid.model.dto.SymptomDto
-import com.chillibits.coronaaid.model.dto.TestDto
+import com.chillibits.coronaaid.model.db.*
+import com.chillibits.coronaaid.model.dto.*
 import java.time.Instant
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+
+fun LocalDate.yearsBetween(other : LocalDate): Long =
+        ChronoUnit.YEARS.between(this, other)
+fun Instant.truncateToMidnight(): Long =
+        this.truncatedTo(ChronoUnit.DAYS).toEpochMilli()
 
 fun Infected.toDto() = InfectedDto(
         id = this.id,
@@ -32,29 +23,32 @@ fun Infected.toDto() = InfectedDto(
         lat = this.lat,
         lon = this.lon,
         healthInsuranceNumber = this.healthInsuranceNumber,
+        done = this.done,
         contactData = this.contactData.map { it.toDto() }.toSet(),
         tests = this.tests.map { it.toDto() }.toSet(),
         initialDiseases = this.initialDiseases.map { it.toDto() }.toSet(),
-        historyItems = this.historyItems.map { it.toDto() }.toSet(),
-        residentialGroups = this.residentialGroups.map { it.toDto() }.toSet()
+        historyItems = this.historyItems.map { it.toDto() }.toSet()
 )
 
-fun Infected.toCompressed(): InfectedCompressedDto {
+fun Infected.toCompressed(configAutoResetOffset : Long): InfectedCompressedDto {
     //Introduce local variable to prevent redundant function call of Infected::historyItems::sortedByDescending
     val sortedHistory = this.historyItems.sortedByDescending { it.timestamp }
     val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
 
-    val latestMidnight = Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli()
-    val todayTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_REACHED }.map { it.timestamp }.firstOrNull()
+    val latestMidnight = Instant.now().truncateToMidnight()
+    val todayUnsuccessfulTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_NOT_REACHABLE }.map { it.timestamp }.firstOrNull()
 
     return InfectedCompressedDto(
             id = this.id,
+            age = this.birthDate.yearsBetween(LocalDate.now()),
             forename = this.forename,
             surname = this.surname,
             lat = this.lat,
             lon = this.lon,
             phone = this.contactData.filter { it.contactKey.equals("phone") }.map { it.contactValue }.firstOrNull(),
-            timestampCallToday = todayTimestamp,
+            locked = this.lockedTimestamp > System.currentTimeMillis() - configAutoResetOffset * 1000,
+            done = this.done,
+            lastUnsuccessfulCallToday = todayUnsuccessfulTimestamp,
             personalFeeling = lastSuccessfulCall?.personalFeeling,
             sumInitialDiseases = this.initialDiseases.size,
             sumSymptoms = lastSuccessfulCall?.symptoms?.size
@@ -74,11 +68,6 @@ fun Test.toDto() = TestDto(
         result = this.result
 )
 
-fun InitialDisease.toDto() = InitialDiseaseDto(
-        id = this.id,
-        degreeOfDanger = this.degreeOfDanger
-)
-
 fun HistoryItem.toDto() = HistoryItemDto(
         id = this.id,
         infectedId = this.infectedId?.id,
@@ -89,11 +78,14 @@ fun HistoryItem.toDto() = HistoryItemDto(
         notes = this.notes
 )
 
-fun ResidentialGroup.toDto() = ResidentialGroupDto(
-        id = this.id
+fun Symptom.toDto() = SymptomDto(
+        id = this.id,
+        name = this.name,
+        degreeOfDanger = this.degreeOfDanger,
+        probability = this.probability
 )
 
-fun Symptom.toDto() = SymptomDto(
+fun Disease.toDto() = DiseaseDto(
         id = this.id,
         name = this.name,
         degreeOfDanger = this.degreeOfDanger,

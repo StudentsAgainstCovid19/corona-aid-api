@@ -41,7 +41,7 @@ class InfectedControllerTests {
     @MockBean
     private lateinit var configRepository: ConfigRepository
 
-    private val testBirthDate = LocalDate.now()
+    private val testBirthDate = LocalDate.of(2000, 2, 7)
     private val testTimestamp = System.currentTimeMillis()
     private val testData = getTestData()
     private val assertData = getAssertData()
@@ -142,10 +142,10 @@ class InfectedControllerTests {
     private fun getAssertData(): Set<InfectedDto> {
         val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085,  "M123456",
-                         emptySet(), emptySet(), emptySet(), getHistoryAssertData().toSet(), emptySet())
+                         false, emptySet(), emptySet(), emptySet(), getHistoryAssertData().toSet())
         val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
                         "Göthestraße", "4", 49.4874639, 8.4763718, "M654321",
-                        emptySet(), emptySet(), emptySet(), emptySet(), emptySet())
+                        false, emptySet(), emptySet(), emptySet(), emptySet())
         return setOf(infected1, infected2)
     }
 
@@ -166,10 +166,10 @@ class InfectedControllerTests {
     }
 
     private fun getCompressedAssertData(): Set<InfectedCompressedDto> {
-        val compressed1 = InfectedCompressedDto(0, "John", "Doe", 49.0264134, 8.3831085, null,
-                                                null, 6, 0, 0)
-        val compressed2 = InfectedCompressedDto(1, "Joe", "Dalton", 49.4874639, 8.4763718, null,
-                                                null, null, 0, null)
+        val compressed1 = InfectedCompressedDto(0, 20,"John", "Doe", 49.0264134, 8.3831085, null,
+                                                false, false, null, 6, 0, 0)
+        val compressed2 = InfectedCompressedDto(1, 20, "Joe", "Dalton", 49.4874639, 8.4763718, null,
+                                                false, true, null, null, 0, null)
         return setOf(compressed1, compressed2)
     }
 }

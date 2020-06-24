@@ -1,5 +1,6 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.events.InfectedChangeEvent
 import com.chillibits.coronaaid.exception.exception.InfectedLockedException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.dto.InfectedDto
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -30,6 +32,9 @@ class InfectedController {
 
     @Autowired
     private lateinit var configRepository: ConfigRepository
+
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @GetMapping(
             path = ["/infected"],
@@ -81,6 +86,10 @@ class InfectedController {
     )
     fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().apply {
         infectedRepository.changeLockedState(infectedId, this)
+
+        // Notify SSE Task
+        applicationEventPublisher.publishEvent(InfectedChangeEvent(this, setOf(infectedId)))
+
         infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 
@@ -94,6 +103,10 @@ class InfectedController {
     )
     fun unlockSingleInfected(@PathVariable infectedId: Int) {
         infectedRepository.changeLockedState(infectedId, 0)
+
+        // Notify SSE Task
+        applicationEventPublisher.publishEvent(InfectedChangeEvent(this, setOf(infectedId)))
+
         infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 }

@@ -34,11 +34,11 @@ class CronJobsConfig {
     public fun onStartup() {
         log.info("Startup finished. Executing jobs now ...")
 
-        val configAutoResetOffset = configRepository
-                .findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: ConfigKeys.CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+        val realtimeRefreshInterval = configRepository
+                .findByConfigKey(ConfigKeys.CK_REALTIME_REFRESH_INTERVAL)?.configValue?.toLong() ?: ConfigKeys.CK_REALTIME_REFRESH_INTERVAL_DEFAULT.toLong()
 
         taskScheduler.schedule(Runnable { dailyReset() }, CronTrigger("0 0 0 * * ?"))
-        taskScheduler.scheduleAtFixedRate(realtimeTask, Duration.ofSeconds(configAutoResetOffset))
+        taskScheduler.scheduleAtFixedRate(realtimeTask, Duration.ofSeconds(realtimeRefreshInterval))
 
         log.info("Jobs finished.")
     }

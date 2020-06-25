@@ -1,6 +1,10 @@
 package com.chillibits.coronaaid.model.db
 
 import javax.persistence.*
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
+import javax.validation.constraints.PastOrPresent
+import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "history")
@@ -17,6 +21,7 @@ data class HistoryItem (
         val infectedId: Infected? = null,
 
         // Timestamp of the call
+        @PastOrPresent(message = "Timestamp in the future not allowed")
         val timestamp: Long,
 
         // List of symptoms
@@ -29,9 +34,13 @@ data class HistoryItem (
         val symptoms: Set<Symptom>,
 
         // Status of the call - 0: Not reachable, 1: Reached, 2: Flatmate answered
+        @Min(value = 0, message = "Status must be >= 0")
+        @Max(value = 2, message = "Status must be <= 2")
         val status: Int,
 
         // Personal feeling (Rating from 0 - 10)
+        @Min(value = 0, message = "Personal feeling must be >= 0")
+        @Max(value = 10, message = "Personal feeling be <= 10")
         val personalFeeling: Int,
 
         //Notes about the infected person

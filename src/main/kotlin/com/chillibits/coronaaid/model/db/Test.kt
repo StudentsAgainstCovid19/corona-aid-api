@@ -7,6 +7,8 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
 
 @Entity
 @Table(name = "test")
@@ -26,6 +28,8 @@ data class Test (
         val timestamp: Long,
 
         // Test result - 0: Scheduled, 1: Positive, 2: Negative, 3: Invalid
+        @Min(value = 0, message = "Value must be >= 0")
+        @Max(value = 3, message = "Value must be <= 3")
         val result: Int
 ) {
     companion object {

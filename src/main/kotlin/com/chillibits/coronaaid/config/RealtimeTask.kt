@@ -37,15 +37,17 @@ class RealtimeTask : Runnable {
     private var trackedInfectedLock = ReentrantLock()
 
     override fun run() {
-        val offset = (configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0) * 1000
-        loadInfectedChanges(offset)
+        val configResetOffset = (configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0) * 1000
+        val realtimeRefreshInterval = (configRepository.findByConfigKey(ConfigKeys.CK_REALTIME_REFRESH_INTERVAL)?.configValue?.toLong() ?: 0) * 1000
+
+        loadInfectedChanges(configResetOffset, realtimeRefreshInterval)
 
         val infected = trackedInfectedLock.run {
             withLock {
                 infectedRepository.findAllEagerly(trackedInfected)
             }
         }
-        val mapped = infected.map { it.toCompressed(offset) }.map {
+        val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
             InfectedRealtimeDto(
                     it.id,
                     it.done,
@@ -59,12 +61,12 @@ class RealtimeTask : Runnable {
         trackedInfected.clear()
     }
 
-    private fun loadInfectedChanges(offset: Long) {
-        val timeFrame = System.currentTimeMillis() - 15000L
+    private fun loadInfectedChanges(configResetOffset: Long, realtimeRefresh: Long) {
+        val timeFrame = System.currentTimeMillis() - realtimeRefresh
 
         val changed = historyRepository
                 .getAllInfectedWithChangedHistorySince(timeFrame)
-                .plus(infectedRepository.findAllLockedSince(timeFrame, offset))
+                .plus(infectedRepository.findAllLockedSince(timeFrame, configResetOffset))
 
         trackedInfected.addAll(changed)
     }

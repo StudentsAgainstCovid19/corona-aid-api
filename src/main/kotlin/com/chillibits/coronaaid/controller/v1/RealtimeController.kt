@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder
 import java.util.concurrent.locks.ReentrantLock
+import javax.servlet.http.HttpServletResponse
 import kotlin.concurrent.withLock
 
 @RestController
@@ -30,7 +31,9 @@ class RealtimeController {
     private val circularBufferLock = ReentrantLock()
 
     @GetMapping(path = ["/realtime/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun sseConnection(@RequestHeader(name = "Last-Event-ID", required = false, defaultValue = "-1") lastIdStr: String): SseEmitter {
+    fun sseConnection(@RequestHeader(name = "Last-Event-ID", required = false, defaultValue = "-1") lastIdStr: String, servlet: HttpServletResponse): SseEmitter {
+        servlet.addHeader("X-Accel-Buffering", "no")
+
         val emitter = SseEmitter()
         SseEmitterStorage.addEmitter(emitter) //TODO: replace with CopyOnWriteList
 

@@ -37,28 +37,26 @@ class RealtimeTask : Runnable {
     private var trackedInfectedLock = ReentrantLock()
 
     override fun run() {
-        val configResetOffset = (configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0) * 1000
-        val realtimeRefreshInterval = (configRepository.findByConfigKey(ConfigKeys.CK_REALTIME_REFRESH_INTERVAL)?.configValue?.toLong() ?: 0) * 1000
+        trackedInfectedLock.withLock {
+            val configResetOffset = (configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0) * 1000
+            val realtimeRefreshInterval = (configRepository.findByConfigKey(ConfigKeys.CK_REALTIME_REFRESH_INTERVAL)?.configValue?.toLong() ?: 0) * 1000
 
-        loadInfectedChanges(configResetOffset, realtimeRefreshInterval)
+            loadInfectedChanges(configResetOffset, realtimeRefreshInterval)
 
-        val infected = trackedInfectedLock.run {
-            withLock {
-                infectedRepository.findAllEagerly(trackedInfected)
-            }
+            val infected = infectedRepository.findAllEagerly(trackedInfected)
+            val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
+                InfectedRealtimeDto(
+                        it.id,
+                        it.done,
+                        it.lastUnsuccessfulCallToday != null,
+                        it.lastUnsuccessfulCallTodayString,
+                        it.locked
+                )
+            }.toSet()
+
+            applicationEventPublisher.publishEvent(SseDataPreparedEvent(this, mapped))
+            trackedInfected.clear()
         }
-        val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
-            InfectedRealtimeDto(
-                    it.id,
-                    it.done,
-                    it.lastUnsuccessfulCallToday != null,
-                    it.lastUnsuccessfulCallTodayString,
-                    it.locked
-            )
-        }.toSet()
-
-        applicationEventPublisher.publishEvent(SseDataPreparedEvent(this, mapped))
-        trackedInfected.clear()
     }
 
     private fun loadInfectedChanges(configResetOffset: Long, realtimeRefresh: Long) {

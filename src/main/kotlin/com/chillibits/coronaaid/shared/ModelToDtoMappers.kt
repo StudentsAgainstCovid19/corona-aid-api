@@ -4,12 +4,17 @@ import com.chillibits.coronaaid.model.db.*
 import com.chillibits.coronaaid.model.dto.*
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 fun LocalDate.yearsBetween(other : LocalDate): Long =
         ChronoUnit.YEARS.between(this, other)
 fun Instant.truncateToMidnight(): Long =
         this.truncatedTo(ChronoUnit.DAYS).toEpochMilli()
+fun Instant.truncateToLocalMidnight(): Long =
+        this.atZone(ZoneId.systemDefault()).truncatedTo(ChronoUnit.DAYS).toInstant().toEpochMilli()
+fun Instant.zonedEpochMilli(zone: ZoneId = ZoneId.systemDefault()): Long =
+        this.atZone(zone).toInstant().toEpochMilli()
 
 fun Infected.toDto() = InfectedDto(
         id = this.id,
@@ -35,9 +40,9 @@ fun Infected.toCompressed(configAutoResetOffset : Long): InfectedCompressedDto {
     val sortedHistory = this.historyItems.sortedByDescending { it.timestamp }
     val lastSuccessfulCall = sortedHistory.filter { it.status == HistoryItem.STATUS_REACHED }.firstOrNull()
 
-    val latestMidnight = Instant.now().truncateToMidnight()
-    val todayUnsuccessfulTimestamp = sortedHistory.filter { it.timestamp >= latestMidnight && it.status == HistoryItem.STATUS_NOT_REACHABLE }.map { it.timestamp }.firstOrNull()
-
+    val latestMidnight = Instant.now().truncateToLocalMidnight()
+    val todayUnsuccessfulTimestamp = sortedHistory.filter { Instant.ofEpochMilli(it.timestamp).zonedEpochMilli() >= latestMidnight && it.status == HistoryItem.STATUS_NOT_REACHABLE }.map { it.timestamp }.firstOrNull()
+    
     return InfectedCompressedDto(
             id = this.id,
             age = this.birthDate.yearsBetween(LocalDate.now()),

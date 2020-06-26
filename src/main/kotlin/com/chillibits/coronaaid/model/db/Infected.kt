@@ -1,6 +1,7 @@
 package com.chillibits.coronaaid.model.db
 
-import com.chillibits.coronaaid.shared.truncateToMidnight
+import com.chillibits.coronaaid.shared.truncateToLocalMidnight
+import com.chillibits.coronaaid.shared.zonedEpochMilli
 import java.time.Instant
 import java.time.LocalDate
 import javax.persistence.*
@@ -104,7 +105,9 @@ data class Infected (
 
     @Transient
     var done = false
-        get() = this.historyItems.any { it.timestamp >= Instant.now().truncateToMidnight() && it.status == HistoryItem.STATUS_REACHED }
+        get() = this.historyItems.any {
+            Instant.ofEpochMilli(it.timestamp).zonedEpochMilli() >= Instant.now().truncateToLocalMidnight() && it.status == HistoryItem.STATUS_REACHED
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -35,6 +35,6 @@ jobs:
         run: |
           echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
           docker build -t docker.pkg.github.com/jatsqi/corona-aid-api/${ARTIFACT_ID}-dev:latest .
-          docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}-dev:latest
+          docker push docker.pkg.github.com/jatsqi/corona-aid-api/${ARTIFACT_ID}-dev:latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

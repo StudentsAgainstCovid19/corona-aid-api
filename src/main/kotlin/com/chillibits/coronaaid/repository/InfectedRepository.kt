@@ -38,5 +38,5 @@ interface InfectedRepository: JpaRepository<Infected, Int> {
     @Transactional
     @Query("UPDATE Infected i SET i.lockedTimestamp = ?2 WHERE i.id = ?1")
     fun changeLockedState(infectedId: Int, timestamp: Long)
-
+  
 }

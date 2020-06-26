@@ -41,6 +41,7 @@ class RealtimeTask : Runnable {
             val configResetOffset = (configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0) * 1000
             val realtimeRefreshInterval = (configRepository.findByConfigKey(ConfigKeys.CK_REALTIME_REFRESH_INTERVAL)?.configValue?.toLong() ?: 0) * 1000
 
+            println("CRO " + configResetOffset + "; RRI " + realtimeRefreshInterval)
             loadInfectedChanges(configResetOffset, realtimeRefreshInterval)
 
             val infected = infectedService.findAllEagerly(trackedInfected)

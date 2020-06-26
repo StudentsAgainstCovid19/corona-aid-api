@@ -31,6 +31,7 @@ class CronJobsConfig {
         val realtimeRefreshInterval = configRepository
                 .findByConfigKey(ConfigKeys.CK_REALTIME_REFRESH_INTERVAL)?.configValue?.toLong() ?: ConfigKeys.CK_REALTIME_REFRESH_INTERVAL_DEFAULT.toLong()
 
+        println("START SCHEDULER WITH " + realtimeRefreshInterval)
         taskScheduler.scheduleAtFixedRate(realtimeTask, Duration.ofSeconds(realtimeRefreshInterval))
 
         log.info("Jobs finished.")

@@ -5,7 +5,7 @@ import com.chillibits.coronaaid.events.SseDataPreparedEvent
 import com.chillibits.coronaaid.model.dto.InfectedRealtimeDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.HistoryRepository
-import com.chillibits.coronaaid.repository.InfectedRepository
+import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.toCompressed
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +22,7 @@ import kotlin.concurrent.withLock
 class RealtimeTask : Runnable {
 
     @Autowired
-    private lateinit var infectedRepository: InfectedRepository
+    private lateinit var infectedService: InfectedService
 
     @Autowired
     private lateinit var configRepository: ConfigRepository
@@ -43,7 +43,7 @@ class RealtimeTask : Runnable {
 
             loadInfectedChanges(configResetOffset, realtimeRefreshInterval)
 
-            val infected = infectedRepository.findAllEagerly(trackedInfected)
+            val infected = infectedService.findAllEagerly(trackedInfected)
             val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
                 InfectedRealtimeDto(
                         it.id,
@@ -64,7 +64,7 @@ class RealtimeTask : Runnable {
 
         val changed = historyRepository
                 .getAllInfectedWithChangedHistorySince(timeFrame)
-                .plus(infectedRepository.findAllLockedSince(timeFrame, configResetOffset))
+                .plus(infectedService.findAllLockedSince(timeFrame, configResetOffset, realtimeRefresh))
 
         trackedInfected.addAll(changed)
     }

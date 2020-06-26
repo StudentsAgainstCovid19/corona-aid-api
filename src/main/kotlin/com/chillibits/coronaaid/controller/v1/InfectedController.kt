@@ -1,11 +1,10 @@
 package com.chillibits.coronaaid.controller.v1
 
-import com.chillibits.coronaaid.events.InfectedChangeEvent
 import com.chillibits.coronaaid.exception.exception.InfectedLockedException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
-import com.chillibits.coronaaid.repository.InfectedRepository
+import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.ConfigKeys.CK_AUTO_RESET_OFFSET_DEFAULT
 import com.chillibits.coronaaid.shared.toCompressed
@@ -15,7 +14,6 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -28,13 +26,10 @@ import org.springframework.web.bind.annotation.RestController
 class InfectedController {
 
     @Autowired
-    private lateinit var infectedRepository: InfectedRepository
+    private lateinit var infectedService: InfectedService
 
     @Autowired
     private lateinit var configRepository: ConfigRepository
-
-    @Autowired
-    private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @GetMapping(
             path = ["/infected"],
@@ -46,9 +41,9 @@ class InfectedController {
             var configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
             configResetOffset *= 1000
 
-            infectedRepository.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
+            infectedService.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
         } else {
-            infectedRepository.findAllEagerly().map { it.toDto() }.toSet()
+            infectedService.findAllEagerly().map { it.toDto() }.toSet()
         }
     }
 
@@ -62,7 +57,7 @@ class InfectedController {
             ApiResponse(code = 423, message = "Infected locked")
     )
     fun getSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
-        val infected = infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
+        val infected = infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
 
         // Retrieve config record for 'autoResetOffset' (seconds -> conversion to millis)
         configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.let {
@@ -71,7 +66,7 @@ class InfectedController {
         }
 
         // Lock infected for other access
-        infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
+        infectedService.changeLockedState(infectedId, System.currentTimeMillis())
 
         return infected.toDto()
     }
@@ -85,12 +80,8 @@ class InfectedController {
             ApiResponse(code = 404, message = "Infected not found")
     )
     fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().apply {
-        infectedRepository.changeLockedState(infectedId, this)
-
-        // Notify SSE Task
-        applicationEventPublisher.publishEvent(InfectedChangeEvent(this, setOf(infectedId)))
-
-        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
+        infectedService.changeLockedState(infectedId, this)
+        infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 
     @PutMapping(
@@ -102,11 +93,7 @@ class InfectedController {
             ApiResponse(code = 404, message = "Infected not found")
     )
     fun unlockSingleInfected(@PathVariable infectedId: Int) {
-        infectedRepository.changeLockedState(infectedId, 0)
-
-        // Notify SSE Task
-        applicationEventPublisher.publishEvent(InfectedChangeEvent(this, setOf(infectedId)))
-
-        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
+        infectedService.changeLockedState(infectedId, 0)
+        infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 }

@@ -1,6 +1,6 @@
 package com.chillibits.coronaaid.model.dto
 
-import com.chillibits.coronaaid.model.mapper.yearsBetween
+import com.chillibits.coronaaid.shared.yearsBetween
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import java.time.LocalDate

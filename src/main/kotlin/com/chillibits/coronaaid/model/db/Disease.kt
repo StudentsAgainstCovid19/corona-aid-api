@@ -1,6 +1,10 @@
 package com.chillibits.coronaaid.model.db
 
 import javax.persistence.*
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "disease")
@@ -17,12 +21,18 @@ data class Disease (
 
         // Name or indication of the disease
         @Column(unique = true)
+        @NotNull(message = "Disease name cannot be null")
+        @NotBlank(message = "Disease name cannot be blank")
         val name: String,
 
-        // Degree of danger of the symptom in general (percentage)
+        // Degree of danger of the symptom in general (1 - 10)
+        @Min(value = 1, message = "Degree of danger must be > 0")
+        @Max(value = 10, message = "Degree of danger must be <= 10")
         val degreeOfDanger: Int,
 
         // Probability of occurrence in the wild (percentage)
+        @Min(value = 1, message = "Disease probability must be > 0")
+        @Max(value = 100, message = "Disease probability must be <= 100")
         val probability: Int
 ) {
         override fun equals(other: Any?): Boolean {

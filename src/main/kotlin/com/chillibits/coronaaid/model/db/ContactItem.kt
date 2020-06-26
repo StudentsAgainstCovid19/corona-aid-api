@@ -1,6 +1,8 @@
 package com.chillibits.coronaaid.model.db
 
 import javax.persistence.*
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "contact")
@@ -17,9 +19,13 @@ data class ContactItem (
         val infectedId: Infected? = null,
 
         // Key of the key-value pair. List gets filtered by the key
+        @NotNull(message = "Contact key cannot be null")
+        @NotBlank(message = "Contact key cannot be blank")
         val contactKey: String,
 
         // Value of the key-value pair (do not name this field 'value'. This would cause an MySQL error)
+        @NotNull(message = "Contact key cannot be null")
+        @NotBlank(message = "Contact key cannot be blank")
         val contactValue: String
 ) {
         override fun equals(other: Any?): Boolean {

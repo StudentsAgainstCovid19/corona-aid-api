@@ -1,10 +1,12 @@
 package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.events.InfectedChangeEvent
+import com.chillibits.coronaaid.exception.exception.HistoryItemNotFoundException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.HistoryItemInsertDto
+import com.chillibits.coronaaid.model.dto.HistoryItemUpdateDto
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
 import com.chillibits.coronaaid.service.InfectedService
@@ -104,10 +106,16 @@ class HistoryController {
     )
     @ApiResponses(
             ApiResponse(code = 404, message = "History item not found"),
-            ApiResponse(code = 404, message = "Infected not found")
+            ApiResponse(code = 404, message = "Infected not found"),
+            ApiResponse(code = 425, message = "No HistoryItem to update for today")
     )
-    fun updateHistoryItem(@RequestBody historyDto: HistoryItemInsertDto): HistoryItemDto? {
+    fun updateHistoryItem(@RequestBody historyDto: HistoryItemUpdateDto): Int {
+        // Check if ids are fine
+        infectedService.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
+        historyRepository.findById(historyDto.historyItemId).orElseThrow { HistoryItemNotFoundException(historyDto.historyItemId) }
 
-        return null
+        // TODO: Check if at least one HistoryItem is available for today and only update if this condition is true
+
+        return historyRepository.updateHistoryItem(historyDto)
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
@@ -96,4 +97,17 @@ class HistoryController {
         return item.toDto()
     }
 
+    @PutMapping(
+            path = ["/history"],
+            consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
+    )
+    @ApiResponses(
+            ApiResponse(code = 404, message = "History item not found"),
+            ApiResponse(code = 404, message = "Infected not found")
+    )
+    fun updateHistoryItem(@RequestBody historyDto: HistoryItemInsertDto): HistoryItemDto? {
+
+        return null
+    }
 }

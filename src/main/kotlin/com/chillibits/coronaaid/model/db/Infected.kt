@@ -1,6 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
-import com.chillibits.coronaaid.shared.truncateToMidnight
+import com.chillibits.coronaaid.model.mapper.truncateToMidnight
 import java.time.Instant
 import java.time.LocalDate
 import javax.persistence.*

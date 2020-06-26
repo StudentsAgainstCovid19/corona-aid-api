@@ -7,7 +7,7 @@ import com.chillibits.coronaaid.model.dto.TestDto
 import com.chillibits.coronaaid.model.dto.TestInsertDto
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.repository.TestRepository
-import com.chillibits.coronaaid.shared.toDto
+import com.chillibits.coronaaid.model.mapper.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse

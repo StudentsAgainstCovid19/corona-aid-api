@@ -7,8 +7,8 @@ import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.ConfigKeys.CK_AUTO_RESET_OFFSET_DEFAULT
-import com.chillibits.coronaaid.shared.toCompressed
-import com.chillibits.coronaaid.shared.toDto
+import com.chillibits.coronaaid.model.mapper.toCompressed
+import com.chillibits.coronaaid.model.mapper.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse

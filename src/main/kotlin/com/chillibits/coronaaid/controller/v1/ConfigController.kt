@@ -3,7 +3,7 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.exception.exception.ConfigItemNotFoundException
 import com.chillibits.coronaaid.model.dto.ConfigItemDto
 import com.chillibits.coronaaid.repository.ConfigRepository
-import com.chillibits.coronaaid.shared.toDto
+import com.chillibits.coronaaid.model.mapper.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse

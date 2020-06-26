@@ -7,7 +7,7 @@ import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
-import com.chillibits.coronaaid.shared.toCompressed
+import com.chillibits.coronaaid.model.mapper.toCompressed
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.event.EventListener
@@ -70,7 +70,7 @@ class RealtimeTask : Runnable {
     }
 
     @EventListener
-    public fun onInfectedChange(event: InfectedChangeEvent) {
+    fun onInfectedChange(event: InfectedChangeEvent) {
         trackedInfectedLock.withLock {
             trackedInfected.addAll(event.changedInfected)
         }

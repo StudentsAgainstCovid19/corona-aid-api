@@ -8,7 +8,7 @@ import com.chillibits.coronaaid.model.dto.HistoryItemInsertDto
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
 import com.chillibits.coronaaid.service.InfectedService
-import com.chillibits.coronaaid.shared.toDto
+import com.chillibits.coronaaid.model.mapper.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse

@@ -2,6 +2,7 @@ package com.chillibits.coronaaid.config
 
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
+import com.chillibits.coronaaid.repository.TestRepository
 import com.chillibits.coronaaid.shared.ConfigKeys
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,6 +21,9 @@ class CronJobsConfig {
     private lateinit var infectedRepository: InfectedRepository
 
     @Autowired
+    private lateinit var testRepository: TestRepository
+
+    @Autowired
     private lateinit var configRepository: ConfigRepository
 
     @Autowired
@@ -31,7 +35,7 @@ class CronJobsConfig {
     val log: Logger = LoggerFactory.getLogger(CronJobsConfig::class.java)
 
     @PostConstruct
-    public fun onStartup() {
+    fun onStartup() {
         log.info("Startup finished. Executing jobs now ...")
 
         val realtimeRefreshInterval = configRepository
@@ -44,10 +48,15 @@ class CronJobsConfig {
     }
 
     @Scheduled(cron = "0 0 0 * * ?")
-    public fun dailyReset() {
+    fun dailyReset() {
         log.info("Daily reset started.")
+
+        // Unlock all infected persons
         infectedRepository.resetLockingOfAllInfected()
+
+        // Evaluate all pending tests
+        testRepository.evaluateAllPendingTests()
+
         log.info("Daily reset finished.")
     }
-
 }

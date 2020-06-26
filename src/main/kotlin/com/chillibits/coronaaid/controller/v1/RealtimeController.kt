@@ -65,6 +65,7 @@ class RealtimeController {
             circularBuffer.add(emittedData)
         }
 
+        println("SEND TO ALL: " + content)
         SseEmitterStorage.sendToAll(emittedData)
     }
 

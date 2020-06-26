@@ -36,6 +36,7 @@ object SseEmitterStorage {
             for (it in emitters) {
                 try {
                     it.send(obj)
+                    println("SEND TO CLIENT")
                 } catch (ex: Exception) {
                     failed.add(it)
                 }

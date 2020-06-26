@@ -8,8 +8,8 @@ import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.HistoryItemInsertDto
 import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.repository.HistoryRepository
-import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
+import com.chillibits.coronaaid.service.InfectedService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -43,7 +43,7 @@ class HistoryControllerTests {
     private lateinit var symptomRepository: SymptomRepository
 
     @MockBean
-    private lateinit var infectedRepository: InfectedRepository
+    private lateinit var infectedService: InfectedService
 
     private val dummyInfected = getDummyInfected()
     private val testData = getHistoryTestData()
@@ -68,8 +68,8 @@ class HistoryControllerTests {
         Mockito.`when`(symptomRepository.findAllById(listOf(0))).thenReturn(getPostSymptomTestData())
 
         // Infected repository
-        Mockito.`when`(infectedRepository.findById(5)).thenReturn(Optional.of(getDummyInfected()))
-        Mockito.`when`(infectedRepository.findById(100)).thenReturn(Optional.empty())
+        Mockito.`when`(infectedService.findById(5)).thenReturn(Optional.of(getDummyInfected()))
+        Mockito.`when`(infectedService.findById(100)).thenReturn(Optional.empty())
     }
 
     // ---------------------------------------------------- Tests ------------------------------------------------------

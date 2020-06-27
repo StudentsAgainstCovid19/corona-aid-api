@@ -4,7 +4,20 @@ import com.chillibits.coronaaid.shared.truncateToLocalMidnight
 import com.chillibits.coronaaid.shared.zonedEpochMilli
 import java.time.Instant
 import java.time.LocalDate
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
+import javax.persistence.NamedAttributeNode
+import javax.persistence.NamedEntityGraph
+import javax.persistence.OneToMany
+import javax.persistence.OrderBy
+import javax.persistence.Table
+import javax.persistence.Transient
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
@@ -89,6 +102,7 @@ data class Infected (
 
         // List of tests
         @OneToMany(mappedBy = "infectedId")
+        @OrderBy("timestamp")
         val tests: Set<Test> = emptySet(),
 
         // List of initial diseases
@@ -100,6 +114,7 @@ data class Infected (
 
         // List of history items
         @OneToMany(mappedBy = "infectedId")
+        @OrderBy("timestamp")
         val historyItems: Set<HistoryItem> = emptySet()
 ) {
 

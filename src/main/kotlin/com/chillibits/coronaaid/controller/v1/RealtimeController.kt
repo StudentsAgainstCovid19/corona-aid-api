@@ -1,12 +1,10 @@
 package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.events.SseDataPreparedEvent
-import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.shared.SseEmitterStorage
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import io.swagger.annotations.Api
 import org.apache.commons.collections4.queue.CircularFifoQueue
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.event.EventListener
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,9 +19,6 @@ import kotlin.concurrent.withLock
 @RestController
 @Api(value = "Realtime Endpoint", tags = ["realtime"])
 class RealtimeController {
-
-    @Autowired
-    private lateinit var configRepository: ConfigRepository
 
     private var sseEventId = 0
 
@@ -72,5 +67,4 @@ class RealtimeController {
     companion object {
         @JvmField val XML_MAPPER = XmlMapper()
     }
-
 }

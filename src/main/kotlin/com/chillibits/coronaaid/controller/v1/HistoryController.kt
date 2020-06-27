@@ -114,7 +114,7 @@ class HistoryController {
             ApiResponse(code = 425, message = "No HistoryItem to update for today")
     )
     @ApiOperation("Updates an existing history item in the database")
-    fun updateHistoryItem(@RequestBody historyDto: HistoryItemUpdateDto): Int {
+    fun updateHistoryItem(@RequestBody historyDto: HistoryItemUpdateDto): HistoryItemDto {
         // Check if ids are fine
         val infected = infectedService.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
         historyRepository.findById(historyDto.historyItemId).orElseThrow { HistoryItemNotFoundException(historyDto.historyItemId) }
@@ -138,6 +138,6 @@ class HistoryController {
                 historyDto.notes
         )
 
-        return historyRepository.updateHistoryItem(item)
+        return historyRepository.save(item).toDto()
     }
 }

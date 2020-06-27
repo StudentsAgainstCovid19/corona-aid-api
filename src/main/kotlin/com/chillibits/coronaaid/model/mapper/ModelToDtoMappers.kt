@@ -1,7 +1,10 @@
-package com.chillibits.coronaaid.shared
+package com.chillibits.coronaaid.model.mapper
 
 import com.chillibits.coronaaid.model.db.*
 import com.chillibits.coronaaid.model.dto.*
+import com.chillibits.coronaaid.shared.truncateToLocalMidnight
+import com.chillibits.coronaaid.shared.yearsBetween
+import com.chillibits.coronaaid.shared.zonedEpochMilli
 import java.time.Instant
 import java.time.LocalDate
 

@@ -7,7 +7,7 @@ import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
-import com.chillibits.coronaaid.shared.toCompressed
+import com.chillibits.coronaaid.model.mapper.toCompressed
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.event.EventListener
@@ -36,6 +36,10 @@ class RealtimeTask : Runnable {
     private var trackedInfected: MutableSet<Int> = Collections.synchronizedSet(mutableSetOf())
     private var trackedInfectedLock = ReentrantLock()
 
+    /**
+     * Runner which maps infected changes to a specific DTO
+     *
+     */
     override fun run() {
         trackedInfectedLock.withLock {
             val configResetOffset = (configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: 0) * 1000
@@ -59,6 +63,17 @@ class RealtimeTask : Runnable {
         }
     }
 
+    /**
+     * Loads the ids of all infected that changed during the last [realtimeRefresh] milliseconds
+     * This database tracking includes:
+     * - Infected which got locked/unlocked during the last [realtimeRefresh] milliseconds
+     * - Infected with changes to their history items during the last [realtimeRefresh] milliseconds
+     *
+     * All ids are stored in [trackedInfected]
+     *
+     * @param configResetOffset
+     * @param realtimeRefresh
+     */
     private fun loadInfectedChanges(configResetOffset: Long, realtimeRefresh: Long) {
         val timeFrame = System.currentTimeMillis() - realtimeRefresh
 
@@ -69,8 +84,13 @@ class RealtimeTask : Runnable {
         trackedInfected.addAll(changed)
     }
 
+    /**
+     * Event listener that is called when a repository/controller method made a change to one or more infected
+     *
+     * @param event Event data which contains set of changed infected
+     */
     @EventListener
-    public fun onInfectedChange(event: InfectedChangeEvent) {
+    fun onInfectedChange(event: InfectedChangeEvent) {
         trackedInfectedLock.withLock {
             trackedInfected.addAll(event.changedInfected)
         }

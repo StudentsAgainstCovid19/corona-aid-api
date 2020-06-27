@@ -2,12 +2,13 @@ package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.exception.exception.InvalidTestResultException
+import com.chillibits.coronaaid.exception.exception.OnlyOnePendingTestException
 import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.TestDto
 import com.chillibits.coronaaid.model.dto.TestInsertDto
+import com.chillibits.coronaaid.model.mapper.toDto
 import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.repository.TestRepository
-import com.chillibits.coronaaid.model.mapper.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -52,12 +53,17 @@ class TestController {
     )
     @ApiResponses(
             ApiResponse(code = 406, message = "Test result invalid"),
-            ApiResponse(code = 404, message = "Infected not found")
+            ApiResponse(code = 404, message = "Infected not found"),
+            ApiResponse(code = 409, message = "Only one pending test allowed")
     )
     @ApiOperation("Pushes a new test to the database")
     fun addTest(@RequestBody testDto: TestInsertDto): TestDto? {
         // Throw exception, if test has invalid result value
         if(testDto.result != 0) throw InvalidTestResultException()
+
+        // Check if there is already a pending test
+        val pendingTests = testRepository.findTestsForPerson(testDto.infectedId).filter { it.result == 0 }
+        if(pendingTests.isNotEmpty()) throw OnlyOnePendingTestException()
 
         val infected = infectedRepository.findById(testDto.infectedId).orElseThrow { InfectedNotFoundException(testDto.infectedId) }
 

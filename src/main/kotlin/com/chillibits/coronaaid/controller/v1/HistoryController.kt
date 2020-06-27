@@ -1,10 +1,14 @@
 package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.events.InfectedChangeEvent
+import com.chillibits.coronaaid.exception.exception.HistoryItemNotFoundException
+import com.chillibits.coronaaid.exception.exception.InfectedMismatchException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
+import com.chillibits.coronaaid.exception.exception.NoHistoryItemForTodayException
 import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.HistoryItemInsertDto
+import com.chillibits.coronaaid.model.dto.HistoryItemUpdateDto
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
 import com.chillibits.coronaaid.service.InfectedService
@@ -19,8 +23,12 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 @RestController
 @Api(value = "History REST Endpoint", tags = ["history"])
@@ -96,4 +104,45 @@ class HistoryController {
         return item.toDto()
     }
 
+    @PutMapping(
+            path = ["/history"],
+            consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
+    )
+    @ApiResponses(
+            ApiResponse(code = 404, message = "History item not found"),
+            ApiResponse(code = 404, message = "Infected not found"),
+            ApiResponse(code = 404, message = "Infected id does not match with the id, provided with the HistoryItem"),
+            ApiResponse(code = 425, message = "No HistoryItem to update for today")
+    )
+    @ApiOperation("Updates an existing history item in the database")
+    fun updateHistoryItem(@RequestBody historyDto: HistoryItemUpdateDto): HistoryItemDto {
+        // Check if ids are fine
+        val infected = infectedService.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
+        val historyItem = historyRepository.findById(historyDto.historyItemId).orElseThrow { HistoryItemNotFoundException(historyDto.historyItemId) }
+
+        // Check if at least one HistoryItem is available for today and only update if this condition is true
+        val historyItems = historyRepository.getHistoryItemsForPerson(historyDto.infectedId).filter {
+            LocalDate.now() == Instant.ofEpochMilli(it.timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+        }
+        if(historyItems.isEmpty()) throw NoHistoryItemForTodayException()
+
+        // Check if HistoryItem id and Infected id are matching
+        if(historyItem.infectedId?.id != historyDto.infectedId) throw InfectedMismatchException()
+
+        // Fetch symptoms
+        val symptoms = historyDto.symptoms?.map { symptomRepository.findById(it) }?.filter { it.isPresent }?.map { it.get() }?.toSet()
+
+        val item = HistoryItem(
+                historyDto.historyItemId,
+                infected,
+                historyDto.timestamp,
+                symptoms ?: emptySet(),
+                historyDto.status,
+                historyDto.personalFeeling,
+                historyDto.notes
+        )
+
+        return historyRepository.save(item).toDto()
+    }
 }

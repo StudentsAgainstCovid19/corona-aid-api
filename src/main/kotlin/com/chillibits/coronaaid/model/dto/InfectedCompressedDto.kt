@@ -1,9 +1,9 @@
 package com.chillibits.coronaaid.model.dto
 
+import com.chillibits.coronaaid.shared.DateTimeConverters
 import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 data class InfectedCompressedDto(
         val id: Int,
@@ -21,10 +21,6 @@ data class InfectedCompressedDto(
         val sumSymptoms: Int?
 ) {
     var lastUnsuccessfulCallTodayString : String? = lastUnsuccessfulCallToday?.let {
-        LocalTime.ofInstant(Instant.ofEpochMilli(lastUnsuccessfulCallToday), ZoneId.systemDefault()).format(TIME_FORMATTER)
-    }
-
-    companion object {
-        @JvmField val TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        LocalTime.ofInstant(Instant.ofEpochMilli(lastUnsuccessfulCallToday), ZoneId.systemDefault()).format(DateTimeConverters.TIME_HOURS_MINUTES)
     }
 }

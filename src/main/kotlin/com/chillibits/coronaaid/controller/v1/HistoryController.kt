@@ -3,6 +3,7 @@ package com.chillibits.coronaaid.controller.v1
 import com.chillibits.coronaaid.events.InfectedChangeEvent
 import com.chillibits.coronaaid.exception.exception.HistoryItemNotFoundException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
+import com.chillibits.coronaaid.exception.exception.NoHistoryItemForTodayException
 import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.HistoryItemInsertDto
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 @RestController
 @Api(value = "History REST Endpoint", tags = ["history"])
@@ -109,13 +113,31 @@ class HistoryController {
             ApiResponse(code = 404, message = "Infected not found"),
             ApiResponse(code = 425, message = "No HistoryItem to update for today")
     )
+    @ApiOperation("Updates an existing history item in the database")
     fun updateHistoryItem(@RequestBody historyDto: HistoryItemUpdateDto): Int {
         // Check if ids are fine
-        infectedService.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
+        val infected = infectedService.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
         historyRepository.findById(historyDto.historyItemId).orElseThrow { HistoryItemNotFoundException(historyDto.historyItemId) }
 
-        // TODO: Check if at least one HistoryItem is available for today and only update if this condition is true
+        // Check if at least one HistoryItem is available for today and only update if this condition is true
+        val historyItems = historyRepository.getHistoryItemsForPerson(historyDto.infectedId).filter {
+            LocalDate.now() == Instant.ofEpochMilli(it.timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+        }
+        if(historyItems.isEmpty()) throw NoHistoryItemForTodayException()
 
-        return historyRepository.updateHistoryItem(historyDto)
+        // Fetch symptoms
+        val symptoms = historyDto.symptoms?.map { symptomRepository.findById(it) }?.filter { it.isPresent }?.map { it.get() }?.toSet()
+
+        val item = HistoryItem(
+                historyDto.historyItemId,
+                infected,
+                historyDto.timestamp,
+                symptoms ?: emptySet(),
+                historyDto.status,
+                historyDto.personalFeeling,
+                historyDto.notes
+        )
+
+        return historyRepository.updateHistoryItem(item)
     }
 }

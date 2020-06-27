@@ -12,15 +12,12 @@ object SseEmitterStorage {
 
     fun addEmitter(emitter: SseEmitter) {
         emitter.onCompletion {
-            println("COMLETE")
             mutex.withLock { emitters.remove(emitter) }
         }
         emitter.onError {
-            println("ERROR")
             mutex.withLock { emitters.remove(emitter) }
         }
         emitter.onTimeout {
-            println("TIMEOUT")
             mutex.withLock { emitters.remove(emitter) }
         }
 

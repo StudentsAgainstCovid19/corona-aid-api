@@ -2,6 +2,7 @@ package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.events.InfectedChangeEvent
 import com.chillibits.coronaaid.exception.exception.HistoryItemNotFoundException
+import com.chillibits.coronaaid.exception.exception.InfectedMismatchException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.exception.exception.NoHistoryItemForTodayException
 import com.chillibits.coronaaid.model.db.HistoryItem
@@ -111,19 +112,23 @@ class HistoryController {
     @ApiResponses(
             ApiResponse(code = 404, message = "History item not found"),
             ApiResponse(code = 404, message = "Infected not found"),
+            ApiResponse(code = 404, message = "Infected id does not match with the id, provided with the HistoryItem"),
             ApiResponse(code = 425, message = "No HistoryItem to update for today")
     )
     @ApiOperation("Updates an existing history item in the database")
     fun updateHistoryItem(@RequestBody historyDto: HistoryItemUpdateDto): HistoryItemDto {
         // Check if ids are fine
         val infected = infectedService.findById(historyDto.infectedId).orElseThrow { InfectedNotFoundException(historyDto.infectedId) }
-        historyRepository.findById(historyDto.historyItemId).orElseThrow { HistoryItemNotFoundException(historyDto.historyItemId) }
+        val historyItem = historyRepository.findById(historyDto.historyItemId).orElseThrow { HistoryItemNotFoundException(historyDto.historyItemId) }
 
         // Check if at least one HistoryItem is available for today and only update if this condition is true
         val historyItems = historyRepository.getHistoryItemsForPerson(historyDto.infectedId).filter {
             LocalDate.now() == Instant.ofEpochMilli(it.timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
         }
         if(historyItems.isEmpty()) throw NoHistoryItemForTodayException()
+
+        // Check if HistoryItem id and Infected id are matching
+        if(historyItem.infectedId?.id != historyDto.infectedId) throw InfectedMismatchException()
 
         // Fetch symptoms
         val symptoms = historyDto.symptoms?.map { symptomRepository.findById(it) }?.filter { it.isPresent }?.map { it.get() }?.toSet()

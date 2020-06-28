@@ -4,11 +4,11 @@ import com.chillibits.coronaaid.exception.exception.InfectedLockedException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
-import com.chillibits.coronaaid.repository.InfectedRepository
+import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.ConfigKeys.CK_AUTO_RESET_OFFSET_DEFAULT
-import com.chillibits.coronaaid.shared.toCompressed
-import com.chillibits.coronaaid.shared.toDto
+import com.chillibits.coronaaid.model.mapper.toCompressed
+import com.chillibits.coronaaid.model.mapper.toDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController
 class InfectedController {
 
     @Autowired
-    private lateinit var infectedRepository: InfectedRepository
+    private lateinit var infectedService: InfectedService
 
     @Autowired
     private lateinit var configRepository: ConfigRepository
@@ -38,10 +38,12 @@ class InfectedController {
     @ApiOperation("Returns all infected persons with all available attributes")
     fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): Set<Any> {
         return if(compressDto) {
-            val configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
-            infectedRepository.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
+            var configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+            configResetOffset *= 1000
+
+            infectedService.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
         } else {
-            infectedRepository.findAllEagerly().map { it.toDto() }.toSet()
+            infectedService.findAllEagerly().map { it.toDto() }.toSet()
         }
     }
 
@@ -55,7 +57,7 @@ class InfectedController {
             ApiResponse(code = 423, message = "Infected locked")
     )
     fun getSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
-        val infected = infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
+        val infected = infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
 
         // Retrieve config record for 'autoResetOffset' (seconds -> conversion to millis)
         configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.let {
@@ -64,7 +66,7 @@ class InfectedController {
         }
 
         // Lock infected for other access
-        infectedRepository.changeLockedState(infectedId, System.currentTimeMillis())
+        infectedService.changeLockedState(infectedId, System.currentTimeMillis())
 
         return infected.toDto()
     }
@@ -78,8 +80,8 @@ class InfectedController {
             ApiResponse(code = 404, message = "Infected not found")
     )
     fun lockSingleInfected(@PathVariable infectedId: Int) = System.currentTimeMillis().apply {
-        infectedRepository.changeLockedState(infectedId, this)
-        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
+        infectedService.changeLockedState(infectedId, this)
+        infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 
     @PutMapping(
@@ -91,7 +93,7 @@ class InfectedController {
             ApiResponse(code = 404, message = "Infected not found")
     )
     fun unlockSingleInfected(@PathVariable infectedId: Int) {
-        infectedRepository.changeLockedState(infectedId, 0)
-        infectedRepository.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
+        infectedService.changeLockedState(infectedId, 0)
+        infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }.toDto()
     }
 }

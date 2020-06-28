@@ -3,7 +3,9 @@ package com.chillibits.coronaaid.model.dto
 import com.chillibits.coronaaid.shared.yearsBetween
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 
 data class InfectedDto (
         val id: Int,
@@ -32,4 +34,7 @@ data class InfectedDto (
         val historyItems: Set<HistoryItemDto>
 ) {
         val age = this.birthDate.yearsBetween(LocalDate.now())
+        val updateFlag = this.historyItems.any {
+                LocalDate.now() == Instant.ofEpochMilli(it.timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+        }
 }

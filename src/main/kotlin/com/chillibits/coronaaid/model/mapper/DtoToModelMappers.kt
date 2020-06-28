@@ -1,4 +1,4 @@
-package com.chillibits.coronaaid.shared
+package com.chillibits.coronaaid.model.mapper
 
 import com.chillibits.coronaaid.model.db.*
 import com.chillibits.coronaaid.model.dto.*

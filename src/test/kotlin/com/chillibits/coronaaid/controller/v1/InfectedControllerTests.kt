@@ -10,6 +10,7 @@ import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
 import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.repository.InfectedRepository
+import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
@@ -36,8 +37,10 @@ class InfectedControllerTests {
 
     @Autowired
     private lateinit var infectedController: InfectedController
+
     @MockBean
-    private lateinit var infectedRepository: InfectedRepository
+    private lateinit var infectedService: InfectedService
+
     @MockBean
     private lateinit var configRepository: ConfigRepository
 
@@ -58,10 +61,10 @@ class InfectedControllerTests {
     @Before
     fun init() {
         // Setup fake function calls
-        Mockito.`when`(infectedRepository.findAllEagerly()).thenReturn(testData)
-        Mockito.`when`(infectedRepository.findById(testData.elementAt(0).id)).thenReturn(Optional.of(testData.elementAt(0)))
-        Mockito.`when`(infectedRepository.findById(testData.elementAt(1).id)).thenReturn(Optional.of(testData.elementAt(1)))
-        Mockito.`when`(infectedRepository.findById(10)).thenReturn(Optional.empty())
+        Mockito.`when`(infectedService.findAllEagerly()).thenReturn(testData)
+        Mockito.`when`(infectedService.findById(testData.elementAt(0).id)).thenReturn(Optional.of(testData.elementAt(0)))
+        Mockito.`when`(infectedService.findById(testData.elementAt(1).id)).thenReturn(Optional.of(testData.elementAt(1)))
+        Mockito.`when`(infectedService.findById(10)).thenReturn(Optional.empty())
         Mockito.`when`(configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET))
                 .thenReturn(ConfigItem(0, ConfigKeys.CK_AUTO_RESET_OFFSET, ConfigKeys.CK_AUTO_RESET_OFFSET_DEFAULT))
     }
@@ -105,7 +108,7 @@ class InfectedControllerTests {
     @DisplayName("Test for locking a single infected manually - successful")
     fun testLockSingleInfected() {
         val timestamp = infectedController.lockSingleInfected(testData.elementAt(0).id)
-        verify(infectedRepository).changeLockedState(testData.elementAt(0).id, timestamp)
+        verify(infectedService).changeLockedState(testData.elementAt(0).id, timestamp)
     }
 
     @Test
@@ -118,7 +121,7 @@ class InfectedControllerTests {
     @DisplayName("Test for unlocking a single infected manually - successful")
     fun testUnlockSingleInfected() {
         infectedController.unlockSingleInfected(testData.elementAt(1).id)
-        verify(infectedRepository).changeLockedState(testData.elementAt(1).id, 0)
+        verify(infectedService).changeLockedState(testData.elementAt(1).id, 0)
     }
 
     @Test

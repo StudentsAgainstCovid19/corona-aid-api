@@ -18,7 +18,7 @@ class SwaggerConfig {
     private lateinit var context: ServletContext
 
     @Bean
-    fun api() = Docket(DocumentationType.SWAGGER_12)
+    fun api() = Docket(DocumentationType.OAS_30)
             .host("api.corona-aid-ka.de")
             .enableUrlTemplating(true)
             .select()

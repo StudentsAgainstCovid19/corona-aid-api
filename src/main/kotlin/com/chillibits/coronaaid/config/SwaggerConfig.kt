@@ -2,7 +2,6 @@ package com.chillibits.coronaaid.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.context.ServletContextAware
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.service.ApiInfo
@@ -13,14 +12,13 @@ import springfox.documentation.swagger.web.UiConfigurationBuilder
 import javax.servlet.ServletContext
 
 @Configuration
-class SwaggerConfig: ServletContextAware {
+class SwaggerConfig {
 
     // Variables as objects
     private lateinit var context: ServletContext
 
     @Bean
     fun api() = Docket(DocumentationType.SWAGGER_12)
-            .protocols(setOf("https"))
             .host("api.corona-aid-ka.de")
             .enableUrlTemplating(true)
             .select()
@@ -44,8 +42,4 @@ class SwaggerConfig: ServletContextAware {
             "https://opendatacommons.org/licenses/dbcl/1.0/",
             emptyList()
     )
-
-    override fun setServletContext(servletContext: ServletContext) {
-        context = servletContext
-    }
 }

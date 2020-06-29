@@ -46,19 +46,22 @@ class RealtimeTask : Runnable {
             val realtimeRefreshInterval = (configRepository.findByConfigKey(ConfigKeys.CK_REALTIME_REFRESH_INTERVAL)?.configValue?.toLong() ?: 0) * 1000
 
             loadInfectedChanges(configResetOffset, realtimeRefreshInterval)
-
             val infected = infectedService.findAllEagerly(trackedInfected)
-            val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
-                InfectedRealtimeDto(
-                        it.id,
-                        it.done,
-                        it.lastUnsuccessfulCallToday != null,
-                        it.lastUnsuccessfulCallTodayString,
-                        it.locked
-                )
-            }.toSet()
 
-            applicationEventPublisher.publishEvent(SseDataPreparedEvent(this, mapped))
+            if(infected.any()) {
+                val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
+                    InfectedRealtimeDto(
+                            it.id,
+                            it.done,
+                            it.lastUnsuccessfulCallToday != null,
+                            it.lastUnsuccessfulCallTodayString,
+                            it.locked
+                    )
+                }.toSet()
+
+                applicationEventPublisher.publishEvent(SseDataPreparedEvent(this, mapped))
+            }
+
             trackedInfected.clear()
         }
     }

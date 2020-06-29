@@ -9,7 +9,6 @@ import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.InfectedCompressedDto
 import com.chillibits.coronaaid.model.dto.InfectedDto
 import com.chillibits.coronaaid.repository.ConfigRepository
-import com.chillibits.coronaaid.repository.InfectedRepository
 import com.chillibits.coronaaid.service.InfectedService
 import com.chillibits.coronaaid.shared.ConfigKeys
 import org.assertj.core.api.Assertions.assertThat
@@ -136,7 +135,7 @@ class InfectedControllerTests {
         val infected1 = Infected(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085, healthInsuranceNumber = "M123456",
                         lockedTimestamp = 0, historyItems = getHistoryTestData().toSet())
-        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
+        val infected2 = Infected(1, "Joe", "Dalton", testBirthDate, "Mannheim", "68159",
                         "Göthestraße", "4", 49.4874639, 8.4763718,  "M654321",
                         lockedTimestamp = testTimestamp)
         return setOf(infected1, infected2)
@@ -146,7 +145,7 @@ class InfectedControllerTests {
         val infected1 = InfectedDto(0, "John", "Doe", testBirthDate, "Karlsruhe", "76131",
                         "Erzbergerstraße", "121", 49.0264134, 8.3831085,  "M123456",
                          false, emptySet(), emptySet(), emptySet(), getHistoryAssertData().toSet())
-        val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "76131",
+        val infected2 = InfectedDto(1, "Joe", "Dalton", testBirthDate, "Mannheim", "68159",
                         "Göthestraße", "4", 49.4874639, 8.4763718, "M654321",
                         false, emptySet(), emptySet(), emptySet(), emptySet())
         return setOf(infected1, infected2)

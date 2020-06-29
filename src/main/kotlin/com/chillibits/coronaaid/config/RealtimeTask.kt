@@ -49,17 +49,21 @@ class RealtimeTask : Runnable {
             loadInfectedChanges(configResetOffset, realtimeRefreshInterval)
 
             val infected = infectedService.findAllEagerly(trackedInfected)
-            val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
-                InfectedRealtimeDto(
-                        it.id,
-                        it.done,
-                        it.lastUnsuccessfulCallToday != null,
-                        it.lastUnsuccessfulCallTodayString,
-                        it.locked
-                )
-            }.toSet()
 
-            applicationEventPublisher.publishEvent(SseDataPreparedEvent(this, mapped))
+            if(infected.any()) {
+                val mapped = infected.map { it.toCompressed(configResetOffset) }.map {
+                    InfectedRealtimeDto(
+                            it.id,
+                            it.done,
+                            it.lastUnsuccessfulCallToday != null,
+                            it.lastUnsuccessfulCallTodayString,
+                            it.locked
+                    )
+                }.toSet()
+
+                applicationEventPublisher.publishEvent(SseDataPreparedEvent(this, mapped))
+            }
+
             trackedInfected.clear()
         }
     }

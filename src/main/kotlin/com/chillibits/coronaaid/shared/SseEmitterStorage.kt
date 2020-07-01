@@ -1,7 +1,6 @@
 package com.chillibits.coronaaid.shared
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.lang.Exception
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -41,5 +40,4 @@ object SseEmitterStorage {
             emitters.removeAll(failed)
         }
     }
-
 }

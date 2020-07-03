@@ -19,5 +19,5 @@ spring:
     show-sql: false
     open-in-view: true
     hibernate.ddl-auto: update
-    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+    properties.hibernate.dialect: org.hibernate.spatial.dialect.mysql.MySQL56SpatialDialect
     properties.hibernate.format_sql: true

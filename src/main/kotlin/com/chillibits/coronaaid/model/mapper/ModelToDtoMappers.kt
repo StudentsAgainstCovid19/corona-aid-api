@@ -94,3 +94,11 @@ fun ConfigItem.toDto() = ConfigItemDto(
         configKey = this.configKey,
         configValue = this.configValue
 )
+
+fun District.toDto() = DistrictDto(
+        id = this.id,
+        name = this.name,
+        city = this.city,
+        geometry = this.geometry,
+        postalCode = this.postalCode
+)

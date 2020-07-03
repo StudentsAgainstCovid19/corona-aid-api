@@ -1,11 +1,15 @@
 package com.chillibits.coronaaid.controller.v1
 
+import com.chillibits.coronaaid.exception.exception.HistoryItemNotFoundException
+import com.chillibits.coronaaid.exception.exception.InfectedMismatchException
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
+import com.chillibits.coronaaid.exception.exception.NoHistoryItemForTodayException
 import com.chillibits.coronaaid.model.db.HistoryItem
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.db.Symptom
 import com.chillibits.coronaaid.model.dto.HistoryItemDto
 import com.chillibits.coronaaid.model.dto.HistoryItemInsertDto
+import com.chillibits.coronaaid.model.dto.HistoryItemUpdateDto
 import com.chillibits.coronaaid.model.dto.SymptomDto
 import com.chillibits.coronaaid.repository.HistoryRepository
 import com.chillibits.coronaaid.repository.SymptomRepository
@@ -45,7 +49,7 @@ class HistoryControllerTests {
     @MockBean
     private lateinit var infectedService: InfectedService
 
-    private val dummyInfected = getDummyInfected()
+    private val testTimestamp = System.currentTimeMillis()
     private val testData = getHistoryTestData()
     private val assertData = getHistoryAssertData()
 
@@ -60,7 +64,11 @@ class HistoryControllerTests {
     fun init() {
         // History repository
         Mockito.`when`(historyRepository.findAll()).thenReturn(testData.toList())
+        Mockito.`when`(historyRepository.findById(0)).thenReturn(Optional.of(testData.elementAt(0)))
+        Mockito.`when`(historyRepository.findById(3)).thenReturn(Optional.empty())
         Mockito.`when`(historyRepository.getHistoryItemsForPerson(5)).thenReturn(setOf(testData.elementAt(0)))
+        Mockito.`when`(historyRepository.getHistoryItemsForPerson(3)).thenReturn(setOf(testData.elementAt(0)))
+        Mockito.`when`(historyRepository.getHistoryItemsForPerson(6)).thenReturn(setOf(testData.elementAt(1)))
         Mockito.`when`(historyRepository.save(getPostRequiredRepositorySaveInput())).thenReturn(getPostRepositorySaveOutput())
 
         // Symptom repository
@@ -69,6 +77,9 @@ class HistoryControllerTests {
 
         // Infected repository
         Mockito.`when`(infectedService.findById(5)).thenReturn(Optional.of(getDummyInfected()))
+        Mockito.`when`(infectedService.findById(6)).thenReturn(Optional.of(getDummyInfected()))
+        Mockito.`when`(infectedService.findById(4)).thenReturn(Optional.empty())
+        Mockito.`when`(infectedService.findById(3)).thenReturn(Optional.of(getDummyInfected()))
         Mockito.`when`(infectedService.findById(100)).thenReturn(Optional.empty())
     }
 
@@ -91,13 +102,39 @@ class HistoryControllerTests {
 
     @Test
     fun testPostSingleHistoryItem() {
-        val result = historyController.addHistoryItem(getPostInputDto()) //simulate client request
+        val result = historyController.addHistoryItem(getPostInputDto())
         assertEquals(getPostExpectedPostOutputDto(), result)
     }
 
     @Test
     fun testPostSingleHistoryItemWithUnknownInfected() {
         assertThrows<InfectedNotFoundException> { historyController.addHistoryItem(getPostUnknownInfectedDto()) }
+    }
+
+    @Test
+    fun testUpdateSingleHistoryItem() {
+        val result = historyController.updateHistoryItem(getPostUpdateDtoSuccess())
+        assertEquals(getPostExpectedPostOutputDto(), result)
+    }
+
+    @Test
+    fun testUpdateSingleHistoryItemInfectedNotFound() {
+        assertThrows<InfectedNotFoundException> { historyController.updateHistoryItem(getPostUpdateDtoInfectedNotFound()) }
+    }
+
+    @Test
+    fun testUpdateSingleHistoryItemHistoryItemNotFound() {
+        assertThrows<HistoryItemNotFoundException> { historyController.updateHistoryItem(getPostUpdateDtoHistoryItemNotFound()) }
+    }
+
+    @Test
+    fun testUpdateSingleHistoryItemNothingToUpdate() {
+        assertThrows<NoHistoryItemForTodayException> { historyController.updateHistoryItem(getPostUpdateDtoNoHistoryItemForToday()) }
+    }
+
+    @Test
+    fun testUpdateSingleHistoryItemInfectedIdMismatch() {
+        assertThrows<InfectedMismatchException> { historyController.updateHistoryItem(getPostUpdateDtoInfectedIdMismatch()) }
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
@@ -108,13 +145,13 @@ class HistoryControllerTests {
             healthInsuranceNumber = "M123456", lockedTimestamp = 99999L)
 
     private fun getHistoryTestData(): Set<HistoryItem> {
-        val historyItem1 = HistoryItem(0, getDummyInfected(), 1234, emptySet(), 0, 1)
+        val historyItem1 = HistoryItem(0, getDummyInfected(), testTimestamp, emptySet(), 0, 1)
         val historyItem2 = HistoryItem(1, null, 4321, emptySet(), 1, 0)
         return setOf(historyItem1, historyItem2)
     }
 
     private fun getHistoryAssertData(): Set<HistoryItemDto> {
-        val historyItem1 = HistoryItemDto(0, getDummyInfected().id, 1234, emptySet(), 0, 1, null)
+        val historyItem1 = HistoryItemDto(0, getDummyInfected().id, testTimestamp, emptySet(), 0, 1, null)
         val historyItem2 = HistoryItemDto(1, null, 4321, emptySet(), 1, 0, null)
         return setOf(historyItem1, historyItem2)
     }
@@ -132,4 +169,14 @@ class HistoryControllerTests {
             = HistoryItemDto(100, getDummyInfected().id, 9999, setOf(getPostSymptomAssertData()[0]), 2, 5, "aggressive")
     private fun getPostUnknownInfectedDto()
             = HistoryItemInsertDto(919191, 9999, setOf(0), 2, 5, null)
+    private fun getPostUpdateDtoSuccess()
+            = HistoryItemUpdateDto(0, 5, 10000, setOf(0), 1, 10, "Test")
+    private fun getPostUpdateDtoInfectedNotFound()
+            = HistoryItemUpdateDto(0, 4, 10000, setOf(0), 1, 10, "Test")
+    private fun getPostUpdateDtoHistoryItemNotFound()
+            = HistoryItemUpdateDto(3, 5, 10000, setOf(0), 1, 10, "Test")
+    private fun getPostUpdateDtoNoHistoryItemForToday()
+            = HistoryItemUpdateDto(0, 6, 10000, setOf(0), 1, 10, "Test")
+    private fun getPostUpdateDtoInfectedIdMismatch()
+            = HistoryItemUpdateDto(0, 3, 10000, setOf(0), 1, 10, "Test")
 }

@@ -4,20 +4,7 @@ import com.chillibits.coronaaid.shared.truncateToLocalMidnight
 import com.chillibits.coronaaid.shared.zonedEpochMilli
 import java.time.Instant
 import java.time.LocalDate
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
-import javax.persistence.NamedAttributeNode
-import javax.persistence.NamedEntityGraph
-import javax.persistence.OneToMany
-import javax.persistence.OrderBy
-import javax.persistence.Table
-import javax.persistence.Transient
+import javax.persistence.*
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
@@ -29,9 +16,14 @@ import javax.validation.constraints.Size
         name = "Infected.loadAll",
         attributeNodes = [
                 NamedAttributeNode("contactData"),
-                NamedAttributeNode("historyItems"),
+                NamedAttributeNode("historyItems", subgraph = "historyItems"),
                 NamedAttributeNode("initialDiseases"),
                 NamedAttributeNode("tests")
+        ],
+        subgraphs = [
+                NamedSubgraph(name = "historyItems", attributeNodes = [
+                        NamedAttributeNode("symptoms")
+                ])
         ]
 )
 @Entity

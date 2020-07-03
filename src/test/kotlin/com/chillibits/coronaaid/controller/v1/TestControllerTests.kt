@@ -2,6 +2,7 @@ package com.chillibits.coronaaid.controller.v1
 
 import com.chillibits.coronaaid.exception.exception.InfectedNotFoundException
 import com.chillibits.coronaaid.exception.exception.InvalidTestResultException
+import com.chillibits.coronaaid.exception.exception.OnlyOnePendingTestException
 import com.chillibits.coronaaid.model.db.Infected
 import com.chillibits.coronaaid.model.db.Test
 import com.chillibits.coronaaid.model.dto.TestDto
@@ -94,9 +95,15 @@ class TestControllerTests {
     }
 
     @org.junit.Test
-    @DisplayName("Test for pushing test into db - success")
+    @DisplayName("Test for pushing test into db - invalid test result")
     fun testAddTestInvalidResult() {
         assertThrows<InvalidTestResultException> { testController.addTest(getPostInvalidTestResult()) }
+    }
+
+    @org.junit.Test
+    @DisplayName("Test for pushing test into db - only one pending test allowed")
+    fun testAddTestOnlyOnePendingTestAllowed() {
+        assertThrows<OnlyOnePendingTestException> { testController.addTest(getPostOnlyOnePendingTestResult()) }
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
@@ -145,4 +152,6 @@ class TestControllerTests {
             = TestInsertDto(-10, 12345, 0)
     private fun getPostInvalidTestResult()
             = TestInsertDto(-10, 12345, 2)
+    private fun getPostOnlyOnePendingTestResult()
+            = TestInsertDto(0, 12345, 0)
 }

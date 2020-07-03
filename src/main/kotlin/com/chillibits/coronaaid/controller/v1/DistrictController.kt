@@ -14,25 +14,25 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Api(value = "Geodata REST Endpoint", tags = ["geo"])
-class GeoController {
+@Api(value = "District REST Endpoint", tags = ["district"])
+class DistrictController {
 
     @Autowired
     private lateinit var districtRepository: DistrictRepository
 
     @GetMapping(
-            path = ["/geo"],
+            path = ["/district"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all districts with all available attributes")
     fun getAllGeoDistricts(): List<DistrictDto> = districtRepository.findAll().map { it.toDto() }
 
     @GetMapping(
-            path = ["/geo/analytics"],
+            path = ["/district/analytics"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all districts with some additional analytical data")
-    fun getAllGeoDistrictsAnalytics(): List<DistrictAnalyticsDto> = districtRepository.getAnalyzedDistrictData()
+    fun getAllGeoDistrictsAnalytics(): Set<DistrictAnalyticsDto> = districtRepository.getAnalyzedDistrictData()
 
     @Bean
     fun jtsModule(): JtsModule = JtsModule()

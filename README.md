@@ -10,7 +10,7 @@
 For using the API, please visit [the API documentation](https://api.corona-aid-ka.de/swagger-ui/index.html).
 
 ## Data structure
-![Data structure](https://github.com/StudentsAgainstCovid19/corona-aid-api/blob/master/media/er_diagram.png "Data structure")
+![Data structure](https://github.com/StudentsAgainstCovid19/corona-aid-api/blob/develop/media/er_diagram.png "Data structure")
 
 ## Security policy
 If you want to report a security vulnerability, please read our security policy in the [SECURITY.md](https://github.com/StudentsAgainstCovid19/corona-aid-api/blob/master/SECURITY.md) file.

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Api(value = "Symptoms Rest Endpoint", tags = ["symptoms"])
+@Api(value = "Symptoms Rest Endpoint", tags = ["symptom"])
 class SymptomController {
 
     @Autowired

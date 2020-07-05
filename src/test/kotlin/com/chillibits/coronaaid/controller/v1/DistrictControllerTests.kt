@@ -51,35 +51,31 @@ class DistrictControllerTests {
     }
 
     @Test
-    fun testgetAllDistrictsAnalytics() {
+    fun testGetAllDistrictsAnalytics() {
         assertThat(districtController.getAllGeoDistrictsAnalytics()).containsExactlyInAnyOrderElementsOf(getDistrictAnalyticsData())
     }
 
-    fun getDistrictTestData(): List<District> {
+    private fun getDistrictTestData(): List<District> {
         val district1 = District(0, "Hohenwettersbach", "Karlsruhe", "76228",
                                     geometryFactory.createPolygon(emptyArray()))
         val district2 = District(0, "Grünwettersbach", "Karlsruhe", "76228",
                                     geometryFactory.createPolygon(emptyArray()))
-
         return listOf(district1, district2)
     }
 
-    fun getDistrictAssertData(): Set<DistrictDto> {
+    private fun getDistrictAssertData(): Set<DistrictDto> {
         val district1 = DistrictDto(0, "Hohenwettersbach", "Karlsruhe", "76228",
                                     geometryFactory.createPolygon(emptyArray()))
         val district2 = DistrictDto(0, "Grünwettersbach", "Karlsruhe", "76228",
                                     geometryFactory.createPolygon(emptyArray()))
-
         return setOf(district1, district2)
     }
 
-    fun getDistrictAnalyticsData(): Set<DistrictAnalyticsDto> {
+    private fun getDistrictAnalyticsData(): Set<DistrictAnalyticsDto> {
         val district1 = DistrictAnalyticsDto(0, "Hohenwettersbach", "Karlsruhe", 12.32, "76228", 4,
                                                 geometryFactory.createPolygon(emptyArray()))
         val district2 = DistrictAnalyticsDto(0, "Grünwettersbach", "Karlsruhe", 99.91,"76228", 12,
                                                 geometryFactory.createPolygon(emptyArray()))
-
         return setOf(district1, district2)
     }
-
 }

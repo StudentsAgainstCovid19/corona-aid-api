@@ -18,9 +18,9 @@ class InfectedService {
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     fun findById(infectedId: Int) = infectedRepository.findById(infectedId)
-    fun findAllEagerly(): Set<Infected> = infectedRepository.findAllEagerly()
+    fun findAllEagerly() = infectedRepository.findAllEagerly()
     fun findAllEagerly(infected: Set<Int>) = infectedRepository.findAllEagerly(infected)
-    fun findAllLockedSince(timestamp: Long, configAutoResetOffset: Long, refreshInterval: Long): Set<Int> = infectedRepository.findAllLockedSince(timestamp, configAutoResetOffset, refreshInterval)
+    fun findAllLockedSince(timestamp: Long, configAutoResetOffset: Long, refreshInterval: Long) = infectedRepository.findAllLockedSince(timestamp, configAutoResetOffset, refreshInterval)
 
     @Transactional
     fun changeLockedState(infectedId: Int, timestamp: Long) {

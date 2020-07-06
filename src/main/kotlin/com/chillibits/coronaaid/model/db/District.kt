@@ -1,7 +1,6 @@
 package com.chillibits.coronaaid.model.db
 
-import com.vividsolutions.jts.geom.Polygon
-import org.hibernate.annotations.Formula
+import org.locationtech.jts.geom.Polygon
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull

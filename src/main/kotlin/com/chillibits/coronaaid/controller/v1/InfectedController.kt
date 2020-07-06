@@ -36,15 +36,18 @@ class InfectedController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all infected persons with all available attributes")
-    fun getAllInfected(@RequestParam(name = "compress", required = false, defaultValue = "false") compressDto: Boolean): Set<Any> {
-        return if(compressDto) {
-            var configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong() ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
-            configResetOffset *= 1000
+    fun getAllInfected(): Set<Any> = infectedService.findAllEagerly().map { it.toDto() }.toSet()
 
-            infectedService.findAllEagerly().map { it.toCompressed(configResetOffset) }.toSet()
-        } else {
-            infectedService.findAllEagerly().map { it.toDto() }.toSet()
-        }
+    @GetMapping(
+            path = ["/infected"],
+            produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE],
+            params = ["compress"]
+    )
+    @ApiOperation("Returns all infected persons with all available attributes")
+    fun getAllInfectedCompressed(): Set<Any> {
+        val configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong()
+                ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
+        return infectedService.findAllEagerly().map { it.toCompressed(configResetOffset * 1000) }.toSet()
     }
 
     @GetMapping(

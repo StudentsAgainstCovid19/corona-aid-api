@@ -73,14 +73,14 @@ class InfectedControllerTests {
     @Test
     @DisplayName("Test for getting all infected - success")
     fun testGetAllInfected() {
-        val result = infectedController.getAllInfected(false)
+        val result = infectedController.getAllInfected()
         assertThat(result).containsExactlyInAnyOrder(assertData.elementAt(0), assertData.elementAt(1))
     }
 
     @Test
     @DisplayName("Test for getting all infected compressed - success")
     fun testGetAllInfectedCompressed() {
-        val result = infectedController.getAllInfected(true)
+        val result = infectedController.getAllInfectedCompressed()
         assertThat(result).containsExactlyInAnyOrder(compressedAssertData.elementAt(0), compressedAssertData.elementAt(1))
     }
 

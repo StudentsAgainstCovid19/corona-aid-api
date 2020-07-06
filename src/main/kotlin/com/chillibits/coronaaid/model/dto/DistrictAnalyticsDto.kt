@@ -1,6 +1,6 @@
 package com.chillibits.coronaaid.model.dto
 
-import com.vividsolutions.jts.geom.Geometry
+import org.locationtech.jts.geom.Geometry
 
 data class DistrictAnalyticsDto(
         val id : Int,

@@ -1,8 +1,8 @@
 package com.chillibits.coronaaid.config
 
-import com.chillibits.coronaaid.jackson.JtsGeometryXMLSerializer
+import com.chillibits.coronaaid.jackson.JacksonDoubleSerializer
+import com.chillibits.coronaaid.jackson.JacksonJtsGeometryXMLSerializer
 import com.fasterxml.jackson.databind.module.SimpleModule
-import org.locationtech.spatial4j.io.jackson.ShapeAsGeoJSONSerializer
 import org.locationtech.spatial4j.io.jackson.ShapesAsGeoJSONModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -26,7 +26,8 @@ class JacksonConfig {
 
         // Configure custom XML Mapper
         val module = SimpleModule()
-        module.addSerializer(JtsGeometryXMLSerializer())
+        module.addSerializer(JacksonJtsGeometryXMLSerializer())
+        module.addSerializer(JacksonDoubleSerializer())
         xmlMapper.objectMapper.registerModule(module)
     }
 

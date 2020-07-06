@@ -8,7 +8,7 @@ import org.locationtech.jts.geom.LineString
 import org.locationtech.jts.geom.Polygon
 import java.lang.UnsupportedOperationException
 
-class JtsGeometryXMLSerializer: JsonSerializer<Geometry>() {
+class JacksonJtsGeometryXMLSerializer: JsonSerializer<Geometry>() {
 
     override fun serialize(geometry: Geometry, generator: JsonGenerator, ctx: SerializerProvider?) {
         if(geometry is Polygon) {
@@ -44,7 +44,5 @@ class JtsGeometryXMLSerializer: JsonSerializer<Geometry>() {
         generator.writeEndObject()
     }
 
-    override fun handledType(): Class<Geometry> {
-        return Geometry::class.java
-    }
+    override fun handledType() = Geometry::class.java
 }

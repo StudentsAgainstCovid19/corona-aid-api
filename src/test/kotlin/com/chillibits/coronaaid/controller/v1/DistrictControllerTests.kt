@@ -4,12 +4,12 @@ import com.chillibits.coronaaid.model.db.District
 import com.chillibits.coronaaid.model.dto.DistrictAnalyticsDto
 import com.chillibits.coronaaid.model.dto.DistrictDto
 import com.chillibits.coronaaid.repository.DistrictRepository
-import com.vividsolutions.jts.geom.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
 import org.junit.runner.RunWith
+import org.locationtech.jts.geom.GeometryFactory
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration

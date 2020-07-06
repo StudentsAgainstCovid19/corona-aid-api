@@ -24,7 +24,7 @@ class JacksonConfig {
         // Configure JSON Mapper
         jsonMapper.objectMapper.registerModule(ShapesAsGeoJSONModule())
 
-        //Configure custom XML Mapper
+        // Configure custom XML Mapper
         val module = SimpleModule()
         module.addSerializer(JtsGeometryXMLSerializer())
         xmlMapper.objectMapper.registerModule(module)

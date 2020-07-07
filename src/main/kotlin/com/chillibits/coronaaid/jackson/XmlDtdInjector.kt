@@ -1,11 +1,9 @@
-package com.chillibits.coronaaid.controller.v1
+package com.chillibits.coronaaid.jackson
 
 import com.chillibits.coronaaid.shared.XmlDtdUrl
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
-import java.lang.Exception
 import java.lang.reflect.Method
-import javax.servlet.WriteListener
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 

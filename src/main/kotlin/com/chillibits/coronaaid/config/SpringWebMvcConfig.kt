@@ -1,6 +1,6 @@
 package com.chillibits.coronaaid.config
 
-import com.chillibits.coronaaid.controller.v1.XmlDtdInjector
+import com.chillibits.coronaaid.jackson.XmlDtdInjector
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

@@ -4,6 +4,7 @@ import com.chillibits.coronaaid.exception.exception.ConfigItemNotFoundException
 import com.chillibits.coronaaid.model.dto.ConfigItemDto
 import com.chillibits.coronaaid.repository.ConfigRepository
 import com.chillibits.coronaaid.model.mapper.toDto
+import com.chillibits.coronaaid.shared.XmlDtdUrl
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -26,6 +27,7 @@ class ConfigController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all config items")
+    @XmlDtdUrl(url = "dtd/config.dtd")
     fun getAllConfigItems(): Set<ConfigItemDto> = configRepository.findAll().map { it.toDto() }.toSet()
 
     @GetMapping(

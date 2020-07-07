@@ -9,6 +9,7 @@ import com.chillibits.coronaaid.shared.ConfigKeys
 import com.chillibits.coronaaid.shared.ConfigKeys.CK_AUTO_RESET_OFFSET_DEFAULT
 import com.chillibits.coronaaid.model.mapper.toCompressed
 import com.chillibits.coronaaid.model.mapper.toDto
+import com.chillibits.coronaaid.shared.XmlDtdUrl
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -44,6 +45,7 @@ class InfectedController {
             params = ["compress"]
     )
     @ApiOperation("Returns all infected persons with all available attributes")
+    @XmlDtdUrl(url = "dtd/infected_compressed.dtd")
     fun getAllInfectedCompressed(): Set<Any> {
         val configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong()
                 ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
@@ -59,6 +61,7 @@ class InfectedController {
             ApiResponse(code = 404, message = "Infected not found"),
             ApiResponse(code = 423, message = "Infected locked")
     )
+    @XmlDtdUrl(url = "dtd/infected_id.dtd")
     fun getSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
         val infected = infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
 

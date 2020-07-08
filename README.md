@@ -5,7 +5,7 @@
 ![Maven Build](https://github.com/StudentsAgainstCovid19/corona-aid-api/workflows/Maven%20Build/badge.svg)
 ![Docker Build](https://img.shields.io/github/workflow/status/StudentsAgainstCovid19/corona-aid-api/CI%20with%20Docker?label=Docker%20build)
 [![codecov](https://codecov.io/gh/StudentsAgainstCovid19/corona-aid-api/branch/master/graph/badge.svg)](https://codecov.io/gh/StudentsAgainstCovid19/corona-aid-api)
-[![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m785529165-af4acf0c73e4d1163408636d)](https://status.pm.chillibits.com/)
+[![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m785529165-af4acf0c73e4d1163408636d)](https://status.corona-aid-ka.de)
 
 ## API usage
 For using the API, please visit [the API documentation](https://api.corona-aid-ka.de/swagger-ui/index.html).

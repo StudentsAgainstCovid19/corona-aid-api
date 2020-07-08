@@ -18,7 +18,7 @@ class XmlDtdBodyAdvice: ResponseBodyAdvice<Any> {
     private val reflectionCache: MutableMap<Method, String?> = mutableMapOf()
 
     override fun supports(method: MethodParameter, converter: Class<out HttpMessageConverter<*>>): Boolean {
-        return true
+        return method.method != null
     }
 
     override fun beforeBodyWrite(

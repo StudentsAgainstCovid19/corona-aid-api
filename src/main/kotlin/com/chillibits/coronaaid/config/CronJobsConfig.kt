@@ -84,7 +84,7 @@ class CronJobsConfig {
             // Random status
             val status = rand(0, 2)
             // Random personal feeling
-            val personalFeeling = rand(0, 10)
+            val personalFeeling = rand(0, 9)
             // Create history item
             historyRepository.save(HistoryItem(0, it, System.currentTimeMillis(), emptySet(), status, personalFeeling))
         }

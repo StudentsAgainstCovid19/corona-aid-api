@@ -27,7 +27,7 @@ class ConfigController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all config items")
-    @XmlDtdUrl(url = "dtd/config.dtd")
+    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/config.dtd")
     fun getAllConfigItems(): Set<ConfigItemDto> = configRepository.findAll().map { it.toDto() }.toSet()
 
     @GetMapping(

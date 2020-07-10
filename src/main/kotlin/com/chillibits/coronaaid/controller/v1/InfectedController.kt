@@ -45,7 +45,7 @@ class InfectedController {
             params = ["compress"]
     )
     @ApiOperation("Returns all infected persons with all available attributes")
-    @XmlDtdUrl(url = "dtd/infected_compressed.dtd")
+    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/infected_compressed.dtd")
     fun getAllInfectedCompressed(): Set<Any> {
         val configResetOffset = configRepository.findByConfigKey(ConfigKeys.CK_AUTO_RESET_OFFSET)?.configValue?.toLong()
                 ?: CK_AUTO_RESET_OFFSET_DEFAULT.toLong()
@@ -61,7 +61,7 @@ class InfectedController {
             ApiResponse(code = 404, message = "Infected not found"),
             ApiResponse(code = 423, message = "Infected locked")
     )
-    @XmlDtdUrl(url = "dtd/infected_id.dtd")
+    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/infected_id.dtd")
     fun getSingleInfected(@PathVariable infectedId: Int): InfectedDto? {
         val infected = infectedService.findById(infectedId).orElseThrow { InfectedNotFoundException(infectedId) }
 

@@ -38,9 +38,9 @@ data class HistoryItem (
         @Max(value = 2, message = "Status must be <= 2")
         val status: Int,
 
-        // Personal feeling (Rating from 0 - 9)
-        @Min(value = 0, message = "Personal feeling must be >= 0")
-        @Max(value = 10, message = "Personal feeling be <= 9")
+        // Personal feeling (Rating from 1 - 5)
+        @Min(value = 1, message = "Personal feeling must be >= 1")
+        @Max(value = 5, message = "Personal feeling be <= 5")
         val personalFeeling: Int,
 
         //Notes about the infected person

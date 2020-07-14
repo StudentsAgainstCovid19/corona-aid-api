@@ -29,7 +29,7 @@ class RealtimeController {
     fun sseConnection(@RequestHeader(name = "Last-Event-ID", required = false, defaultValue = "-1") lastIdStr: String, servlet: HttpServletResponse): SseEmitter {
         servlet.addHeader("X-Accel-Buffering", "no")
 
-        val emitter = SseEmitter()
+        val emitter = SseEmitter(-1)
         SseEmitterStorage.addEmitter(emitter) //TODO: replace with CopyOnWriteList
 
         val lastId = lastIdStr.toInt()

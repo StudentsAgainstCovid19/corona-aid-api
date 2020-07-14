@@ -33,6 +33,7 @@ object SseEmitterStorage {
                 try {
                     it.send(obj)
                 } catch (ex: Exception) {
+                    it.complete()
                     failed.add(it)
                 }
             }

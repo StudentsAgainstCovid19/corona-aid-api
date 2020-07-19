@@ -29,7 +29,7 @@ class SwaggerConfig {
 
     @Bean
     fun uiConfig() = UiConfigurationBuilder.builder()
-            .defaultModelsExpandDepth(s-1)
+            .defaultModelsExpandDepth(-1)
             .build()
 
     private fun apiInfo() = ApiInfo(

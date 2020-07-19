@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.chillibits</groupId>
 	<artifactId>corona-aid</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>corona-aid</name>
 	<description>Student project for fighting against Covid19</description>
 

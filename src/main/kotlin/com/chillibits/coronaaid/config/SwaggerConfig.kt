@@ -29,13 +29,13 @@ class SwaggerConfig {
 
     @Bean
     fun uiConfig() = UiConfigurationBuilder.builder()
-            .defaultModelsExpandDepth(-1)
+            .defaultModelsExpandDepth(s-1)
             .build()
 
     private fun apiInfo() = ApiInfo(
             "Corona Aid API",
             "Student project for fighting against Covid19",
-            "1.0.1",
+            "1.0.0",
             "https://chillibits.com/pmapp?p=privacy",
             Contact("ChilliBits", "https://www.chillibits.com", "contact@chillibits.com"),
             "ODC DbCL v1.0 License",

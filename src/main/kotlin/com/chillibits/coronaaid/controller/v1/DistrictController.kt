@@ -24,6 +24,7 @@ class DistrictController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all districts with all available attributes")
+    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/district.dtd", rootElement = "Set")
     fun getAllGeoDistricts(): List<DistrictDto> = districtRepository.findAll().map { it.toDto() }
 
     @GetMapping(

@@ -4,6 +4,7 @@ import com.chillibits.coronaaid.model.dto.DistrictAnalyticsDto
 import com.chillibits.coronaaid.model.dto.DistrictDto
 import com.chillibits.coronaaid.model.mapper.toDto
 import com.chillibits.coronaaid.repository.DistrictRepository
+import com.chillibits.coronaaid.shared.XmlDtdUrl
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +24,7 @@ class DistrictController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all districts with all available attributes")
+    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/district.dtd", rootElement = "Set")
     fun getAllGeoDistricts(): List<DistrictDto> = districtRepository.findAll().map { it.toDto() }
 
     @GetMapping(
@@ -30,7 +32,6 @@ class DistrictController {
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
     @ApiOperation("Returns all districts with some additional analytical data")
+    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/district_analytics.dtd", rootElement = "Set")
     fun getAllGeoDistrictsAnalytics(): Set<DistrictAnalyticsDto> = districtRepository.getAnalyzedDistrictData()
-
 }
-

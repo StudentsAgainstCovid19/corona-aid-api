@@ -17,9 +17,7 @@ class XmlDtdBodyAdvice: ResponseBodyAdvice<Any> {
 
     private val reflectionCache: MutableMap<Method, String?> = mutableMapOf()
 
-    override fun supports(method: MethodParameter, converter: Class<out HttpMessageConverter<*>>): Boolean {
-        return method.method != null
-    }
+    override fun supports(method: MethodParameter, converter: Class<out HttpMessageConverter<*>>) = method.method != null
 
     override fun beforeBodyWrite(
             obj: Any?,
@@ -44,10 +42,13 @@ class XmlDtdBodyAdvice: ResponseBodyAdvice<Any> {
         }
 
         val url = handler.getMethodAnnotation(XmlDtdUrl::class.java)?.url
+        val rootElement = handler.getMethodAnnotation(XmlDtdUrl::class.java)?.rootElement.toString()
         var combined = XML_HEADER
 
         if(!url.isNullOrEmpty()) {
-            combined += XML_DTD_TEMPLATE.replace("%DTD_URL%", url)
+            combined += XML_DTD_TEMPLATE
+                    .replace("%DTD_URL%", url)
+                    .replace("%DTD_ROOT_ELEMENT%", rootElement)
         }
 
         reflectionCache[handler.method!!] = combined
@@ -55,18 +56,15 @@ class XmlDtdBodyAdvice: ResponseBodyAdvice<Any> {
     }
 
     private fun writeToServlet(response : HttpServletResponse, data: String?): Int {
-        if(data != null) {
+        return if(data != null) {
             val byteArray = data.toByteArray()
             response.outputStream.write(byteArray)
-
-            return byteArray.size
-        }
-
-        return 0
+            byteArray.size
+        } else 0
     }
 
     companion object {
         const val XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-        const val XML_DTD_TEMPLATE = "<!DOCTYPE Set SYSTEM \"%DTD_URL%\">"
+        const val XML_DTD_TEMPLATE = "<!DOCTYPE %DTD_ROOT_ELEMENT% SYSTEM \"%DTD_URL%\">"
     }
 }

@@ -1,5 +1,12 @@
 ![Corona Aid Logo](https://user-images.githubusercontent.com/37160523/84581280-fc464f80-addf-11ea-93a9-fb5daec67018.jpg)
 
+# Corona Aid
+This is the backend of the Corona Aid application, developed by students of the DHBW Karlsruhe as part of a student project.
+
+> Corona Aid ist der Name unseres Projekts. Wir haben einen Prototypen entwickelt, der ausgelasteten Gesundheitsämtern in Zeiten von Covid-19 helfen kann. Die Ämter müssen täglich mit den Patienten in Kontakt treten und z. B. deren Gesundheitszustand erfragen. Diesen Prozess haben wir mithilfe einer interaktiven Kartenanwendung vereinfacht. So wird die Verwaltung von Patientendaten zum Kinderspiel.
+
+What is this project about? Discover more in our [documentary repo](https://github.com/StudentsAgainstCovid19/corona-aid-docs/wiki) (only available in German).
+
 # Corona Aid API
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/648ad20c31b841d684a5d03b2e93c798)](https://app.codacy.com/gh/StudentsAgainstCovid19/corona-aid-api?utm_source=github.com&utm_medium=referral&utm_content=StudentsAgainstCovid19/corona-aid-api&utm_campaign=Badge_Grade_Dashboard)
 ![Maven Build](https://github.com/StudentsAgainstCovid19/corona-aid-api/workflows/Maven%20Build/badge.svg)

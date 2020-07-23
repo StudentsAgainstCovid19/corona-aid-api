@@ -27,6 +27,9 @@ class CronJobsConfig {
     @Autowired
     private lateinit var realtimeTask: RealtimeTask
 
+    @Autowired
+    private lateinit var prepareDataTask: PrepareDataTask
+
     val log: Logger = LoggerFactory.getLogger(CronJobsConfig::class.java)
 
     @PostConstruct
@@ -38,6 +41,8 @@ class CronJobsConfig {
 
         taskScheduler.scheduleAtFixedRate(realtimeTask, Duration.ofSeconds(realtimeRefreshInterval))
 
+        prepareDataTask.run()
+
         log.info("Jobs finished.")
     }
   
@@ -47,6 +52,9 @@ class CronJobsConfig {
 
         // Evaluate all pending tests
         testRepository.evaluateAllPendingTests()
+
+        // Start data preparation
+        prepareDataTask.run()
 
         log.info("Daily cron finished.")
     }

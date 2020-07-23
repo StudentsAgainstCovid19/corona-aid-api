@@ -21,6 +21,6 @@ class SymptomController {
             path = ["/symptom"],
             produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE]
     )
-    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/symptom.dtd")
+    @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/symptom.dtd", rootElement = "Set")
     fun getAllSymptoms(): Set<SymptomDto> = symptomRepository.findAll().map { it.toDto() }.toSet()
 }

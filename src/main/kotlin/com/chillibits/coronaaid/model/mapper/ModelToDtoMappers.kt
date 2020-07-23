@@ -47,8 +47,8 @@ fun Infected.toCompressed(configAutoResetOffset : Long): InfectedCompressedDto {
             done = this.done,
             lastUnsuccessfulCallToday = todayUnsuccessfulTimestamp,
             personalFeeling = lastSuccessfulCall?.personalFeeling,
-            sumInitialDiseases = this.initialDiseases.size,
-            sumSymptoms = lastSuccessfulCall?.symptoms?.size
+            sumInitialDiseases = this.initialDiseases.sumBy { it.degreeOfDanger },
+            sumSymptoms = lastSuccessfulCall?.symptoms?.sumBy { it.degreeOfDanger }
     )
 }
 

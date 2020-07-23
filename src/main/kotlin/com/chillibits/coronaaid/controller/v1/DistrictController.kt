@@ -25,7 +25,7 @@ class DistrictController {
     )
     @ApiOperation("Returns all districts with all available attributes")
     @XmlDtdUrl(url = "https://www.corona-aid-ka.de/dtd/district.dtd", rootElement = "Set")
-    fun getAllGeoDistricts(): List<DistrictDto> = districtRepository.findAll().map { it.toDto() }
+    fun getAllGeoDistricts(): Set<DistrictDto> = districtRepository.findAll().map { it.toDto() }.toSet()
 
     @GetMapping(
             path = ["/district/analytics"],

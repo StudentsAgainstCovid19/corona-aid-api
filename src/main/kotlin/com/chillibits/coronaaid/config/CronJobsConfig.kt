@@ -41,8 +41,6 @@ class CronJobsConfig {
 
         taskScheduler.scheduleAtFixedRate(realtimeTask, Duration.ofSeconds(realtimeRefreshInterval))
 
-        prepareDataTask.run()
-
         log.info("Jobs finished.")
     }
   

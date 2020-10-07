@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.chillibits</groupId>
-	<artifactId>corona-aid</artifactId>
+	<artifactId>corona-aid-api</artifactId>
 	<version>1.0.1</version>
 	<name>corona-aid</name>
 	<description>Student project for fighting against Covid19</description>

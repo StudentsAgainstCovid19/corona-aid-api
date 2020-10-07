@@ -24,10 +24,10 @@ jobs:
         run: |
           sudo apt-get install --yes --no-install-recommends libxml-xpath-perl
           export ARTIFACT_ID=$(xpath -q -e "/project/artifactId/text()" pom.xml)
-          echo "::set-env name=ARTIFACT_ID::${ARTIFACT_ID}"
+          echo "ARTIFACT_ID=${ARTIFACT_ID}" >> $GITHUB_ENV
           export VERSION=$(xpath -q -e "/project/version/text()" pom.xml)
           export VERSION=${VERSION//-SNAPSHOT}-$(git rev-parse --short ${GITHUB_SHA})
-          echo "::set-env name=VERSION::${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
       - name: GH Packages deploy
         uses: actions/upload-artifact@v1
         with:
@@ -35,9 +35,9 @@ jobs:
           path: target
       - name: docker build and push
         run: |
-          echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
-          docker build -t docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}-dev:${VERSION} -t docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}-dev:latest .
-          docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}-dev:${VERSION}
-          docker push docker.pkg.github.com/studentsagainstcovid19/corona-aid-api/${ARTIFACT_ID}-dev:latest
+          echo ${CR_PAT} | docker login ghcr.io -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
+          docker build -t ghcr.io/studentsagainstcovid19/${ARTIFACT_ID}-dev:${VERSION} -t ghcr.io/studentsagainstcovid19/${ARTIFACT_ID}-dev:latest .
+          docker push ghcr.io/studentsagainstcovid19/${ARTIFACT_ID}-dev:${VERSION}
+          docker push ghcr.io/studentsagainstcovid19/${ARTIFACT_ID}-dev:latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_PAT: ${{ secrets.CR_PAT }}

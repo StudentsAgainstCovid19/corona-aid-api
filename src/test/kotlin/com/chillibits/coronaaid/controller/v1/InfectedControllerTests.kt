@@ -168,9 +168,9 @@ class InfectedControllerTests {
     }
 
     private fun getCompressedAssertData(): Set<InfectedCompressedDto> {
-        val compressed1 = InfectedCompressedDto(0, 20,"John", "Doe", 49.0264134, 8.3831085, null,
+        val compressed1 = InfectedCompressedDto(0, 21,"John", "Doe", 49.0264134, 8.3831085, null,
                                                 false, false, null, 6, 0, 0)
-        val compressed2 = InfectedCompressedDto(1, 20, "Joe", "Dalton", 49.4874639, 8.4763718, null,
+        val compressed2 = InfectedCompressedDto(1, 21, "Joe", "Dalton", 49.4874639, 8.4763718, null,
                                                 false, true, null, null, 0, null)
         return setOf(compressed1, compressed2)
     }
